@@ -7,9 +7,10 @@ Source:
 
 Quick install
 - Clone the private repo.
-- Check out the release tag: v0.14.0-clean
+- Check out the release tag: v0.14.0-clean.
 - Read INSTALL.md for the full deployment protocol.
-- Run scripts/install.sh from the repo root.
+- Run scripts/install.sh from the repo root on Linux/macOS.
+- On Windows, use scripts/install.ps1.
 - Copy cli-config.yaml.example to ~/.hermes/config.yaml if you need a starter config.
 - Copy .env.example to ~/.hermes/.env only if you want the optional env template; do not paste secrets into this backup.
 
