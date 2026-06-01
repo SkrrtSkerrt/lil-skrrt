@@ -1,12 +1,12 @@
 ---
 sidebar_position: 4
 title: "贡献指南"
-description: "如何为 Hermes Agent 做贡献 — 开发环境配置、代码风格、PR 流程"
+description: "如何为 Lil Skrrt 做贡献 — 开发环境配置、代码风格、PR 流程"
 ---
 
 # 贡献指南
 
-感谢您为 Hermes Agent 做贡献！本指南涵盖开发环境配置、代码库结构说明以及 PR 合并流程。
+感谢您为 Lil Skrrt 做贡献！本指南涵盖开发环境配置、代码库结构说明以及 PR 合并流程。
 
 ## 贡献优先级
 
@@ -22,8 +22,8 @@ description: "如何为 Hermes Agent 做贡献 — 开发环境配置、代码�
 
 ## 常见贡献路径
 
-- 构建自定义/本地工具而不修改 Hermes 核心？从 [构建 Hermes 插件](../guides/build-a-hermes-plugin.md) 开始
-- 为 Hermes 本身构建新的内置核心工具？从 [添加工具](./adding-tools.md) 开始
+- 构建自定义/本地工具而不修改 Lil Skrrt 核心？从 [构建 Lil Skrrt 插件](../guides/build-a-hermes-plugin.md) 开始
+- 为 Lil Skrrt 本身构建新的内置核心工具？从 [添加工具](./adding-tools.md) 开始
 - 构建新的 skill？从 [创建 Skill](./creating-skills.md) 开始
 - 构建新的推理提供商？从 [添加提供商](./adding-providers.md) 开始
 
@@ -74,8 +74,8 @@ mkdir -p ~/.local/bin
 ln -sf "$(pwd)/venv/bin/hermes" ~/.local/bin/hermes
 
 # 验证
-hermes doctor
-hermes chat -q "Hello"
+lil-skrrt doctor
+lil-skrrt chat -q "Hello"
 ```
 
 ### 运行测试
@@ -94,7 +94,7 @@ pytest tests/ -v
 
 ## 跨平台兼容性
 
-Hermes 官方支持 **Linux、macOS、WSL2 以及原生 Windows（早期 beta — 通过 PowerShell 安装）**。原生 Windows 使用 [Git for Windows](https://git-scm.com/download/win) 提供的 Git Bash 执行 shell 命令。部分功能依赖 POSIX 内核原语，已做条件限制：dashboard 内嵌的 PTY 终端面板（`/chat` 标签页）仅支持 WSL2。原生 Windows 路径较新且迭代较快 — 如果您主要在 Windows 上开发，请做好遇到并修复粗糙边缘的准备。
+Lil Skrrt 官方支持 **Linux、macOS、WSL2 以及原生 Windows（早期 beta — 通过 PowerShell 安装）**。原生 Windows 使用 [Git for Windows](https://git-scm.com/download/win) 提供的 Git Bash 执行 shell 命令。部分功能依赖 POSIX 内核原语，已做条件限制：dashboard 内嵌的 PTY 终端面板（`/chat` 标签页）仅支持 WSL2。原生 Windows 路径较新且迭代较快 — 如果您主要在 Windows 上开发，请做好遇到并修复粗糙边缘的准备。
 
 贡献代码时，请遵守以下规则：
 
@@ -149,7 +149,7 @@ if platform.system() != "Windows":
 
 ## 安全注意事项
 
-Hermes 拥有终端访问权限，安全至关重要。
+Lil Skrrt 拥有终端访问权限，安全至关重要。
 
 ### 现有保护措施
 
@@ -186,7 +186,7 @@ refactor/description   # 代码重构
 ### 提交前检查
 
 1. **运行测试**：`pytest tests/ -v`
-2. **手动测试**：运行 `hermes` 并验证您修改的代码路径
+2. **手动测试**：运行 `lil-skrrt` 并验证您修改的代码路径
 3. **检查跨平台影响**：考虑 macOS 和不同 Linux 发行版
 4. **保持 PR 聚焦**：每个 PR 只包含一个逻辑变更
 
@@ -227,7 +227,7 @@ fix(security): prevent shell injection in sudo password piping
 ## 报告问题
 
 - 使用 [GitHub Issues](https://github.com/SkrrtSkerrt/hermes-agent/issues)
-- 请包含：操作系统、Python 版本、Hermes 版本（`hermes version`）、完整错误堆栈
+- 请包含：操作系统、Python 版本、Lil Skrrt 版本（`lil-skrrt version`）、完整错误堆栈
 - 包含复现步骤
 - 创建前请检查是否已有重复 issue
 - 安全漏洞请私下报告

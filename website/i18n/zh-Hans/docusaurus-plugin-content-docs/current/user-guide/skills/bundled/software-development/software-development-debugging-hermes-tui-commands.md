@@ -1,14 +1,14 @@
 ---
-title: "Debugging Hermes Tui Commands — Debug Hermes TUI slash commands: Python, gateway, Ink UI"
-sidebar_label: "Debugging Hermes Tui Commands"
-description: "调试 Hermes TUI slash 命令：Python、gateway、Ink UI"
+title: "Debugging Lil Skrrt Tui Commands — Debug Lil Skrrt TUI slash commands: Python, gateway, Ink UI"
+sidebar_label: "Debugging Lil Skrrt Tui Commands"
+description: "调试 Lil Skrrt TUI slash 命令：Python、gateway、Ink UI"
 ---
 
 {/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
-# 调试 Hermes TUI 命令
+# 调试 Lil Skrrt TUI 命令
 
-调试 Hermes TUI slash（斜杠）命令：Python、gateway、Ink UI。
+调试 Lil Skrrt TUI slash（斜杠）命令：Python、gateway、Ink UI。
 
 ## Skill 元数据
 
@@ -17,7 +17,7 @@ description: "调试 Hermes TUI slash 命令：Python、gateway、Ink UI"
 | 来源 | 内置（默认安装） |
 | 路径 | `skills/software-development/debugging-hermes-tui-commands` |
 | 版本 | `1.0.0` |
-| 作者 | Hermes Agent |
+| 作者 | Lil Skrrt |
 | 许可证 | MIT |
 | 平台 | linux, macos, windows |
 | 标签 | `debugging`, `hermes-agent`, `tui`, `slash-commands`, `typescript`, `python` |
@@ -26,16 +26,16 @@ description: "调试 Hermes TUI slash 命令：Python、gateway、Ink UI"
 ## 参考：完整 SKILL.md
 
 :::info
-以下是 Hermes 在触发该 skill 时加载的完整 skill 定义。这是 agent 在 skill 激活时所看到的指令内容。
+以下是 Lil Skrrt 在触发该 skill 时加载的完整 skill 定义。这是 agent 在 skill 激活时所看到的指令内容。
 :::
 
-# 调试 Hermes TUI Slash 命令
+# 调试 Lil Skrrt TUI Slash 命令
 
 ## 概述
 
-Hermes slash 命令跨越三个层次——Python 命令注册表、tui_gateway JSON-RPC 桥接层，以及 Ink/TypeScript 前端。当某个命令出现异常（不在自动补全中显示、在 CLI 中正常但在 TUI 中不工作、配置已持久化但 UI 未更新），问题几乎总是某一层与另一层不同步所致。
+Lil Skrrt slash 命令跨越三个层次——Python 命令注册表、tui_gateway JSON-RPC 桥接层，以及 Ink/TypeScript 前端。当某个命令出现异常（不在自动补全中显示、在 CLI 中正常但在 TUI 中不工作、配置已持久化但 UI 未更新），问题几乎总是某一层与另一层不同步所致。
 
-当你在 Hermes TUI 中遇到 slash 命令问题时使用本 skill，尤其是命令未出现在自动补全中、在 TUI 中无法正常工作，或需要添加/更新命令时。
+当你在 Lil Skrrt TUI 中遇到 slash 命令问题时使用本 skill，尤其是命令未出现在自动补全中、在 TUI 中无法正常工作，或需要添加/更新命令时。
 
 ## 适用场景
 
@@ -159,7 +159,7 @@ TUI frontend (ui-tui/src/app/slash/)        <- 本地处理器 + fallthrough
 
 2. 运行 TUI 并测试命令：
    ```bash
-   hermes --tui
+   lil-skrrt --tui
    ```
 
 3. 输入 `/` 并验证命令出现在自动补全建议中，且显示预期的描述和参数提示。

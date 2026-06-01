@@ -8,7 +8,7 @@ prerequisites:
   commands: [curl, file, jq]
 platforms: [macos, linux]
 metadata:
-  hermes:
+  lil-skrrt:
     tags: [here.now, herenow, publish, deploy, hosting, static-site, web, share, URL, drive, storage]
     homepage: https://here.now
     requires_toolsets: [terminal]
@@ -201,7 +201,7 @@ For Drives:
 | `--title {text}`       | Viewer title (non-HTML sites)             |
 | `--description {text}` | Viewer description                            |
 | `--ttl {seconds}`      | Set expiry (authenticated only)               |
-| `--client {name}`      | Agent name for attribution (e.g. `hermes`)    |
+| `--client {name}`      | Agent name for attribution (e.g. `lil-skrrt`)    |
 | `--base-url {url}`     | API base URL (default: `https://here.now`)    |
 | `--allow-nonherenow-base-url` | Allow sending auth to non-default `--base-url` |
 | `--api-key {key}`      | API key override (prefer credentials file)    |

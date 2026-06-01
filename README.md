@@ -1,7 +1,7 @@
 Lil Skrrt clean baseline backup
 
 Source:
-- Based on Hermes Agent v0.14.0 (2026.5.16)
+- Based on Lil Skrrt v0.14.0 (2026.5.16)
 - commit febc4cfec
 - exported directly from the clean installed checkout
 

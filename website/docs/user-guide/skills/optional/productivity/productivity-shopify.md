@@ -14,7 +14,7 @@ Shopify Admin & Storefront GraphQL APIs via curl. Products, orders, customers, i
 
 | | |
 |---|---|
-| Source | Optional — install with `hermes skills install official/productivity/shopify` |
+| Source | Optional — install with `lil-skrrt skills install official/productivity/shopify` |
 | Path | `optional-skills/productivity/shopify` |
 | Version | `1.0.0` |
 | Author | community |
@@ -26,7 +26,7 @@ Shopify Admin & Storefront GraphQL APIs via curl. Products, orders, customers, i
 ## Reference: full SKILL.md
 
 :::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
+The following is the complete skill definition that Lil Skrrt loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
 :::
 
 # Shopify — Admin & Storefront GraphQL APIs

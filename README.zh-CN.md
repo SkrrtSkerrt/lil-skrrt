@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Hermes Agent" width="100%">
+  <img src="assets/banner.png" alt="Lil Skrrt" width="100%">
 </p>
 
-# Hermes Agent ☤
+# Lil Skrrt ☤
 
 <p align="center">
   <a href="https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/"><img src="https://img.shields.io/badge/Docs-hermes--agent.github.com/SkrrtSkerrt/hermes-agent-FFD700?style=for-the-badge" alt="Documentation"></a>
@@ -14,7 +14,7 @@
 
 **由 [SkrrtSkerrt](https://github.com/SkrrtSkerrt/hermes-agent) 构建的自进化 AI 代理。** 它是唯一内置学习闭环的智能代理——从经验中创建技能，在使用中改进技能，主动持久化知识，搜索过往对话，并在跨会话中逐步构建对你的深度理解。可以在 $5 的 VPS 上运行，也可以在 GPU 集群上运行，或者使用几乎零成本的 Serverless 基础设施。它不绑定你的笔记本——你可以在 Telegram 上与它对话，而它在云端 VM 上工作。
 
-支持任意模型——[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent)、[OpenRouter](https://openrouter.ai)（200+ 模型）、[NVIDIA NIM](https://build.nvidia.com)（Nemotron）、[小米 MiMo](https://platform.xiaomimimo.com)、[z.ai/GLM](https://z.ai)、[Kimi/Moonshot](https://platform.moonshot.ai)、[MiniMax](https://www.minimax.io)、[Hugging Face](https://huggingface.co)、OpenAI，或自定义端点。使用 `hermes model` 即可切换——无需改代码，无锁定。
+支持任意模型——[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent)、[OpenRouter](https://openrouter.ai)（200+ 模型）、[NVIDIA NIM](https://build.nvidia.com)（Nemotron）、[小米 MiMo](https://platform.xiaomimimo.com)、[z.ai/GLM](https://z.ai)、[Kimi/Moonshot](https://platform.moonshot.ai)、[MiniMax](https://www.minimax.io)、[Hugging Face](https://huggingface.co)、OpenAI，或自定义端点。使用 `lil-skrrt model` 即可切换——无需改代码，无锁定。
 
 <table>
 <tr><td><b>真正的终端界面</b></td><td>完整的 TUI，支持多行编辑、斜杠命令自动补全、对话历史、中断重定向和流式工具输出。</td></tr>
@@ -36,7 +36,7 @@ curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scrip
 
 支持 Linux、macOS、WSL2 和 Android (Termux)。安装程序会自动处理平台特定的配置。
 
-> **Android / Termux：** 已测试的手动安装路径请参考 [Termux 指南](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/getting-started/termux)。在 Termux 上，Hermes 会安装精选的 `.[termux]` 扩展，因为完整的 `.[all]` 扩展会拉取 Android 不兼容的语音依赖。
+> **Android / Termux：** 已测试的手动安装路径请参考 [Termux 指南](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/getting-started/termux)。在 Termux 上，Lil Skrrt 会安装精选的 `.[termux]` 扩展，因为完整的 `.[all]` 扩展会拉取 Android 不兼容的语音依赖。
 >
 > **Windows：** 原生 Windows 不受支持。请安装 [WSL2](https://learn.microsoft.com/zh-cn/windows/wsl/install) 并运行上述命令。
 
@@ -44,7 +44,7 @@ curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scrip
 
 ```bash
 source ~/.bashrc    # 重新加载 shell（或: source ~/.zshrc）
-hermes              # 开始对话！
+a lil skrrt  # 开始对话！
 ```
 
 ---
@@ -52,15 +52,15 @@ hermes              # 开始对话！
 ## 快速入门
 
 ```bash
-hermes              # 交互式 CLI — 开始对话
-hermes model        # 选择 LLM 提供商和模型
-hermes tools        # 配置启用的工具
-hermes config set   # 设置单个配置项
-hermes gateway      # 启动消息网关（Telegram、Discord 等）
-hermes setup        # 运行完整设置向导（一次性配置所有内容）
-hermes claw migrate # 从 OpenClaw 迁移（如果来自 OpenClaw）
-hermes update       # 更新到最新版本
-hermes doctor       # 诊断问题
+a lil skrrt  # 交互式 CLI — 开始对话
+lil-skrrt model        # 选择 LLM 提供商和模型
+lil-skrrt tools        # 配置启用的工具
+lil-skrrt config set   # 设置单个配置项
+lil-skrrt gateway      # 启动消息网关（Telegram、Discord 等）
+lil-skrrt setup        # 运行完整设置向导（一次性配置所有内容）
+lil-skrrt claw migrate # 从 OpenClaw 迁移（如果来自 OpenClaw）
+lil-skrrt update       # 更新到最新版本
+lil-skrrt doctor       # 诊断问题
 ```
 
 📖 **[完整文档 →](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/)**
@@ -69,7 +69,7 @@ hermes doctor       # 诊断问题
 
 ## 省去到处收集 API Key — Nous Portal
 
-Hermes 始终允许你使用任意服务商，这点不会改变。但如果你不想为模型、网页搜索、图像生成、TTS、云浏览器分别去申请五个不同的 API Key，**[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent)** 用一个订阅就能覆盖全部：
+Lil Skrrt 始终允许你使用任意服务商，这点不会改变。但如果你不想为模型、网页搜索、图像生成、TTS、云浏览器分别去申请五个不同的 API Key，**[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent)** 用一个订阅就能覆盖全部：
 
 - **300+ 模型** — 用 `/model <name>` 随时切换
 - **Tool Gateway** — 网页搜索（Firecrawl）、图像生成（FAL）、文本转语音（OpenAI）、云浏览器（Browser Use），全部通过订阅托管。无需额外注册任何账户。
@@ -77,10 +77,10 @@ Hermes 始终允许你使用任意服务商，这点不会改变。但如果你�
 全新安装时一条命令即可：
 
 ```bash
-hermes setup --portal
+lil-skrrt setup --portal
 ```
 
-它会通过 OAuth 登录、把 Nous 设为推理服务商，并启用 Tool Gateway。随时用 `hermes portal status` 查看路由状态。完整说明见 [Tool Gateway 文档](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/user-guide/features/tool-gateway)。
+它会通过 OAuth 登录、把 Nous 设为推理服务商，并启用 Tool Gateway。随时用 `lil-skrrt portal status` 查看路由状态。完整说明见 [Tool Gateway 文档](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/user-guide/features/tool-gateway)。
 
 你随时可以按工具单独切回自己的 API Key — Gateway 是按工具粒度生效的，不是一刀切。
 
@@ -88,11 +88,11 @@ hermes setup --portal
 
 ## CLI 与消息平台 快速对照
 
-Hermes 有两种入口：用 `hermes` 启动终端 UI，或运行网关从 Telegram、Discord、Slack、WhatsApp、Signal 或 Email 与之对话。进入对话后，许多斜杠命令在两种界面中通用。
+Lil Skrrt 有两种入口：用 `lil-skrrt` 启动终端 UI，或运行网关从 Telegram、Discord、Slack、WhatsApp、Signal 或 Email 与之对话。进入对话后，许多斜杠命令在两种界面中通用。
 
 | 操作 | CLI | 消息平台 |
 |------|-----|----------|
-| 开始对话 | `hermes` | 运行 `hermes gateway setup` + `hermes gateway start`，然后给机器人发消息 |
+| 开始对话 | `lil-skrrt` | 运行 `lil-skrrt gateway setup` + `lil-skrrt gateway start`，然后给机器人发消息 |
 | 开始新对话 | `/new` 或 `/reset` | `/new` 或 `/reset` |
 | 更换模型 | `/model [provider:model]` | `/model [provider:model]` |
 | 设置人格 | `/personality [name]` | `/personality [name]` |
@@ -132,17 +132,17 @@ Hermes 有两种入口：用 `hermes` 启动终端 UI，或运行网关从 Teleg
 
 ## 从 OpenClaw 迁移
 
-如果你来自 OpenClaw，Hermes 可以自动导入你的设置、记忆、技能和 API 密钥。
+如果你来自 OpenClaw，Lil Skrrt 可以自动导入你的设置、记忆、技能和 API 密钥。
 
-**首次安装时：** 安装向导（`hermes setup`）会自动检测 `~/.openclaw` 并在配置开始前提供迁移选项。
+**首次安装时：** 安装向导（`lil-skrrt setup`）会自动检测 `~/.openclaw` 并在配置开始前提供迁移选项。
 
 **安装后任意时间：**
 
 ```bash
-hermes claw migrate              # 交互式迁移（完整预设）
-hermes claw migrate --dry-run    # 预览将要迁移的内容
-hermes claw migrate --preset user-data   # 仅迁移用户数据，不含密钥
-hermes claw migrate --overwrite  # 覆盖已有冲突
+lil-skrrt claw migrate              # 交互式迁移（完整预设）
+lil-skrrt claw migrate --dry-run    # 预览将要迁移的内容
+lil-skrrt claw migrate --preset user-data   # 仅迁移用户数据，不含密钥
+lil-skrrt claw migrate --overwrite  # 覆盖已有冲突
 ```
 
 导入内容：
@@ -155,7 +155,7 @@ hermes claw migrate --overwrite  # 覆盖已有冲突
 - **TTS 资产** — 工作区音频文件
 - **工作区指令** — AGENTS.md（使用 `--workspace-target`）
 
-使用 `hermes claw migrate --help` 查看所有选项，或使用 `openclaw-migration` 技能进行交互式代理引导迁移（含干运行预览）。
+使用 `lil-skrrt claw migrate --help` 查看所有选项，或使用 `openclaw-migration` 技能进行交互式代理引导迁移（含干运行预览）。
 
 ---
 
@@ -190,7 +190,7 @@ python -m pytest tests/ -q
 - 📚 [技能中心](https://agentskills.io)
 - 🐛 [问题反馈](https://github.com/SkrrtSkerrt/hermes-agent/issues)
 - 💡 [讨论区](https://github.com/SkrrtSkerrt/hermes-agent/discussions)
-- 🔌 [HermesClaw](https://github.com/AaronWong1999/hermesclaw) — 社区微信桥接：在同一微信账号上运行 Hermes Agent 和 OpenClaw。
+- 🔌 [HermesClaw](https://github.com/AaronWong1999/hermesclaw) — 社区微信桥接：在同一微信账号上运行 Lil Skrrt 和 OpenClaw。
 
 ---
 

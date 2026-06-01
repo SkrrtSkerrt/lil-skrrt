@@ -1,46 +1,46 @@
 ---
 sidebar_position: 2
 title: "TUI"
-description: "启动 Hermes 的现代终端 UI——支持鼠标操作、丰富的浮层面板和非阻塞输入。"
+description: "启动 Lil Skrrt 的现代终端 UI——支持鼠标操作、丰富的浮层面板和非阻塞输入。"
 ---
 
 # TUI
 
-TUI 是 Hermes 的现代前端——一个终端 UI（用户界面），与 [Classic CLI](cli.md) 共享同一 Python 运行时。相同的 agent、相同的会话、相同的斜杠命令；交互界面更简洁、响应更流畅。
+TUI 是 Lil Skrrt 的现代前端——一个终端 UI（用户界面），与 [Classic CLI](cli.md) 共享同一 Python 运行时。相同的 agent、相同的会话、相同的斜杠命令；交互界面更简洁、响应更流畅。
 
-这是以交互方式运行 Hermes 的推荐方式。
+这是以交互方式运行 Lil Skrrt 的推荐方式。
 
 ## 启动
 
 ```bash
 # 启动 TUI
-hermes --tui
+lil-skrrt --tui
 
 # 恢复最近的 TUI 会话（若无则回退到最近的 classic 会话）
-hermes --tui -c
-hermes --tui --continue
+lil-skrrt --tui -c
+lil-skrrt --tui --continue
 
 # 通过 ID 或标题恢复指定会话
-hermes --tui -r 20260409_000000_aa11bb
-hermes --tui --resume "my t0p session"
+lil-skrrt --tui -r 20260409_000000_aa11bb
+lil-skrrt --tui --resume "my t0p session"
 
 # 直接运行源码——跳过预构建步骤（供 TUI 贡献者使用）
-hermes --tui --dev
+lil-skrrt --tui --dev
 ```
 
 也可以通过环境变量启用：
 
 ```bash
 export HERMES_TUI=1
-hermes          # 现在使用 TUI
-hermes chat     # 同上
+a lil skrrt  # 现在使用 TUI
+lil-skrrt chat     # 同上
 ```
 
 Classic CLI 仍作为默认方式保留。[CLI 界面](cli.md)中记录的所有内容——斜杠命令、快捷命令、skill 预加载、personality、多行输入、中断——在 TUI 中均完全一致。
 
 ## 为什么选择 TUI
 
-- **即时首帧** — banner 在应用加载完成前就已渲染，因此 Hermes 启动时终端不会出现卡顿感。
+- **即时首帧** — banner 在应用加载完成前就已渲染，因此 Lil Skrrt 启动时终端不会出现卡顿感。
 - **非阻塞输入** — 会话就绪前即可输入并排队消息。agent 上线后立即发送第一条 prompt（提示词）。
 - **丰富的浮层面板** — 模型选择器、会话选择器、审批和澄清提示均以模态面板形式渲染，而非内联流程。
 - **实时会话面板** — 工具和 skill 在初始化过程中逐步填充。
@@ -65,18 +65,18 @@ TUI 启动 banner 将运行时信息分为四个可折叠区块，每个区块�
 
 ## 环境要求
 
-- **Node.js** ≥ 20 — TUI 作为从 Python CLI 启动的子进程运行。`hermes doctor` 会验证此项。
+- **Node.js** ≥ 20 — TUI 作为从 Python CLI 启动的子进程运行。`lil-skrrt doctor` 会验证此项。
 - **TTY** — 与 classic CLI 一样，通过管道传入 stdin 或在非交互式环境中运行时，将回退到单次查询模式。
 
-首次启动时，Hermes 会将 TUI 的 Node 依赖安装到 `ui-tui/node_modules`（一次性操作，耗时数秒）。后续启动速度很快。拉取新版 Hermes 后，若源文件比 dist 更新，TUI bundle 将自动重新构建。
+首次启动时，Lil Skrrt 会将 TUI 的 Node 依赖安装到 `ui-tui/node_modules`（一次性操作，耗时数秒）。后续启动速度很快。拉取新版 Lil Skrrt 后，若源文件比 dist 更新，TUI bundle 将自动重新构建。
 
 ### 外部预构建
 
-发行版若附带预构建 bundle（如 Nix、系统包），可将 Hermes 指向该 bundle：
+发行版若附带预构建 bundle（如 Nix、系统包），可将 Lil Skrrt 指向该 bundle：
 
 ```bash
 export HERMES_TUI_DIR=/path/to/prebuilt/ui-tui
-hermes --tui
+lil-skrrt --tui
 ```
 
 该目录必须包含 `dist/entry.js`。
@@ -132,7 +132,7 @@ export HERMES_TUI_THEME=light
 
 ## 忙碌指示器样式
 
-状态栏忙碌指示器可插拔——默认在 agent 工作期间每 2.5 秒轮换一次 Hermes 的 kawaii 表情调色板。通过配置或 `/indicator` 斜杠命令选择不同样式：
+状态栏忙碌指示器可插拔——默认在 agent 工作期间每 2.5 秒轮换一次 Lil Skrrt 的 kawaii 表情调色板。通过配置或 `/indicator` 斜杠命令选择不同样式：
 
 ```yaml
 display:
@@ -143,7 +143,7 @@ display:
 
 ## 自动恢复
 
-默认情况下，`hermes --tui` 每次启动都会开启新会话。若要自动重新连接到最近的 TUI 会话（在终端或 SSH 连接意外断开时很有用），可选择启用：
+默认情况下，`lil-skrrt --tui` 每次启动都会开启新会话。若要自动重新连接到最近的 TUI 会话（在终端或 SSH 连接意外断开时很有用），可选择启用：
 
 ```bash
 export HERMES_TUI_RESUME=1          # 最近的 TUI 会话
@@ -173,11 +173,11 @@ TUI 的状态栏实时跟踪 agent 状态：
 - **每条 prompt 的耗时** — 轮次运行时显示 `⏱ 12s/3m 45s`（实时），轮次完成后冻结为 `⏲ 32s / 3m 45s`。第一个数字是自上次用户消息以来的时间；第二个是会话总时长。每次新 prompt 时重置。
 - **`🗜️ N`** — 当前会话被自动压缩的次数。首次压缩触发后显示。
 - **`▶ N`** — 当前会话中正在运行的 `/background` 任务数量。至少有一个任务在执行时显示。
-- **`⚠ YOLO`** — 每当 YOLO 模式开启时（`hermes --yolo`、`/yolo` 或 `HERMES_YOLO_MODE=1`）显示的可见警告。同一徽章也出现在启动 banner 中，确保你不会在未注意到的情况下启动自动审批会话。
+- **`⚠ YOLO`** — 每当 YOLO 模式开启时（`lil-skrrt --yolo`、`/yolo` 或 `HERMES_YOLO_MODE=1`）显示的可见警告。同一徽章也出现在启动 banner 中，确保你不会在未注意到的情况下启动自动审批会话。
 
 ## 配置
 
-TUI 遵循所有标准 Hermes 配置：`~/.hermes/config.yaml`、profile、personality、skin、快捷命令、凭证池、内存提供商、工具/skill 启用状态。不存在 TUI 专属配置文件。
+TUI 遵循所有标准 Lil Skrrt 配置：`~/.hermes/config.yaml`、profile、personality、skin、快捷命令、凭证池、内存提供商、工具/skill 启用状态。不存在 TUI 专属配置文件。
 
 少数键专门用于调整 TUI 界面：
 
@@ -231,13 +231,13 @@ TUI 附带有主见的按区块默认值，将轮次以实时转录形式流式�
 
 ## 连接到运行中的 gateway
 
-默认情况下，TUI 会在进程内启动自己的 gateway，因此每个 TUI 实例是自包含的。如果你已有一个长期运行的 gateway（例如在 tmux 中运行 `hermes gateway run`，或 systemd / launchd 服务），可以将 TUI 指向该 gateway——TUI 将成为一个瘦客户端，与连接到同一 gateway 的所有其他界面（消息平台、Web 仪表板、其他 TUI 会话）共享状态。
+默认情况下，TUI 会在进程内启动自己的 gateway，因此每个 TUI 实例是自包含的。如果你已有一个长期运行的 gateway（例如在 tmux 中运行 `lil-skrrt gateway run`，或 systemd / launchd 服务），可以将 TUI 指向该 gateway——TUI 将成为一个瘦客户端，与连接到同一 gateway 的所有其他界面（消息平台、Web 仪表板、其他 TUI 会话）共享状态。
 
 启动前通过环境变量设置 websocket URL：
 
 ```bash
 export HERMES_TUI_GATEWAY_URL="ws://localhost:8765/api/ws?token=<auth-token>"
-hermes --tui
+lil-skrrt --tui
 ```
 
 token 来自 gateway 的 API 认证配置（参见 [API Server](features/api-server.md)）。设置该环境变量后，TUI 将：
@@ -250,9 +250,9 @@ token 来自 gateway 的 API 认证配置（参见 [API Server](features/api-ser
 
 ## 回退到 Classic CLI
 
-不带 `--tui` 启动 `hermes` 将继续使用 classic CLI。若要让某台机器默认使用 TUI，在 shell profile 中设置 `HERMES_TUI=1`。若要回退，取消设置即可。
+不带 `--tui` 启动 `lil-skrrt` 将继续使用 classic CLI。若要让某台机器默认使用 TUI，在 shell profile 中设置 `HERMES_TUI=1`。若要回退，取消设置即可。
 
-如果 TUI 启动失败（无 Node、缺少 bundle、TTY 问题），Hermes 会打印诊断信息并回退——而不是让你陷入困境。
+如果 TUI 启动失败（无 Node、缺少 bundle、TTY 问题），Lil Skrrt 会打印诊断信息并回退——而不是让你陷入困境。
 
 ## 另请参阅
 

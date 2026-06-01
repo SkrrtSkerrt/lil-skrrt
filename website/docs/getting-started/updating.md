@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 title: "Updating & Uninstalling"
-description: "How to update Hermes Agent to the latest version or uninstall it"
+description: "How to update Lil Skrrt to the latest version or uninstall it"
 ---
 
 # Updating & Uninstalling
@@ -13,7 +13,7 @@ description: "How to update Hermes Agent to the latest version or uninstall it"
 Update to the latest version with a single command:
 
 ```bash
-hermes update
+lil-skrrt update
 ```
 
 This pulls the latest code from `main`, updates dependencies, and prompts you to configure any new options that were added since your last update.
@@ -23,8 +23,8 @@ This pulls the latest code from `main`, updates dependencies, and prompts you to
 PyPI releases track **tagged versions** (major and minor releases), not every commit on `main`. Check for updates and upgrade with:
 
 ```bash
-hermes update --check    # see if a newer release is on PyPI
-hermes update            # runs pip install --upgrade hermes-agent
+lil-skrrt update --check    # see if a newer release is on PyPI
+lil-skrrt update            # runs pip install --upgrade hermes-agent
 ```
 
 Or manually:
@@ -34,29 +34,29 @@ pip install --upgrade hermes-agent    # or: uv pip install --upgrade hermes-agen
 ```
 
 :::tip
-`hermes update` automatically detects new configuration options and prompts you to add them. If you skipped that prompt, you can manually run `hermes config check` to see missing options, then `hermes config migrate` to interactively add them.
+`lil-skrrt update` automatically detects new configuration options and prompts you to add them. If you skipped that prompt, you can manually run `lil-skrrt config check` to see missing options, then `lil-skrrt config migrate` to interactively add them.
 :::
 
 ### What happens during an update (git installs)
 
-When you run `hermes update`, the following steps occur:
+When you run `lil-skrrt update`, the following steps occur:
 
-1. **Pairing-data snapshot** — a lightweight pre-update state snapshot is saved (covers `~/.hermes/pairing/`, Feishu comment rules, and other state files that get modified at runtime). Recoverable via the snapshot restore flow described under [Snapshots and rollback](../user-guide/checkpoints-and-rollback.md), or by extracting the most recent quick-snapshot zip Hermes wrote next to your `~/.hermes/` directory.
+1. **Pairing-data snapshot** — a lightweight pre-update state snapshot is saved (covers `~/.hermes/pairing/`, Feishu comment rules, and other state files that get modified at runtime). Recoverable via the snapshot restore flow described under [Snapshots and rollback](../user-guide/checkpoints-and-rollback.md), or by extracting the most recent quick-snapshot zip Lil Skrrt wrote next to your `~/.hermes/` directory.
 2. **Git pull** — pulls the latest code from the `main` branch and updates submodules
 3. **Dependency install** — runs `uv pip install -e ".[all]"` to pick up new or changed dependencies
 4. **Config migration** — detects new config options added since your version and prompts you to set them
-5. **Gateway auto-restart** — running gateways are refreshed after the update completes so the new code takes effect immediately. Service-managed gateways (systemd on Linux, launchd on macOS) are restarted through the service manager. Manual gateways are relaunched automatically when Hermes can map the running PID back to a profile.
+5. **Gateway auto-restart** — running gateways are refreshed after the update completes so the new code takes effect immediately. Service-managed gateways (systemd on Linux, launchd on macOS) are restarted through the service manager. Manual gateways are relaunched automatically when Lil Skrrt can map the running PID back to a profile.
 
-### Preview-only: `hermes update --check`
+### Preview-only: `lil-skrrt update --check`
 
-Want to know if an update is available before pulling? Run `hermes update --check` — for git installs it fetches and compares commits against `origin/main`; for pip installs it queries PyPI for the latest release. No files are modified, no gateway is restarted. Useful in scripts and cron jobs that gate on "is there an update".
+Want to know if an update is available before pulling? Run `lil-skrrt update --check` — for git installs it fetches and compares commits against `origin/main`; for pip installs it queries PyPI for the latest release. No files are modified, no gateway is restarted. Useful in scripts and cron jobs that gate on "is there an update".
 
 ### Full pre-update backup: `--backup`
 
 For high-value profiles (production gateways, shared team installs) you can opt into a full pre-pull backup of `HERMES_HOME` (config, auth, sessions, skills, pairing):
 
 ```bash
-hermes update --backup
+lil-skrrt update --backup
 ```
 
 Or make it the default for every run:
@@ -69,9 +69,9 @@ updates:
 
 `--backup` was the always-on behavior in earlier builds, but it was adding minutes to every update on large homes, so it's now opt-in. The lightweight pairing-data snapshot above still runs unconditionally.
 
-### Windows: another `hermes.exe` is running
+### Windows: another `lil-skrrt.exe` is running
 
-On Windows, `hermes update` will refuse to run if it detects another `hermes.exe` process holding the venv's entry-point executable open — most commonly the Hermes Desktop app's spawned backend, an open `hermes` REPL in another terminal, or a running gateway:
+On Windows, `lil-skrrt update` will refuse to run if it detects another `lil-skrrt.exe` process holding the venv's entry-point executable open — most commonly the Lil Skrrt Desktop app's spawned backend, an open `lil-skrrt` REPL in another terminal, or a running gateway:
 
 ```
 $ hermes update
@@ -107,21 +107,21 @@ Already up to date.  (or: Updating abc1234..def5678)
 
 ### Recommended Post-Update Validation
 
-`hermes update` handles the main update path, but a quick validation confirms everything landed cleanly:
+`lil-skrrt update` handles the main update path, but a quick validation confirms everything landed cleanly:
 
 1. `git status --short` — if the tree is unexpectedly dirty, inspect before continuing
-2. `hermes doctor` — checks config, dependencies, and service health
-3. `hermes --version` — confirm the version bumped as expected
-4. If you use the gateway: `hermes gateway status`
+2. `lil-skrrt doctor` — checks config, dependencies, and service health
+3. `lil-skrrt --version` — confirm the version bumped as expected
+4. If you use the gateway: `lil-skrrt gateway status`
 5. If `doctor` reports npm audit issues: run `npm audit fix` in the flagged directory
 
 :::warning Dirty working tree after update
-If `git status --short` shows unexpected changes after `hermes update`, stop and inspect them before continuing. This usually means local modifications were reapplied on top of the updated code, or a dependency step refreshed lockfiles.
+If `git status --short` shows unexpected changes after `lil-skrrt update`, stop and inspect them before continuing. This usually means local modifications were reapplied on top of the updated code, or a dependency step refreshed lockfiles.
 :::
 
 ### If your terminal disconnects mid-update
 
-`hermes update` protects itself against accidental terminal loss:
+`lil-skrrt update` protects itself against accidental terminal loss:
 
 - The update ignores `SIGHUP`, so closing your SSH session or terminal window no longer kills it mid-install. `pip` and `git` child processes inherit this protection, so the Python environment cannot be left half-installed by a dropped connection.
 - All output is mirrored to `~/.hermes/logs/update.log` while the update runs. If your terminal disappears, reconnect and inspect the log to see whether the update finished and whether the gateway restart succeeded:
@@ -132,12 +132,12 @@ tail -f ~/.hermes/logs/update.log
 
 - `Ctrl-C` (SIGINT) and system shutdown (SIGTERM) are still honored — those are deliberate cancellations, not accidents.
 
-You no longer need to wrap `hermes update` in `screen` or `tmux` to survive a terminal drop.
+You no longer need to wrap `lil-skrrt update` in `screen` or `tmux` to survive a terminal drop.
 
 ### Checking your current version
 
 ```bash
-hermes version
+lil-skrrt version
 ```
 
 Compare against the latest release at the [GitHub releases page](https://github.com/SkrrtSkerrt/hermes-agent/releases).
@@ -167,8 +167,8 @@ git pull origin main
 uv pip install -e ".[all]"
 
 # Check for new config options
-hermes config check
-hermes config migrate   # Interactively add any missing options
+lil-skrrt config check
+lil-skrrt config migrate   # Interactively add any missing options
 ```
 
 ### Rollback instructions
@@ -187,7 +187,7 @@ git submodule update --init --recursive
 uv pip install -e ".[all]"
 
 # Restart the gateway if running
-hermes gateway restart
+lil-skrrt gateway restart
 ```
 
 To roll back to a specific release tag:
@@ -199,7 +199,7 @@ uv pip install -e ".[all]"
 ```
 
 :::warning
-Rolling back may cause config incompatibilities if new options were added. Run `hermes config check` after rolling back and remove any unrecognized options from `config.yaml` if you encounter errors.
+Rolling back may cause config incompatibilities if new options were added. Run `lil-skrrt config check` after rolling back and remove any unrecognized options from `config.yaml` if you encounter errors.
 :::
 
 ### Note for Nix users
@@ -229,7 +229,7 @@ See [Nix Setup](./nix-setup.md) for more details.
 ### Git installs
 
 ```bash
-hermes uninstall
+lil-skrrt uninstall
 ```
 
 The uninstaller gives you the option to keep your configuration files (`~/.hermes/`) for a future reinstall.
@@ -252,7 +252,7 @@ rm -rf ~/.hermes            # Optional — keep if you plan to reinstall
 :::info
 If you installed the gateway as a system service, stop and disable it first:
 ```bash
-hermes gateway stop
+lil-skrrt gateway stop
 # Linux: systemctl --user disable hermes-gateway
 # macOS: launchctl remove ai.hermes.gateway
 ```

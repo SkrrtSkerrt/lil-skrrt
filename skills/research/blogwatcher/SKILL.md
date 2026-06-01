@@ -6,7 +6,7 @@ author: JulienTant (fork of Hyaxia/blogwatcher)
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lil-skrrt:
     tags: [RSS, Blogs, Feed-Reader, Monitoring]
     homepage: https://github.com/JulienTant/blogwatcher-cli
 prerequisites:

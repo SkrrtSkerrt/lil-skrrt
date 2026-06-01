@@ -2,11 +2,11 @@
 name: github-issues
 description: "Create, triage, label, assign GitHub issues via gh or REST."
 version: 1.1.0
-author: Hermes Agent
+author: Lil Skrrt
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lil-skrrt:
     tags: [GitHub, Issues, Project-Management, Bug-Tracking, Triage]
     related_skills: [github-auth, github-pr-workflow]
 ---

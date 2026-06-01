@@ -3,18 +3,18 @@
 THIS REPOSITORY IS THE CLEAN BASELINE.
 
 VERSION LOCK:
-- Lil Skrrt skin based on Hermes Agent v0.14.0 (2026.5.16)
+- Lil Skrrt skin based on Lil Skrrt v0.14.0 (2026.5.16)
 - commit febc4cfec
 - release tag: v0.14.0-clean
 
 DIRECTIVE:
 - Use this version as the stable install target.
-- Do not upgrade to newer Hermes releases unless you have a verified reason to do so.
+- Do not upgrade to newer Lil Skrrt releases unless you have a verified reason to do so.
 - The newer versions have issues on this machine. This baseline does not carry your secrets, chat sessions, or personal customizations.
 
 UPDATE POLICY:
 - The manual update command still exists for maintainers, but this backup is meant to stay frozen.
-- Do not run `hermes update` unless you intentionally want to diverge from the clean baseline.
+- Do not run `lil-skrrt update` unless you intentionally want to diverge from the clean baseline.
 - If you do update, treat the result as a new fork, not this backup.
 
 DEPLOYMENT SEQUENCE:

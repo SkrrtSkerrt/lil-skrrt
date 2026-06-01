@@ -2,11 +2,11 @@
 name: gitnexus-explorer
 description: Index a codebase with GitNexus and serve an interactive knowledge graph via web UI + Cloudflare tunnel.
 version: 1.0.0
-author: Hermes Agent + Teknium
+author: Lil Skrrt + Teknium
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  lil-skrrt:
     tags: [gitnexus, code-intelligence, knowledge-graph, visualization]
     related_skills: [native-mcp, codebase-inspection]
 ---

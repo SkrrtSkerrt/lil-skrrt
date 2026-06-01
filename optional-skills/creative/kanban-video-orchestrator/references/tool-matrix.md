@@ -1,11 +1,11 @@
 # Tool Matrix — Skills + Toolsets per Role
 
-Maps each role archetype to the Hermes skills it should `always_load` and the
+Maps each role archetype to the Lil Skrrt skills it should `always_load` and the
 toolsets it needs. Only references skills that ship in the public hermes-agent
 repository (under `skills/` or `optional-skills/`). External APIs and CLIs are
 called from the terminal toolset; they don't appear in `always_load`.
 
-## Hermes skills relevant to video production
+## Lil Skrrt skills relevant to video production
 
 ### Visual / rendering skills (`hermes-agent/skills/creative/`)
 
@@ -65,7 +65,7 @@ profile needs them.
 
 ## External tools (called from terminal toolset)
 
-These are **not** Hermes skills but external CLIs / APIs that profiles invoke.
+These are **not** Lil Skrrt skills but external CLIs / APIs that profiles invoke.
 They don't appear in `always_load`; instead the role's terminal commands hit
 them directly.
 
@@ -82,14 +82,14 @@ them directly.
 | Manim CE (`manim`) | Math animation render (driven by `manim-video` skill's recipes) | renderer-manim |
 | Blender (`blender -b`) | 3D rendering (alternative to `blender-mcp`) | renderer-3d |
 
-## Built-in Hermes tools for media review
+## Built-in Lil Skrrt tools for media review
 
-These are native Hermes tools — not invoked via terminal but through their own
+These are native Lil Skrrt tools — not invoked via terminal but through their own
 toolsets. Enable them per-profile by adding the toolset to the profile config.
 
 | Tool | Toolset | What it does | Profile that uses it |
 |------|---------|--------------|----------------------|
-| `video_analyze` | `video` (opt-in — `hermes tools enable video`) | Native video understanding — sends full clip to a multimodal LLM (Gemini via OpenRouter) for review without frame extraction. Supports mp4, webm, mov, avi, mkv. 50 MB cap. Model: `AUXILIARY_VIDEO_MODEL` env → `AUXILIARY_VISION_MODEL` fallback. | reviewer, cinematographer, editor |
+| `video_analyze` | `video` (opt-in — `lil-skrrt tools enable video`) | Native video understanding — sends full clip to a multimodal LLM (Gemini via OpenRouter) for review without frame extraction. Supports mp4, webm, mov, avi, mkv. 50 MB cap. Model: `AUXILIARY_VIDEO_MODEL` env → `AUXILIARY_VISION_MODEL` fallback. | reviewer, cinematographer, editor |
 | `vision_analyze` | `vision` (core — enabled by default) | Image/frame analysis — review stills, thumbnails, exported frames. Already available to all profiles without opt-in. | reviewer, cinematographer, concept-artist |
 
 ## Standard toolset configurations per role
@@ -298,7 +298,7 @@ key is present in `~/.hermes/.env` (or macOS Keychain) before firing the kanban.
 | Luma | `LUMA_API_KEY` | image-to-video-generator (alternate) |
 | Suno | `SUNO_API_KEY` | music-supervisor (paired with `songwriting-and-ai-music`) |
 | Spotify | `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` | music-supervisor (paired with `spotify` skill) |
-| Anthropic | `ANTHROPIC_API_KEY` | every Hermes profile (Claude) |
+| Anthropic | `ANTHROPIC_API_KEY` | every Lil Skrrt profile (Claude) |
 
 If a key is missing, prompt the user to add it. Storage methods, in order of
 preference: macOS Keychain → `~/.hermes/.env` → environment variable.

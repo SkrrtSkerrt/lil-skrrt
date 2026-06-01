@@ -17,7 +17,7 @@ This is different from the [API server](./api-server.md):
 | | API server | Subscription proxy |
 |---|---|---|
 | What it serves | Your agent (full toolset, memory, skills) | Raw model inference |
-| Use case | "Use Hermes as a chat backend" | "Use my Portal sub from another app" |
+| Use case | "Use Lil Skrrt as a chat backend" | "Use my Portal sub from another app" |
 | Auth | Your `API_SERVER_KEY` | Any bearer (proxy attaches the real one) |
 | Tool calls | Yes — the agent runs tools | No — passthrough only |
 
@@ -29,17 +29,17 @@ proxy when you just want **the model** through your subscription.
 ### 1. Log into your provider (one-time)
 
 ```bash
-hermes auth add nous
+lil-skrrt auth add nous
 ```
 
-This opens your browser for the Nous Portal OAuth flow. Hermes stores
-the refresh token in `~/.hermes/auth.json` — the same place all Hermes
+This opens your browser for the Nous Portal OAuth flow. Lil Skrrt stores
+the refresh token in `~/.hermes/auth.json` — the same place all Lil Skrrt
 provider logins live.
 
 ### 2. Start the proxy
 
 ```bash
-hermes proxy start
+lil-skrrt proxy start
 ```
 
 ```
@@ -69,7 +69,7 @@ automatically when the bearer approaches expiry.
 ## Available providers
 
 ```bash
-hermes proxy providers
+lil-skrrt proxy providers
 ```
 
 Currently shipped: `nous` (Nous Portal). More OAuth providers can be
@@ -79,7 +79,7 @@ added by implementing the `UpstreamAdapter` interface in
 ## Check status
 
 ```bash
-hermes proxy status
+lil-skrrt proxy status
 ```
 
 ```
@@ -88,10 +88,10 @@ Hermes proxy upstream adapters
   [nous    ] Nous Portal — ready (bearer expires 2026-05-15T06:43:21Z)
 ```
 
-If you see `not logged in`, run `hermes auth add nous`. If you see
+If you see `not logged in`, run `lil-skrrt auth add nous`. If you see
 `credentials need attention`, your refresh token was revoked (rare —
 happens if you signed out from the Portal web UI) — just re-run
-`hermes auth add nous`.
+`lil-skrrt auth add nous`.
 
 ## Allowed paths
 
@@ -133,7 +133,7 @@ Then start your proxy in a terminal alongside `openviking-server`:
 
 ```bash
 # Terminal 1
-hermes proxy start
+lil-skrrt proxy start
 
 # Terminal 2
 openviking-server
@@ -165,7 +165,7 @@ By default the proxy binds `127.0.0.1` (localhost only). To let other
 machines on your network use it:
 
 ```bash
-hermes proxy start --host 0.0.0.0 --port 8645
+lil-skrrt proxy start --host 0.0.0.0 --port 8645
 ```
 
 ⚠ **Be aware:** anyone on your network can now use your Portal

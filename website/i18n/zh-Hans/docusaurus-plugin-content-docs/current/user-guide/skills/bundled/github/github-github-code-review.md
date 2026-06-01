@@ -17,7 +17,7 @@ description: "通过 gh 或 REST 审查 PR：差异对比、行内评论"
 | 来源 | 内置（默认安装） |
 | 路径 | `skills/github/github-code-review` |
 | 版本 | `1.1.0` |
-| 作者 | Hermes Agent |
+| 作者 | Lil Skrrt |
 | 许可证 | MIT |
 | 平台 | linux, macos, windows |
 | 标签 | `GitHub`, `Code-Review`, `Pull-Requests`, `Git`, `Quality` |
@@ -26,7 +26,7 @@ description: "通过 gh 或 REST 审查 PR：差异对比、行内评论"
 ## 参考：完整 SKILL.md
 
 :::info
-以下是 Hermes 在触发此 skill 时加载的完整 skill 定义。这是 agent 在 skill 激活时所看到的指令内容。
+以下是 Lil Skrrt 在触发此 skill 时加载的完整 skill 定义。这是 agent 在 skill 激活时所看到的指令内容。
 :::
 
 # GitHub Code Review

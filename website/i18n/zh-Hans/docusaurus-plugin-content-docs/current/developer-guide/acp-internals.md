@@ -6,7 +6,7 @@ description: "ACP 适配器的工作原理：生命周期、会话、事件桥�
 
 # ACP 内部机制
 
-ACP 适配器将 Hermes 的同步 `AIAgent` 封装为异步 JSON-RPC stdio 服务器。
+ACP 适配器将 Lil Skrrt 的同步 `AIAgent` 封装为异步 JSON-RPC stdio 服务器。
 
 关键实现文件：
 
@@ -22,7 +22,7 @@ ACP 适配器将 Hermes 的同步 `AIAgent` 封装为异步 JSON-RPC stdio 服�
 ## 启动流程
 
 ```text
-hermes acp / hermes-acp / python -m acp_adapter
+lil-skrrt acp / hermes-acp / python -m acp_adapter
   -> acp_adapter.entry.main()
   -> parse --version / --check / --setup before server startup
   -> load ~/.hermes/.env
@@ -94,15 +94,15 @@ asyncio.run_coroutine_threadsafe(...)
 
 映射关系：
 
-- `allow_once` -> Hermes `once`
-- `allow_always` -> Hermes `always`
-- 拒绝选项 -> Hermes `deny`
+- `allow_once` -> Lil Skrrt `once`
+- `allow_always` -> Lil Skrrt `always`
+- 拒绝选项 -> Lil Skrrt `deny`
 
 超时和桥接失败默认拒绝。
 
 ### 工具渲染辅助
 
-`acp_adapter/tools.py` 将 Hermes 工具映射到 ACP 工具类型，并构建面向编辑器的内容。
+`acp_adapter/tools.py` 将 Lil Skrrt 工具映射到 ACP 工具类型，并构建面向编辑器的内容。
 
 示例：
 
@@ -144,12 +144,12 @@ prompt(..., session_id)
 
 ACP 不实现自己的认证存储。
 
-而是复用 Hermes 的运行时解析器：
+而是复用 Lil Skrrt 的运行时解析器：
 
 - `acp_adapter/auth.py`
 - `hermes_cli/runtime_provider.py`
 
-因此 ACP 通告并使用当前配置的 Hermes provider/凭据。它还始终通告一个终端 setup 认证方法（`hermes-setup`，参数 `--setup`），以便首次运行的 registry 客户端在启动正常 ACP 会话前可以打开 Hermes 的交互式模型/provider 配置。
+因此 ACP 通告并使用当前配置的 Lil Skrrt provider/凭据。它还始终通告一个终端 setup 认证方法（`hermes-setup`，参数 `--setup`），以便首次运行的 registry 客户端在启动正常 ACP 会话前可以打开 Lil Skrrt 的交互式模型/provider 配置。
 
 ## 工作目录绑定
 
@@ -180,5 +180,5 @@ ACP 在 prompt 执行期间临时在终端工具上安装审批回调，执行�
 
 - `tests/acp/` — ACP 测试套件
 - `toolsets.py` — `hermes-acp` toolset 定义
-- `hermes_cli/main.py` — `hermes acp` CLI 子命令
+- `hermes_cli/main.py` — `lil-skrrt acp` CLI 子命令
 - `pyproject.toml` — `[acp]` 可选依赖 + `hermes-acp` 脚本

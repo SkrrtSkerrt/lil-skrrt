@@ -29,7 +29,7 @@ You need **tenant admin rights** (or an admin to grant consent on your behalf) t
 2. Navigate to **Identity → Applications → App registrations**.
 3. Click **New registration**.
 4. Fill in:
-   - **Name:** `Hermes Teams Meeting Pipeline` (or any name you'll recognize).
+   - **Name:** `Lil Skrrt Teams Meeting Pipeline` (or any name you'll recognize).
    - **Supported account types:** *Accounts in this organizational directory only (Single tenant)*.
    - **Redirect URI:** leave blank — app-only auth does not need one.
 5. Click **Register**.
@@ -137,7 +137,7 @@ chmod 600 ~/.hermes/.env
 
 ## Step 6: Verify the Token Flow
 
-Hermes ships a Graph auth smoke-test. From your Hermes install:
+Lil Skrrt ships a Graph auth smoke-test. From your Lil Skrrt install:
 
 ```python
 python -c "
@@ -165,7 +165,7 @@ Azure client secrets have a hard expiry. Before yours expires:
 
 1. Create a second client secret in step 2 without deleting the first one.
 2. Update `MSGRAPH_CLIENT_SECRET` in `~/.hermes/.env` with the new value.
-3. Restart the gateway so the new secret is picked up: `hermes gateway restart`.
+3. Restart the gateway so the new secret is picked up: `lil-skrrt gateway restart`.
 4. Verify with the smoke test above.
 5. Delete the old secret from the Azure portal.
 
