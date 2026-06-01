@@ -119,7 +119,7 @@ def _strip_yaml_frontmatter(content: str) -> str:
 # =========================================================================
 
 DEFAULT_AGENT_IDENTITY = (
-    "You are Hermes Agent, an intelligent AI assistant created by Nous Research. "
+    "You are Hermes Agent, an intelligent AI assistant created by SkrrtSkerrt. "
     "You are helpful, knowledgeable, and direct. You assist users with a wide "
     "range of tasks including answering questions, writing and editing code, "
     "analyzing information, creative work, and executing actions via your tools. "
@@ -131,7 +131,7 @@ DEFAULT_AGENT_IDENTITY = (
 HERMES_AGENT_HELP_GUIDANCE = (
     "If the user asks about configuring, setting up, or using Hermes Agent "
     "itself, load the `hermes-agent` skill with skill_view(name='hermes-agent') "
-    "before answering. Docs: https://hermes-agent.nousresearch.com/docs"
+    "before answering. Docs: https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs"
 )
 
 MEMORY_GUIDANCE = (

@@ -2602,7 +2602,7 @@ class OptionalSkillSource(SkillSource):
     """
     Fetch skills from the optional-skills/ directory shipped with the repo.
 
-    These skills are official (maintained by Nous Research) but not activated
+    These skills are official (maintained by SkrrtSkerrt) but not activated
     by default — they don't appear in the system prompt and aren't copied to
     ~/.hermes/skills/ during setup.  They are discoverable via the Skills Hub
     (search / install / inspect) and labelled "official" with "builtin" trust.
@@ -3198,7 +3198,7 @@ def check_for_skill_updates(
 # Hermes centralized index source
 # ---------------------------------------------------------------------------
 
-HERMES_INDEX_URL = "https://hermes-agent.nousresearch.com/docs/api/skills-index.json"
+HERMES_INDEX_URL = "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/api/skills-index.json"
 HERMES_INDEX_CACHE_FILE = INDEX_CACHE_DIR / "hermes-index.json"
 HERMES_INDEX_TTL = 6 * 3600  # 6 hours
 

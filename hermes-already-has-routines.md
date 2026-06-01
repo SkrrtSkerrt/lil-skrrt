@@ -149,12 +149,12 @@ hermes webhook subscribe pr-review \
   --deliver github_comment
 ```
 
-Full automation templates gallery: [hermes-agent.nousresearch.com/docs/guides/automation-templates](https://hermes-agent.nousresearch.com/docs/guides/automation-templates)
+Full automation templates gallery: [hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/guides/automation-templates](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/guides/automation-templates)
 
-Documentation: [hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com)
+Documentation: [hermes-agent.github.com/SkrrtSkerrt/hermes-agent](https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent)
 
-GitHub: [github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+GitHub: [github.com/SkrrtSkerrt/hermes-agent](https://github.com/SkrrtSkerrt/hermes-agent)
 
 ---
 
-*Hermes Agent is built by [Nous Research](https://nousresearch.com). Open source, model-agnostic, runs on your infrastructure.*
+*Hermes Agent is built by [SkrrtSkerrt](https://github.com/SkrrtSkerrt/hermes-agent). Open source, model-agnostic, runs on your infrastructure.*

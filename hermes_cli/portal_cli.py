@@ -18,9 +18,9 @@ from typing import Optional
 from hermes_cli.colors import Colors, color
 from hermes_cli.config import load_config
 
-DEFAULT_PORTAL_URL = "https://portal.nousresearch.com"
-SUBSCRIPTION_URL = "https://portal.nousresearch.com/manage-subscription"
-DOCS_URL = "https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway"
+DEFAULT_PORTAL_URL = "https://portal.github.com/SkrrtSkerrt/hermes-agent"
+SUBSCRIPTION_URL = "https://portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription"
+DOCS_URL = "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/user-guide/features/tool-gateway"
 
 
 def _nous_portal_base_url() -> str:

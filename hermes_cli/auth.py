@@ -71,8 +71,8 @@ AUTH_STORE_VERSION = 1
 AUTH_LOCK_TIMEOUT_SECONDS = 15.0
 
 # Nous Portal defaults
-DEFAULT_NOUS_PORTAL_URL = "https://portal.nousresearch.com"
-DEFAULT_NOUS_INFERENCE_URL = "https://inference-api.nousresearch.com/v1"
+DEFAULT_NOUS_PORTAL_URL = "https://portal.github.com/SkrrtSkerrt/hermes-agent"
+DEFAULT_NOUS_INFERENCE_URL = "https://inference-api.github.com/SkrrtSkerrt/hermes-agent/v1"
 DEFAULT_NOUS_CLIENT_ID = "hermes-cli"
 NOUS_LEGACY_AGENT_KEY_SCOPE = "inference:mint_agent_key"
 NOUS_INFERENCE_INVOKE_SCOPE = "inference:invoke"
@@ -127,12 +127,12 @@ QWEN_ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 120
 DEFAULT_SPOTIFY_ACCOUNTS_BASE_URL = "https://accounts.spotify.com"
 DEFAULT_SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
 DEFAULT_SPOTIFY_REDIRECT_URI = "http://127.0.0.1:43827/spotify/callback"
-SPOTIFY_DOCS_URL = "https://hermes-agent.nousresearch.com/docs/user-guide/features/spotify"
+SPOTIFY_DOCS_URL = "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/user-guide/features/spotify"
 SPOTIFY_DASHBOARD_URL = "https://developer.spotify.com/dashboard"
 SPOTIFY_ACCESS_TOKEN_REFRESH_SKEW_SECONDS = 120
 
-XAI_OAUTH_DOCS_URL = "https://hermes-agent.nousresearch.com/docs/guides/xai-grok-oauth"
-OAUTH_OVER_SSH_DOCS_URL = "https://hermes-agent.nousresearch.com/docs/guides/oauth-over-ssh"
+XAI_OAUTH_DOCS_URL = "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/guides/xai-grok-oauth"
+OAUTH_OVER_SSH_DOCS_URL = "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/guides/oauth-over-ssh"
 DEFAULT_SPOTIFY_SCOPE = " ".join((
     "user-modify-playback-state",
     "user-read-playback-state",
@@ -1572,7 +1572,7 @@ def _optional_base_url(value: Any) -> Optional[str]:
 
 # Allowlist of hosts the Nous Portal proxy is willing to forward minted
 # bearer tokens to. The bearer is a long-lived agent_key minted by
-# portal.nousresearch.com — sending it anywhere else would leak it.
+# portal.github.com/SkrrtSkerrt/hermes-agent — sending it anywhere else would leak it.
 #
 # This is consulted only for URLs coming from the NETWORK side (Portal
 # refresh / agent-key-mint responses). User-controlled env-var overrides
@@ -1580,7 +1580,7 @@ def _optional_base_url(value: Any) -> Optional[str]:
 # dev/staging escape hatch and the env source is already trusted (the
 # user set it themselves).
 _ALLOWED_NOUS_INFERENCE_HOSTS: FrozenSet[str] = frozenset({
-    "inference-api.nousresearch.com",
+    "inference-api.github.com/SkrrtSkerrt/hermes-agent",
 })
 
 
@@ -5482,7 +5482,7 @@ def _snapshot_nous_pool_status() -> Dict[str, Any]:
 
 # ── Process-level memo for get_nous_auth_status() ──
 # get_nous_auth_status() validates state by calling resolve_nous_runtime_credentials(),
-# which does a synchronous OAuth refresh POST to portal.nousresearch.com. That can take
+# which does a synchronous OAuth refresh POST to portal.github.com/SkrrtSkerrt/hermes-agent. That can take
 # ~350ms even on the failure path, and read-only UI surfaces (`hermes tools`, status panels,
 # subscription-feature checks) call it many times per render — `hermes tools` → "All Platforms"
 # was firing the refresh ~31× during one menu paint, racking up >13s of HTTP and burning
@@ -6478,7 +6478,7 @@ def _xai_oauth_exchange_code_for_tokens(
         raise AuthError(
             "xAI token exchange refused locally: PKCE code_verifier is empty. "
             "This is a bug in Hermes — please report at "
-            "https://github.com/NousResearch/hermes-agent/issues/26990.",
+            "https://github.com/SkrrtSkerrt/hermes-agent/issues/26990.",
             provider="xai-oauth",
             code="xai_pkce_verifier_missing",
         )

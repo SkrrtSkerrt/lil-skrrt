@@ -1691,7 +1691,7 @@ DEFAULT_CONFIG = {
     # The default URL is served by the docs site GitHub Pages deploy.
     "model_catalog": {
         "enabled": True,
-        "url": "https://hermes-agent.nousresearch.com/docs/api/model-catalog.json",
+        "url": "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/api/model-catalog.json",
         # Disk cache TTL in hours.  Beyond this, the CLI refetches on the
         # next /model or `hermes model` invocation; network failures
         # silently fall back to the stale cache.
@@ -2391,7 +2391,7 @@ OPTIONAL_ENV_VARS = {
         "advanced": True,
     },
     "TOOL_GATEWAY_DOMAIN": {
-        "description": "Shared tool-gateway domain suffix for Nous Subscribers only, used to derive vendor hosts, e.g. nousresearch.com -> firecrawl-gateway.nousresearch.com",
+        "description": "Shared tool-gateway domain suffix for Nous Subscribers only, used to derive vendor hosts, e.g. github.com/SkrrtSkerrt/hermes-agent -> firecrawl-gateway.github.com/SkrrtSkerrt/hermes-agent",
         "prompt": "Tool-gateway domain suffix",
         "url": None,
         "password": False,

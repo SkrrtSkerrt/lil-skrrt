@@ -22,7 +22,7 @@ export function SidebarFooter() {
       </Typography>
 
       <a
-        href="https://nousresearch.com"
+        href="https://github.com/SkrrtSkerrt/hermes-agent"
         target="_blank"
         rel="noopener noreferrer"
         className={cn(

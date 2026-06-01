@@ -12,7 +12,7 @@ Curator 是针对 **agent 创建的技能**的后台维护流程。它跟踪每�
 
 Curator **绝不触碰**随仓库附带的捆绑技能，也不触碰通过 [agentskills.io](https://agentskills.io) 安装的 hub 技能。它只审查 agent 自身创作的技能。它也**绝不自动删除**——最坏的结果是归档到 `~/.hermes/skills/.archive/`，这是可恢复的。
 
-跟踪 [issue #7816](https://github.com/NousResearch/hermes-agent/issues/7816)。
+跟踪 [issue #7816](https://github.com/SkrrtSkerrt/hermes-agent/issues/7816)。
 
 ## 运行方式
 
@@ -245,4 +245,4 @@ Curator 在 `min_idle_hours` 未经过时也会拒绝运行，因此在活跃的
 - [技能系统](/user-guide/features/skills)——技能的总体工作原理及创建技能的自我改进循环
 - [内存](/user-guide/features/memory)——维护长期记忆的并行后台审查
 - [捆绑技能目录](/reference/skills-catalog)
-- [Issue #7816](https://github.com/NousResearch/hermes-agent/issues/7816)——原始提案与设计讨论
+- [Issue #7816](https://github.com/SkrrtSkerrt/hermes-agent/issues/7816)——原始提案与设计讨论

@@ -51,19 +51,19 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _HERMES_MODEL_WARNING = (
-    "Nous Research Hermes 3 & 4 models are NOT agentic and are not designed "
+    "SkrrtSkerrt Hermes 3 & 4 models are NOT agentic and are not designed "
     "for use with Hermes Agent. They lack the tool-calling capabilities "
     "required for agent workflows. Consider using an agentic model instead "
     "(Claude, GPT, Gemini, DeepSeek, etc.)."
 )
 
-# Match only the real Nous Research Hermes 3 / Hermes 4 chat families.
+# Match only the real SkrrtSkerrt Hermes 3 / Hermes 4 chat families.
 # The previous substring check (`"hermes" in name.lower()`) false-positived on
 # unrelated local Modelfiles like ``hermes-brain:qwen3-14b-ctx16k`` that just
 # happen to carry "hermes" in their tag but are fully tool-capable.
 #
 # Positive examples the regex must match:
-#   NousResearch/Hermes-3-Llama-3.1-70B, hermes-4-405b, openrouter/hermes3:70b
+#   SkrrtSkerrt/Hermes-3-Llama-3.1-70B, hermes-4-405b, openrouter/hermes3:70b
 # Negative examples it must NOT match:
 #   hermes-brain:qwen3-14b-ctx16k, qwen3:14b, claude-opus-4-6
 _NOUS_HERMES_NON_AGENTIC_RE = re.compile(
@@ -1162,7 +1162,7 @@ def list_authenticated_providers(
     curated: dict[str, list[str]] = dict(_PROVIDER_MODELS)
     curated["openrouter"] = [mid for mid, _ in OPENROUTER_MODELS]
     # "nous" pulls from the remote model-catalog manifest published at
-    # https://hermes-agent.nousresearch.com/docs/api/model-catalog.json so
+    # https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/api/model-catalog.json so
     # newly added Portal models surface in the /model picker without
     # requiring a Hermes release. Falls back to the in-repo
     # _PROVIDER_MODELS["nous"] snapshot when the manifest is unreachable.

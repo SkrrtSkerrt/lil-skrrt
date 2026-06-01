@@ -40,14 +40,14 @@ nous = NousProfile(
     name="nous",
     aliases=("nous-portal", "nousresearch"),
     env_vars=("NOUS_API_KEY",),
-    display_name="Nous Research",
-    description="Nous Research — Hermes model family",
-    signup_url="https://nousresearch.com/",
+    display_name="SkrrtSkerrt",
+    description="SkrrtSkerrt — Hermes model family",
+    signup_url="https://github.com/SkrrtSkerrt/hermes-agent/",
     fallback_models=(
         "hermes-3-405b",
         "hermes-3-70b",
     ),
-    base_url="https://inference.nousresearch.com/v1",
+    base_url="https://inference.github.com/SkrrtSkerrt/hermes-agent/v1",
     auth_type="oauth_device_code",
 )
 

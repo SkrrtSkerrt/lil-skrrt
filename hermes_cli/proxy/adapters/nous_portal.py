@@ -35,7 +35,7 @@ from hermes_cli.proxy.adapters.base import UpstreamAdapter, UpstreamCredential
 
 logger = logging.getLogger(__name__)
 
-# Endpoints inference-api.nousresearch.com actually serves. Anything else
+# Endpoints inference-api.github.com/SkrrtSkerrt/hermes-agent actually serves. Anything else
 # the proxy will reject with 404 — keeps stray clients from leaking weird
 # requests to the upstream.
 _ALLOWED_PATHS: FrozenSet[str] = frozenset(
