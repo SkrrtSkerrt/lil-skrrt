@@ -345,13 +345,21 @@ fi
 # PATH setup — symlink hermes into a user-facing bin dir
 # ============================================================================
 
-echo -e "${CYAN}→${NC} Setting up hermes command..."
+echo -e "${CYAN}→${NC} Setting up hermes command aliases..."
 
 HERMES_BIN="$SCRIPT_DIR/venv/bin/hermes"
+LIL_SKRRT_BIN="$SCRIPT_DIR/venv/bin/lil-skrrt"
 COMMAND_LINK_DIR="$(get_command_link_dir)"
 COMMAND_LINK_DISPLAY_DIR="$(get_command_link_display_dir)"
 mkdir -p "$COMMAND_LINK_DIR"
 ln -sf "$HERMES_BIN" "$COMMAND_LINK_DIR/hermes"
+if [ -e "$LIL_SKRRT_BIN" ]; then
+    ln -sf "$LIL_SKRRT_BIN" "$COMMAND_LINK_DIR/lil-skrrt"
+    echo -e "${GREEN}✓${NC} Symlinked lil-skrrt → $COMMAND_LINK_DISPLAY_DIR/lil-skrrt"
+else
+    ln -sf "$HERMES_BIN" "$COMMAND_LINK_DIR/lil-skrrt"
+    echo -e "${YELLOW}⚠${NC} lil-skrrt entry point not found; aliased lil-skrrt → $COMMAND_LINK_DISPLAY_DIR/hermes"
+fi
 echo -e "${GREEN}✓${NC} Symlinked hermes → $COMMAND_LINK_DISPLAY_DIR/hermes"
 
 if is_termux; then

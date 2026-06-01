@@ -1287,7 +1287,7 @@ setup_path() {
     command_link_dir="$(get_command_link_dir)"
     command_link_display_dir="$(get_command_link_display_dir)"
 
-    # Create a user-facing shim for the hermes command.
+    # Create user-facing shims for the hermes / lil-skrrt commands.
     # We intentionally clear PYTHONPATH/PYTHONHOME here so inherited env vars
     # can't make this launcher import modules from another checkout.
     mkdir -p "$command_link_dir"
@@ -1302,7 +1302,16 @@ unset PYTHONHOME
 exec "$HERMES_BIN" "\$@"
 EOF
     chmod +x "$command_link_dir/hermes"
+    rm -f "$command_link_dir/lil-skrrt"
+    cat > "$command_link_dir/lil-skrrt" <<EOF
+#!/usr/bin/env bash
+unset PYTHONPATH
+unset PYTHONHOME
+exec "$HERMES_BIN" "\$@"
+EOF
+    chmod +x "$command_link_dir/lil-skrrt"
     log_success "Installed hermes launcher → $command_link_display_dir/hermes"
+    log_success "Installed lil-skrrt launcher → $command_link_display_dir/lil-skrrt"
 
     if [ "$DISTRO" = "termux" ]; then
         export PATH="$command_link_dir:$PATH"
