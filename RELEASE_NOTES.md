@@ -1,7 +1,7 @@
-# RELEASE NOTES
+# LIL SKRRT RELEASE NOTES
 
 VERSION:
-- Hermes Agent v0.14.0 (2026.5.16)
+- Based on Hermes Agent v0.14.0 (2026.5.16)
 - commit febc4cfec
 - release tag: v0.14.0-clean
 

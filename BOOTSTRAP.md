@@ -9,6 +9,11 @@ git checkout v0.14.0-clean
 bash scripts/install.sh
 ```
 
+# Launch the agent
+
+```bash
+a lil skrrt
+```
 If you need a starter config:
 
 ```bash

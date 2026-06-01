@@ -1,7 +1,7 @@
-Hermes Agent clean baseline backup
+Lil Skrrt clean baseline backup
 
 Source:
-- Hermes Agent v0.14.0 (2026.5.16)
+- Based on Hermes Agent v0.14.0 (2026.5.16)
 - commit febc4cfec
 - exported directly from the clean installed checkout
 
@@ -11,6 +11,7 @@ Quick install
 - Read INSTALL.md for the full deployment protocol.
 - Run scripts/install.sh from the repo root on Linux/macOS.
 - On Windows, use scripts/install.ps1.
+- After install, launch with `a lil skrrt` or `lil-skrrt`.
 - Copy cli-config.yaml.example to ~/.hermes/config.yaml if you need a starter config.
 - Copy .env.example to ~/.hermes/.env only if you want the optional env template; do not paste secrets into this backup.
 
@@ -26,7 +27,7 @@ Excluded:
 - personal customizations
 
 Purpose:
-- private installable baseline for a fresh Hermes setup
+- private installable baseline for a fresh Lil Skrrt setup
 - no user-specific configuration or runtime data
 
 Warning:

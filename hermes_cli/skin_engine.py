@@ -162,6 +162,80 @@ class SkinConfig:
 # =============================================================================
 
 _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
+    "lil-skrrt": {
+        "name": "lil-skrrt",
+        "description": "Lil Skrrt — white, blue, and green",
+        "colors": {
+            "banner_border": "#8CE1FF",
+            "banner_title": "#FFFFFF",
+            "banner_accent": "#5EEAD4",
+            "banner_dim": "#B8D8FF",
+            "banner_text": "#F8FCFF",
+            "ui_accent": "#5AB8FF",
+            "ui_label": "#8CE1FF",
+            "ui_ok": "#22C55E",
+            "ui_error": "#7DD3FC",
+            "ui_warn": "#38BDF8",
+            "prompt": "#F8FCFF",
+            "input_rule": "#5AB8FF",
+            "response_border": "#8CE1FF",
+            "status_bar_bg": "#0B1220",
+            "status_bar_text": "#F8FCFF",
+            "status_bar_strong": "#FFFFFF",
+            "status_bar_dim": "#9DC2E9",
+            "status_bar_good": "#22C55E",
+            "status_bar_warn": "#38BDF8",
+            "status_bar_bad": "#5AB8FF",
+            "status_bar_critical": "#2DD4BF",
+            "session_label": "#8CE1FF",
+            "session_border": "#2DD4BF",
+            "voice_status_bg": "#0B1220",
+            "selection_bg": "#12324A",
+            "completion_menu_bg": "#0B1220",
+            "completion_menu_current_bg": "#12324A",
+            "completion_menu_meta_bg": "#0F172A",
+            "completion_menu_meta_current_bg": "#164E63",
+        },
+        "spinner": {
+            "waiting_faces": ["(✦)", "(✧)", "(◈)", "(◎)"],
+            "thinking_faces": ["(◈)", "(✦)", "(⟡)", "(◎)"],
+            "thinking_verbs": [
+                "dialing in", "mixing the lights", "cooling the stack", "syncing the glow",
+                "routing the wave", "tuning the palette", "locking the groove", "landing the frame",
+            ],
+            "wings": [
+                ["⟪✦", "✦⟫"],
+                ["⟪◇", "◇⟫"],
+                ["⟪●", "●⟫"],
+            ],
+        },
+        "branding": {
+            "agent_name": "Lil Skrrt",
+            "welcome": "Welcome to Lil Skrrt. Type your message or /help for commands.",
+            "goodbye": "Stay bright. Lil Skrrt out.",
+            "response_label": " ✦ Lil Skrrt ",
+            "prompt_symbol": "❯",
+            "help_header": "(✦) Available Commands",
+        },
+        "tool_prefix": "┊",
+        "banner_logo": """[bold #FFFFFF]╔══════════════════════════════════════════════════════════════╗[/]
+[bold #8CE1FF]║                         L I L   S K R R T                    ║[/]
+[#5AB8FF]║                  white / blue / green skin                   ║[/]
+[bold #22C55E]╚══════════════════════════════════════════════════════════════╝[/]""",
+        "banner_hero": """[#F8FCFF]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#8CE1FF]⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠋⠀⠀⠀⠙⠻⣿⣦⡀⠀⠀⠀⠀⠀⠀[/]
+[#5AB8FF]⠀⠀⠀⠀⠀⠀⣠⣿⡟⠀⠀⢀⣀⣀⣀⡀⠀⠀⠹⣿⣄⠀⠀⠀⠀⠀[/]
+[#22C55E]⠀⠀⠀⠀⠀⣰⣿⠏⠀⢀⣴⣿⠿⠿⠿⣿⣦⡀⠀⠹⣿⣆⠀⠀⠀⠀[/]
+[#DFF7FF]⠀⠀⠀⠀⢰⣿⠃⠀⣰⣿⠟⠀⠀⢀⣀⠀⠻⣿⣆⠀⠘⣿⡆⠀⠀⠀[/]
+[#8CE1FF]⠀⠀⠀⠀⢸⣿⠀⢰⣿⠏⠀⠀⢠⣿⣿⡄⠀⠹⣿⡇⠀⣿⡇⠀⠀⠀[/]
+[#5EEAD4]⠀⠀⠀⠀⢸⣿⠀⢸⣿⠀⠀⠀⠈⠛⠛⠁⠀⠀⣿⡇⠀⣿⡇⠀⠀⠀[/]
+[#22C55E]⠀⠀⠀⠀⢸⣿⠀⠸⣿⣄⠀⠀⠀⠀⠀⠀⠀⣠⣿⠇⠀⣿⡇⠀⠀⠀[/]
+[#8CE1FF]⠀⠀⠀⠀⠘⣿⡆⠀⠙⢿⣷⣄⣀⣀⣀⣠⣾⡿⠋⠀⢰⣿⠃⠀⠀⠀[/]
+[#FFFFFF]⠀⠀⠀⠀⠀⠙⢿⣦⡀⠀⠀⠉⠉⠉⠉⠉⠀⠀⢀⣴⡿⠋⠀⠀⠀⠀[/]
+[#B8D8FF]⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣦⣀⠀⠀⠀⠀⣀⣴⣿⠟⠁⠀⠀⠀⠀⠀[/]
+[#22C55E]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠿⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[dim #5AB8FF]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀lil-skrrt online⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]""",
+    },
     "default": {
         "name": "default",
         "description": "Classic Hermes — gold and kawaii",

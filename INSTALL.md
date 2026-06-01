@@ -1,9 +1,9 @@
-# INSTALLATION PROTOCOL
+# LIL SKRRT INSTALLATION PROTOCOL
 
 THIS REPOSITORY IS THE CLEAN BASELINE.
 
 VERSION LOCK:
-- Hermes Agent v0.14.0 (2026.5.16)
+- Lil Skrrt skin based on Hermes Agent v0.14.0 (2026.5.16)
 - commit febc4cfec
 - release tag: v0.14.0-clean
 
@@ -23,6 +23,7 @@ DEPLOYMENT SEQUENCE:
 3. Run: scripts/install.sh
 4. If needed, copy cli-config.yaml.example to ~/.hermes/config.yaml.
 5. If needed, copy .env.example to ~/.hermes/.env and add only your own credentials.
+6. Launch with `a lil skrrt` or `lil-skrrt`.
 
 OPERATOR NOTE:
 - This is the version to keep in service until a future build is verified stable.
