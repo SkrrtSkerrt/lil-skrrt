@@ -106,13 +106,6 @@ def _thread_panic_hook(args):
 
 threading.excepthook = _thread_panic_hook
 
-try:
-    from hermes_cli.banner import prefetch_update_check
-
-    prefetch_update_check()
-except Exception:
-    pass
-
 from tui_gateway.render import make_stream_renderer, render_diff, render_message
 
 _sessions: dict[str, dict] = {}
