@@ -5,6 +5,13 @@ Source:
 - commit febc4cfec
 - exported directly from the clean installed checkout
 
+Quick install
+- Clone the private repo.
+- Check out the release tag: v0.14.0-clean
+- Run scripts/install.sh from the repo root.
+- Copy cli-config.yaml.example to ~/.hermes/config.yaml if you need a starter config.
+- Copy .env.example to ~/.hermes/.env only if you want the optional env template; do not paste secrets into this backup.
+
 Included:
 - full upstream codebase at the exact installed version
 - clean install scaffolding such as cli-config.yaml.example, .env.example, and scripts/install.sh
