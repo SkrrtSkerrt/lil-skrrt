@@ -736,6 +736,7 @@ async def update_hermes():
         "ok": True,
         "pid": proc.pid,
         "name": "hermes-update",
+        "warning": "This backup is frozen at the clean baseline; updating will diverge from the published repo.",
     }
 
 

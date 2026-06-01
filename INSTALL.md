@@ -12,6 +12,11 @@ DIRECTIVE:
 - Do not upgrade to newer Hermes releases unless you have a verified reason to do so.
 - The newer versions have issues on this machine. This baseline does not carry your secrets, chat sessions, or personal customizations.
 
+UPDATE POLICY:
+- The manual update command still exists for maintainers, but this backup is meant to stay frozen.
+- Do not run `hermes update` unless you intentionally want to diverge from the clean baseline.
+- If you do update, treat the result as a new fork, not this backup.
+
 DEPLOYMENT SEQUENCE:
 1. Clone the private repository.
 2. Check out tag v0.14.0-clean.

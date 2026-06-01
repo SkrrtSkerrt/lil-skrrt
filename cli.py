@@ -9881,13 +9881,18 @@ class HermesCLI:
         # renders properly above the composer and avoids raw input() races
         # with the prompt_toolkit event loop (same pattern as
         # _confirm_destructive_slash).
+        warning = (
+            "WARNING: this backup is meant to stay frozen at the clean baseline. "
+            "Updating will diverge from the repo you were given. Only continue if "
+            "you intentionally want to maintain your own fork."
+        )
         choices = [
-            ("once", "Update Now", "exit the current session and update Hermes Agent"),
+            ("once", "Update Anyway", "exit the current session and update Hermes Agent"),
             ("cancel", "Cancel", "keep the current session"),
         ]
         raw = self._prompt_text_input_modal(
             title="⚕  Update Hermes Agent",
-            detail="This will exit the current session and run `hermes update`.",
+            detail=f"This will exit the current session and run `hermes update`.\n\n{warning}",
             choices=choices,
         )
         if raw is None:
@@ -9899,6 +9904,7 @@ class HermesCLI:
             return False
 
         print()
+        print("  ⚠ This backup is frozen. Updating now will fork away from the clean baseline.")
         print("  ⚕ Launching update...")
         print()
 

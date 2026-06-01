@@ -27,3 +27,7 @@ Excluded:
 Purpose:
 - private installable baseline for a fresh Hermes setup
 - no user-specific configuration or runtime data
+
+Warning:
+- This repo is intentionally frozen at the clean baseline.
+- The manual update path still exists, but it should not be used unless you deliberately want to fork away from the backup.

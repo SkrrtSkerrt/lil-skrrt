@@ -14056,7 +14056,12 @@ class GatewayRunner:
             return t("gateway.update.start_failed", error=e)
 
         self._schedule_update_notification_watch()
-        return t("gateway.update.starting")
+        return (
+            f"{t('gateway.update.starting')}\n\n"
+            "⚠ WARNING: this backup is intentionally frozen at the clean baseline. "
+            "Running an update will diverge from the published backup and should only "
+            "be done if you mean to maintain a separate fork."
+        )
 
     def _schedule_update_notification_watch(self) -> None:
         """Ensure a background task is watching for update completion."""
