@@ -329,3 +329,17 @@ that:
   security@nousresearch.com.
 - **Credit:** reporters are credited in release notes unless
   anonymity is requested.
+
+---
+
+## 6. Backup Repository Hygiene
+
+This private backup repo is meant to stay clean and installable.
+
+- Do not add personal data, chat/session exports, memory stores, logs,
+  tokens, API keys, SSH keys, or other secrets.
+- Do not copy host-specific customizations into the backup unless they
+  are required for a fresh install and are explicitly documented as
+  placeholder values.
+- If a file or commit starts to look user-specific, remove or redact it
+before publishing.
