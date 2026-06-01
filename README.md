@@ -8,16 +8,15 @@ Source:
 Quick install
 - Clone the private repo.
 - Check out the release tag: v0.14.0-clean.
-- Read INSTALL.md for the full deployment protocol.
-- Run scripts/install.sh from the repo root on Linux/macOS.
-- On Windows, use scripts/install.ps1.
+- Read INSTALL.md for the full deployment protocol, or see `website/docs/getting-started/installation.md` for the platform-specific Windows/macOS/Linux guide.
+- Linux/macOS/WSL2: run `scripts/install.sh` from the repo root.
+- Windows: open PowerShell and run `scripts/install.ps1`.
 - After install, launch with `a lil skrrt` or `lil-skrrt`.
 - Copy cli-config.yaml.example to ~/.hermes/config.yaml if you need a starter config.
 - Copy .env.example to ~/.hermes/.env only if you want the optional env template; do not paste secrets into this backup.
 
 Included:
 - full upstream codebase at the exact installed version
-- clean install scaffolding such as cli-config.yaml.example, .env.example, and scripts/install.sh
 
 Excluded:
 - secrets

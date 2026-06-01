@@ -33,7 +33,7 @@ Set your provider with `lil-skrrt model` or by editing `~/.hermes/.env`. See the
 **Not natively.** Lil Skrrt requires a Unix-like environment. On Windows, install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and run Lil Skrrt from inside it. The standard install command works perfectly in WSL2:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
 ```
 
 ### I run Lil Skrrt in WSL2. What's the best way to control my normal Windows Chrome?
@@ -61,7 +61,7 @@ Yes — Lil Skrrt now has a tested Termux install path for Android phones.
 Quick install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
 ```
 
 For the fully explicit manual steps, supported extras, and current limitations, see the [Termux guide](../getting-started/termux.md).
@@ -225,7 +225,7 @@ source ~/.bashrc
 # If you previously installed with sudo, clean up:
 sudo rm /usr/local/bin/hermes
 # Then re-run the standard installer
-curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
 ```
 
 ---
@@ -751,7 +751,7 @@ Skills with very long descriptions are truncated to 40 characters in the Telegra
 
 1. Install Lil Skrrt on the new machine:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
    ```
 
 2. On the **source machine**, create a full backup:

@@ -15,19 +15,19 @@ Get Lil Skrrt up and running in under two minutes with the one-line installer.
 For a git-based install that tracks `main` and gives you the latest changes immediately:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
 ```
 
 ### Windows (native, PowerShell) — Early Beta
 
 :::warning Early BETA
-Native Windows support is **early beta**. It installs and works for the common paths, but hasn't been road-tested as broadly as our POSIX installers. Please [file issues](https://github.com/SkrrtSkerrt/hermes-agent/issues) when you hit rough edges. For the most battle-tested setup on Windows today, use the Linux/macOS one-liner above inside **WSL2** instead.
+Native Windows support is **early beta**. It installs and works for the common paths, but hasn't been road-tested as broadly as our POSIX installers. Please [file issues](https://github.com/SkrrtSkerrt/lil-skrrt/issues) when you hit rough edges. For the most battle-tested setup on Windows today, use the Linux/macOS one-liner above inside **WSL2** instead.
 :::
 
 Open PowerShell and run:
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.ps1)
+iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.ps1)
 ```
 
 The installer handles **everything**: `uv`, Python 3.11, Node.js 22, `ripgrep`, `ffmpeg`, **and a portable Git Bash** (PortableGit — a self-contained Git-for-Windows distribution that ships `bash.exe` and the full POSIX toolchain Lil Skrrt uses for shell commands; on 32-bit Windows the installer falls back to MinGit, which lacks bash and disables terminal-tool / agent-browser features).  It clones the repo under `%LOCALAPPDATA%\lil-skrrt\hermes-agent`, creates a virtualenv, and adds `lil-skrrt` to your **User PATH**.  Restart your terminal (or open a new PowerShell window) after the install so PATH picks up.
@@ -49,7 +49,7 @@ If you prefer WSL2, the Linux installer above works inside it; both native and W
 Lil Skrrt now ships a Termux-aware installer path too:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
 ```
 
 The installer detects Termux automatically and switches to a tested Android flow:
@@ -84,11 +84,11 @@ Where the installer puts things depends on whether you're installing as a normal
 
 | Installer | Code lives at | `lil-skrrt` binary | Data directory |
 |---|---|---|---|
-| pip install | Python site-packages | `~/.local/bin/hermes` (console_scripts) | `~/.hermes/` |
-| Per-user (git installer) | `~/.hermes/hermes-agent/` | `~/.local/bin/hermes` (symlink) | `~/.hermes/` |
-| Root-mode (`sudo curl … \| sudo bash`) | `/usr/local/lib/hermes-agent/` | `/usr/local/bin/hermes` | `/root/.hermes/` (or `$HERMES_HOME`) |
+| pip install | Python site-packages | `~/.local/bin/lil-skrrt` (`hermes` compatibility alias) | `~/.hermes/` |
+| Per-user (git installer) | `~/.hermes/hermes-agent/` | `~/.local/bin/lil-skrrt` and `~/.local/bin/hermes` | `~/.hermes/` |
+| Root-mode (`sudo curl … \| sudo bash`) | `/usr/local/lib/hermes-agent/` | `/usr/local/bin/lil-skrrt` and `/usr/local/bin/hermes` | `/root/.hermes/` (or `$HERMES_HOME`) |
 
-The root-mode **FHS layout** (`/usr/local/lib/…`, `/usr/local/bin/hermes`) matches where other system-wide developer tools land on Linux. It's useful for shared-machine deployments where one system install should serve every user. Per-user config (auth, skills, sessions) still lives under each user's `~/.hermes/` or explicit `HERMES_HOME`.
+The root-mode **FHS layout** (`/usr/local/lib/…`, `/usr/local/bin/lil-skrrt`) matches where other system-wide developer tools land on Linux. It's useful for shared-machine deployments where one system install should serve every user. Per-user config (auth, skills, sessions) still lives under each user's `~/.hermes/` or explicit `HERMES_HOME`.
 
 ### After Installation
 
@@ -163,24 +163,24 @@ Running Lil Skrrt as a dedicated unprivileged user (e.g. a `lil-skrrt` systemd s
 
 2. **As the unprivileged service user**, run the regular installer. It will detect the missing sudo, skip `--with-deps`, and install Chromium into the user's local Playwright cache:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash
    ```
 
    If you want to skip the Playwright step entirely — for example because you're running headless and don't need browser automation — pass `--skip-browser`:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.sh | bash -s -- --skip-browser
+   curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.sh | bash -s -- --skip-browser
    ```
 
-3. **Make `lil-skrrt` available to the service user's shells.** The installer writes the launcher to `~/.local/bin/hermes`. System service accounts often have a minimal PATH that doesn't include `~/.local/bin`. Either add it to the user's environment, or symlink the launcher into a system location:
+3. **Make `lil-skrrt` available to the service user's shells.** The installer writes the launcher to `~/.local/bin/lil-skrrt` and keeps `hermes` as a compatibility alias. System service accounts often have a minimal PATH that doesn't include `~/.local/bin`. Either add it to the user's environment, or symlink the launcher into a system location:
    ```bash
    # Option A — add to the service user's profile
    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 
    # Option B — symlink system-wide (run as an admin)
-   sudo ln -s /home/hermes/.hermes/hermes-agent/venv/bin/hermes /usr/local/bin/hermes
+   sudo ln -s /home/hermes/.hermes/hermes-agent/venv/bin/lil-skrrt /usr/local/bin/lil-skrrt
    ```
 
-4. **Verify:** `lil-skrrt doctor` should now run cleanly. If you get `ModuleNotFoundError: No module named 'dotenv'`, you're invoking the repo source `lil-skrrt` file (`~/.hermes/hermes-agent/hermes`) with system Python instead of the venv launcher (`~/.hermes/hermes-agent/venv/bin/hermes`) — fix step 3.
+4. **Verify:** `lil-skrrt doctor` should now run cleanly. If you get `ModuleNotFoundError: No module named 'dotenv'`, you're invoking the repo source `lil-skrrt` file (`~/.hermes/hermes-agent/lil-skrrt`) with system Python instead of the venv launcher (`~/.hermes/hermes-agent/venv/bin/lil-skrrt`) — fix step 3.
 
 The same pattern works on Arch (the installer uses pacman with the same sudo-detection logic), Fedora/RHEL, and openSUSE — those distros don't support `--with-deps` at all, so an administrator always installs the system libraries separately. The relevant `dnf`/`zypper` commands are printed by the installer.
 
