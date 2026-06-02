@@ -9,11 +9,8 @@ that ``hermes update`` survives a terminal disconnect mid-install
 from __future__ import annotations
 
 import io
-import os
 import signal
 import sys
-from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -24,9 +21,20 @@ from hermes_cli.main import (
 )
 
 
-# -----------------------------------------------------------------------------
-# _UpdateOutputStream
-# -----------------------------------------------------------------------------
+@pytest.fixture(autouse=True)
+def _reset_stdio():
+    """Keep stdio clean between tests even if a prior test leaked wrappers."""
+    if isinstance(sys.stdout, _UpdateOutputStream):
+        sys.stdout = sys.stdout._original
+    if isinstance(sys.stderr, _UpdateOutputStream):
+        sys.stderr = sys.stderr._original
+    yield
+    if isinstance(sys.stdout, _UpdateOutputStream):
+        sys.stdout = sys.stdout._original
+    if isinstance(sys.stderr, _UpdateOutputStream):
+        sys.stderr = sys.stderr._original
+
+
 
 
 class TestUpdateOutputStream:

@@ -1,6 +1,6 @@
 # google_meet plugin
 
-Let the lil-skrrt agent join a Google Meet call, transcribe it, optionally speak
+Let the Lil Skrrt agent join a Google Meet call, transcribe it, optionally speak
 in it, and do the followup work afterwards.
 
 ## What ships
@@ -14,7 +14,7 @@ in it, and do the followup work afterwards.
 ## Architecture
 
 ```
-┌─ gateway (Linux box, where hermes runs) ────────────────────────────┐
+┌─ gateway (Linux box, where Lil Skrrt runs) ────────────────────────────┐
 │                                                                      │
 │   agent → meet_join(url, mode='realtime', node='my-mac')             │
 │         │                                                            │
@@ -25,7 +25,7 @@ in it, and do the followup work afterwards.
                                    ▼
 ┌─ node host (user's Mac, signed-in Chrome lives here) ───────────────┐
 │                                                                      │
-│   NodeServer (from `hermes meet node run`)                           │
+│   NodeServer (from `lil-skrrt meet node run`)                           │
 │     │                                                                │
 │     ├─ start_bot → process_manager.start() → spawns meet_bot         │
 │     │                                                                │
@@ -92,7 +92,7 @@ echo 'OPENAI_API_KEY=sk-...' >> ~/.hermes/.env
 lil-skrrt meet join https://meet.google.com/abc-defg-hij --mode realtime
 ```
 
-On macOS, lil-skrrt will **not** switch your system audio input automatically — the
+On macOS, Lil Skrrt will **not** switch your system audio input automatically — the
 user has to do it. This is deliberate: switching default input on a whim would
 be a surprising side effect.
 

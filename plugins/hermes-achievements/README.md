@@ -1,12 +1,12 @@
 # Lil Skrrt Achievements
 
-> **Bundled with Lil Skrrt.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/hermes-achievements — vendored into `plugins/hermes-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Lil Skrrt feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
+> **Bundled with Lil Skrrt.** Originally authored by [@PCinkusz](https://github.com/PCinkusz) at https://github.com/PCinkusz/hermes-achievements — vendored into `plugins/hermes-achievements/` so it ships with the dashboard out-of-the-box and stays in lockstep with Hermes feature changes. Upstream repo remains the staging ground for new badges and UI iteration.
 >
-> When Lil Skrrt is installed via `pip install hermes-agent` or cloned from source, this plugin auto-registers as a dashboard tab on first `lil-skrrt dashboard` launch. No separate install step. See [Built-in Plugins → hermes-achievements](../../website/docs/user-guide/features/built-in-plugins.md) in the main docs.
+> When Lil Skrrt is installed via `pip install hermes-agent` or cloned from source, this plugin auto-registers as a dashboard tab on first `hermes dashboard` launch. No separate install step. See [Built-in Plugins → hermes-achievements](../../website/docs/user-guide/features/built-in-plugins.md) in the main docs.
 
 Achievement system for the Lil Skrrt Dashboard: collectible, tiered badges generated from real local Lil Skrrt session history.
 
-![Lil Skrrt Achievements dashboard](docs/assets/achievements-dashboard-hd.png)
+![Hermes Achievements dashboard](docs/assets/achievements-dashboard-hd.png)
 
 The screenshots use temporary demo tier data to show the full visual range. The plugin itself reads real local Lil Skrrt session history by default.
 
@@ -21,7 +21,7 @@ Lil Skrrt Achievements scans local Lil Skrrt sessions and unlocks badges based o
 - autonomous tool chains
 - debugging and recovery patterns
 - vibe-coding file edits
-- Hermes-native skills, memory, cron, and plugin usage
+- Lil Skrrt-native skills, memory, cron, and plugin usage
 - web research and browser automation
 - model/provider workflows
 - lifestyle patterns such as weekend or night sessions

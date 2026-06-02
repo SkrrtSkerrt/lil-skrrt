@@ -1,12 +1,12 @@
 ---
 sidebar_position: 10
 title: "皮肤与主题"
-description: "使用内置和用户自定义皮肤定制 Lil Skrrt CLI 的外观"
+description: "使用内置和用户自定义皮肤定制 Hermes CLI 的外观"
 ---
 
 # 皮肤与主题
 
-皮肤控制 Lil Skrrt CLI 的**视觉呈现**：横幅颜色、spinner（加载动画）面孔与动词、响应框标签、品牌文本以及工具活动前缀。
+皮肤控制 Hermes CLI 的**视觉呈现**：横幅颜色、spinner（加载动画）面孔与动词、响应框标签、品牌文本以及工具活动前缀。
 
 对话风格与视觉风格是两个独立的概念：
 
@@ -32,15 +32,15 @@ display:
 
 | 皮肤 | 描述 | Agent 品牌 | 视觉特征 |
 |------|------|-----------|---------|
-| `default` | 经典 Lil Skrrt — 金色与 kawaii 风格 | `Lil Skrrt` | 暖金色边框，cornsilk 文字，spinner 中的 kawaii 面孔。熟悉的双蛇杖横幅。简洁亲切。 |
+| `default` | Lil Skrrt Neon — 冷蓝与钢灰 | `Lil Skrrt Agent` | 冷蓝色边框、slate 文字、霓虹强调色，以及熟悉的双蛇杖横幅。简洁且有机器感。 |
 | `ares` | 战神主题 — 深红与青铜 | `Ares Agent` | 深红色边框配青铜点缀。激进的 spinner 动词（"forging"、"marching"、"tempering steel"）。自定义剑盾 ASCII 艺术横幅。 |
-| `mono` | 单色 — 简洁灰度 | `Lil Skrrt` | 全灰色，无彩色。边框为 `#555555`，文字为 `#c9d1d9`。适合极简终端或录屏场景。 |
-| `slate` | 冷蓝色 — 面向开发者 | `Lil Skrrt` | 皇家蓝边框（`#4169e1`），柔和蓝色文字。沉稳专业。无自定义 spinner，使用默认面孔。 |
-| `daylight` | 适用于亮色终端的浅色主题，深色文字配冷蓝点缀 | `Lil Skrrt` | 专为白色或亮色终端设计。深石板色文字配蓝色边框，浅色状态面板，补全菜单在亮色终端配置下保持清晰可读。 |
-| `warm-lightmode` | 适用于浅色终端背景的暖棕/金色文字 | `Lil Skrrt` | 适合浅色终端的暖羊皮纸色调。深棕色文字配马鞍棕点缀，奶油色状态面板。比 daylight 主题更温暖的大地色系选择。 |
+| `mono` | 单色 — 简洁灰度 | `Hermes Agent` | 全灰色，无彩色。边框为 `#555555`，文字为 `#c9d1d9`。适合极简终端或录屏场景。 |
+| `slate` | 冷蓝色 — 面向开发者 | `Hermes Agent` | 皇家蓝边框（`#4169e1`），柔和蓝色文字。沉稳专业。无自定义 spinner，使用默认面孔。 |
+| `daylight` | 适用于亮色终端的浅色主题，深色文字配冷蓝点缀 | `Hermes Agent` | 专为白色或亮色终端设计。深石板色文字配蓝色边框，浅色状态面板，补全菜单在亮色终端配置下保持清晰可读。 |
+| `cool-lightmode` | 适用于浅色终端背景的冷色文字 | `Lil Skrrt Agent` | 适合浅色终端的冷色调。蓝灰色文字配青色点缀，浅钢色面板。比 daylight 主题更凉爽的选择。 |
 | `poseidon` | 海神主题 — 深蓝与海沫绿 | `Poseidon Agent` | 深蓝到海沫绿渐变。海洋主题 spinner（"charting currents"、"sounding the depth"）。三叉戟 ASCII 艺术横幅。 |
 | `sisyphus` | 西西弗斯主题 — 朴素灰度，彰显坚韧 | `Sisyphus Agent` | 浅灰色配强烈对比。巨石主题 spinner（"pushing uphill"、"resetting the boulder"、"enduring the loop"）。巨石与山丘 ASCII 艺术横幅。 |
-| `charizard` | 火山主题 — 焦橙与余烬色 | `Charizard Agent` | 暖焦橙到余烬色渐变。火焰主题 spinner（"banking into the draft"、"measuring burn"）。龙剪影 ASCII 艺术横幅。 |
+| `charizard` | 火山主题 — 蓝焰与钢灰 | `Charizard Agent` | 冷蓝到钢灰渐变。火焰主题 spinner（"banking into the draft"、"measuring signal"）。龙剪影 ASCII 艺术横幅。 |
 
 ## 可配置键完整列表
 
@@ -50,21 +50,21 @@ display:
 
 | 键 | 描述 | 默认值（`default` 皮肤） |
 |----|------|------------------------|
-| `banner_border` | 启动横幅周围的面板边框 | `#CD7F32`（青铜色） |
-| `banner_title` | 横幅中的标题文字颜色 | `#FFD700`（金色） |
-| `banner_accent` | 横幅中的区块标题（Available Tools 等） | `#FFBF00`（琥珀色） |
-| `banner_dim` | 横幅中的弱化文字（分隔符、次要标签） | `#B8860B`（暗金菊色） |
-| `banner_text` | 横幅中的正文文字（工具名、技能名） | `#FFF8DC`（玉米丝色） |
-| `ui_accent` | 通用 UI 强调色（高亮、活动元素） | `#FFBF00` |
+| `banner_border` | 启动横幅周围的面板边框 | `#38BDF8`（天蓝色） |
+| `banner_title` | 横幅中的标题文字颜色 | `#38BDF8`（天蓝色） |
+| `banner_accent` | 横幅中的区块标题（Available Tools 等） | `#22D3EE`（青色） |
+| `banner_dim` | 横幅中的弱化文字（分隔符、次要标签） | `#64748B`（石板灰） |
+| `banner_text` | 横幅中的正文文字（工具名、技能名） | `#E2E8F0`（浅石板） |
+| `ui_accent` | 通用 UI 强调色（高亮、活动元素） | `#22D3EE` |
 | `ui_label` | UI 标签与标记 | `#4dd0e1`（青色） |
 | `ui_ok` | 成功指示器（对勾、完成） | `#4caf50`（绿色） |
 | `ui_error` | 错误指示器（失败、阻断） | `#ef5350`（红色） |
 | `ui_warn` | 警告指示器（注意、审批提示） | `#ffa726`（橙色） |
-| `prompt` | 交互式 prompt（提示符）文字颜色 | `#FFF8DC` |
-| `input_rule` | 输入区域上方的水平分隔线 | `#CD7F32` |
-| `response_border` | agent 响应框边框（ANSI 转义） | `#FFD700` |
-| `session_label` | 会话标签颜色 | `#DAA520` |
-| `session_border` | 会话 ID 弱化边框颜色 | `#8B8682` |
+| `prompt` | 交互式 prompt（提示符）文字颜色 | `#E2E8F0` |
+| `input_rule` | 输入区域上方的水平分隔线 | `#334155` |
+| `response_border` | agent 响应框边框（ANSI 转义） | `#38BDF8` |
+| `session_label` | 会话标签颜色 | `#60A5FA` |
+| `session_border` | 会话 ID 弱化边框颜色 | `#64748B` |
 | `status_bar_bg` | TUI 状态/用量栏的背景色 | `#1a1a2e` |
 | `voice_status_bg` | 语音模式状态徽章的背景色 | `#1a1a2e` |
 | `selection_bg` | TUI 鼠标选区高亮的背景色。未设置时回退到 `completion_menu_current_bg`。 | `#333355` |
@@ -92,10 +92,10 @@ CLI 界面中使用的文字字符串。
 
 | 键 | 描述 | 默认值 |
 |----|------|--------|
-| `agent_name` | 横幅标题和状态显示中的名称 | `Lil Skrrt` |
-| `welcome` | CLI 启动时显示的欢迎消息 | `Welcome to Lil Skrrt! Type your message or /help for commands.` |
+| `agent_name` | 横幅标题和状态显示中的名称 | `Hermes Agent` |
+| `welcome` | CLI 启动时显示的欢迎消息 | `Welcome to Hermes Agent! Type your message or /help for commands.` |
 | `goodbye` | 退出时显示的消息 | `Goodbye! ⚕` |
-| `response_label` | 响应框标题上的标签 | ` ⚕ Lil Skrrt ` |
+| `response_label` | 响应框标题上的标签 | ` ⚕ Hermes ` |
 | `prompt_symbol` | 用户输入 prompt 前的符号（裸 token，渲染器会在后面添加空格） | `❯` |
 | `help_header` | `/help` 命令输出的标题文字 | `(^_^)? Available Commands` |
 
@@ -123,21 +123,21 @@ name: mytheme
 description: My custom theme
 
 colors:
-  banner_border: "#CD7F32"
-  banner_title: "#FFD700"
-  banner_accent: "#FFBF00"
-  banner_dim: "#B8860B"
-  banner_text: "#FFF8DC"
-  ui_accent: "#FFBF00"
+  banner_border: "#38BDF8"
+  banner_title: "#38BDF8"
+  banner_accent: "#22D3EE"
+  banner_dim: "#64748B"
+  banner_text: "#E2E8F0"
+  ui_accent: "#22D3EE"
   ui_label: "#4dd0e1"
   ui_ok: "#4caf50"
   ui_error: "#ef5350"
   ui_warn: "#ffa726"
-  prompt: "#FFF8DC"
-  input_rule: "#CD7F32"
-  response_border: "#FFD700"
-  session_label: "#DAA520"
-  session_border: "#8B8682"
+  prompt: "#E2E8F0"
+  input_rule: "#334155"
+  response_border: "#38BDF8"
+  session_label: "#60A5FA"
+  session_border: "#64748B"
   status_bar_bg: "#1a1a2e"
   voice_status_bg: "#1a1a2e"
   selection_bg: "#333355"
@@ -182,9 +182,9 @@ tool_emojis:
 
 # Custom ASCII art banners (optional, Rich markup supported)
 # banner_logo: |
-#   [bold #FFD700] MY AGENT [/]
+#   [bold #38BDF8] MY AGENT [/]
 # banner_hero: |
-#   [#FFD700]  Custom art here  [/]
+#   [#38BDF8]  Custom art here  [/]
 ```
 
 ### 最简自定义皮肤示例
@@ -212,16 +212,16 @@ branding:
 tool_prefix: "▏"
 ```
 
-## Lil Skrrt Mod — 可视化皮肤编辑器
+## Hermes Mod — 可视化皮肤编辑器
 
-[Lil Skrrt Mod](https://github.com/cocktailpeanut/hermes-mod) 是一个社区构建的 Web UI，用于可视化创建和管理皮肤。无需手写 YAML，提供带实时预览的点击式编辑器。
+[Hermes Mod](https://github.com/cocktailpeanut/hermes-mod) 是一个社区构建的 Web UI，用于可视化创建和管理皮肤。无需手写 YAML，提供带实时预览的点击式编辑器。
 
-![Lil Skrrt Mod skin editor](https://raw.githubusercontent.com/cocktailpeanut/hermes-mod/master/nous.png)
+![Hermes Mod skin editor](https://raw.githubusercontent.com/cocktailpeanut/hermes-mod/master/nous.png)
 
 **功能说明：**
 
 - 列出所有内置和自定义皮肤
-- 将任意皮肤在可视化编辑器中打开，涵盖所有 Lil Skrrt 皮肤字段（颜色、spinner、品牌、工具前缀、工具 emoji）
+- 将任意皮肤在可视化编辑器中打开，涵盖所有 Hermes 皮肤字段（颜色、spinner、品牌、工具前缀、工具 emoji）
 - 根据文字 prompt 生成 `banner_logo` 文字艺术
 - 将上传的图片（PNG、JPG、GIF、WEBP）转换为 `banner_hero` ASCII 艺术，支持多种渲染风格（盲文点阵、ASCII 字符渐变、方块、点阵）
 - 直接保存到 `~/.hermes/skins/`
@@ -259,7 +259,7 @@ npm start
 6. 点击 **Save** 将皮肤 YAML 写入 `~/.hermes/skins/`。
 7. 点击 **Activate** 将其设为当前皮肤（更新 `config.yaml` 中的 `display.skin`）。
 
-Lil Skrrt Mod 遵循 `HERMES_HOME` 环境变量，因此也适用于[配置文件](/user-guide/profiles)。
+Hermes Mod 遵循 `HERMES_HOME` 环境变量，因此也适用于[配置文件](/user-guide/profiles)。
 
 ## 操作说明
 

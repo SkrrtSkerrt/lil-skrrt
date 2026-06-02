@@ -105,11 +105,11 @@ Config is read from the first file that exists:
 
 | Priority | Path | Scope |
 |----------|------|-------|
-| 1 | `$HERMES_HOME/honcho.json` | Profile-local (isolated Lil Skrrt instances) |
+| 1 | `$HERMES_HOME/honcho.json` | Profile-local (isolated Hermes instances) |
 | 2 | `~/.hermes/honcho.json` | Default profile (shared host blocks) |
 | 3 | `~/.honcho/config.json` | Global (cross-app interop) |
 
-Host key is derived from the active Lil Skrrt profile: `lil-skrrt` (default) or `lil-skrrt.<profile>`.
+Host key is derived from the active Lil Skrrt profile: `hermes` (default) or `hermes.<profile>`.
 
 For every key, resolution order is: **host block > root > env var > default**.
 
@@ -162,7 +162,7 @@ The Honcho session name determines which conversation bucket memory lands in. Re
 | 4 | `per-session` strategy | Lil Skrrt session ID (`20260415_a3f2b1`) |
 | 5 | `per-repo` strategy | Git root directory name (`hermes-agent`) |
 | 6 | `per-directory` strategy | Current directory basename (`src`) |
-| 7 | `global` strategy | Workspace name (`lil-skrrt`) |
+| 7 | `global` strategy | Workspace name (`hermes`) |
 
 Gateway platforms always resolve via priority 3 (per-chat isolation) regardless of `sessionStrategy`. The strategy setting only affects CLI sessions.
 
@@ -199,9 +199,9 @@ Multiple Lil Skrrt profiles can share one workspace while maintaining separate A
 }
 ```
 
-Both profiles see the same user (`yourname`) in the same shared environment (`lil-skrrt`), but each AI peer builds its own observations, conclusions, and behavior patterns. The coder's memory stays code-oriented; the main agent's stays broad.
+Both profiles see the same user (`yourname`) in the same shared environment (`hermes`), but each AI peer builds its own observations, conclusions, and behavior patterns. The coder's memory stays code-oriented; the main agent's stays broad.
 
-Host key is derived from the active Lil Skrrt profile: `lil-skrrt` (default) or `lil-skrrt.<profile>` (e.g. `lil-skrrt -p coder` → host key `lil-skrrt.coder`).
+Host key is derived from the active Lil Skrrt profile: `hermes` (default) or `hermes.<profile>` (e.g. `hermes -p coder` → host key `hermes.coder`).
 
 ### Dialectic & Reasoning
 

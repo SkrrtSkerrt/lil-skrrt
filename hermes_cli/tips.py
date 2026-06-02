@@ -28,7 +28,7 @@ TIPS = [
     "/model lets you switch models mid-session — try /model sonnet or /model gpt-5.",
     "/model --global changes your default model permanently.",
     "/personality pirate sets a fun personality — 14 built-in options from kawaii to shakespeare.",
-    "/skin changes the CLI theme — try lil-skrrt, ares, mono, slate, or poseidon.",
+    "/skin changes the CLI theme — try ares, mono, slate, poseidon, or charizard.",
     "/statusbar toggles a persistent bar showing model, tokens, context fill %, cost, and duration.",
     "/tools disable browser temporarily removes browser tools for the current session.",
     "/browser connect attaches browser tools to your running Chromium-family browser via CDP.",
@@ -214,7 +214,7 @@ TIPS = [
 
     # --- Context & Compression ---
     "Context auto-compresses when it reaches the threshold — memories are flushed and history summarized.",
-    "The status bar turns yellow, then orange, then red as context fills up.",
+    "The status bar turns blue, then violet, then red as context fills up.",
     "SOUL.md at ~/.hermes/SOUL.md is the agent's primary identity — customize it to shape behavior.",
     "Hermes loads project context from .hermes.md, AGENTS.md, CLAUDE.md, or .cursorrules (first match).",
     "Subdirectory AGENTS.md files are discovered progressively as the agent navigates into folders.",
@@ -335,7 +335,7 @@ TIPS = [
     "HERMES_DEV=1 bypasses container mode detection for local development.",
     "Each MCP server gets its own toolset (mcp-servername) that can be toggled independently via hermes tools.",
     "MCP ${ENV_VAR} placeholders in config are resolved at server spawn — including vars from ~/.hermes/.env.",
-    "Skills from trusted repos (SkrrtSkerrt) get a 'trusted' security level; community skills get extra scanning.",
+    "Skills from trusted repos (NousResearch) get a 'trusted' security level; community skills get extra scanning.",
     "The skills quarantine at ~/.hermes/skills/.hub/quarantine/ holds skills pending security review.",
 
     # --- Advanced Slash Commands ---

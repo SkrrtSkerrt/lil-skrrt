@@ -17,28 +17,28 @@ All fields are optional. Missing values inherit from the ``default`` skin.
 
     # Colors: hex values for Rich markup (banner, UI, response box)
     colors:
-      banner_border: "#CD7F32"            # Panel border color
-      banner_title: "#FFD700"             # Panel title text color
-      banner_accent: "#FFBF00"            # Section headers (Available Tools, etc.)
-      banner_dim: "#B8860B"               # Dim/muted text (separators, labels)
-      banner_text: "#FFF8DC"              # Body text (tool names, skill names)
-      ui_accent: "#FFBF00"               # General UI accent
-      ui_label: "#DAA520"                # UI labels (warm gold; teal clashed w/ default banner gold)
+      banner_border: "#38BDF8"            # Panel border color
+      banner_title: "#38BDF8"             # Panel title text color
+      banner_accent: "#22D3EE"            # Section headers (Available Tools, etc.)
+      banner_dim: "#64748B"               # Dim/muted text (separators, labels)
+      banner_text: "#E2E8F0"              # Body text (tool names, skill names)
+      ui_accent: "#22D3EE"               # General UI accent
+      ui_label: "#60A5FA"                # UI labels (cool blue)
       ui_ok: "#4caf50"                   # Success indicators
       ui_error: "#ef5350"                # Error indicators
       ui_warn: "#ffa726"                 # Warning indicators
-      prompt: "#FFF8DC"                  # Prompt text color
-      input_rule: "#CD7F32"              # Input area horizontal rule
-      response_border: "#FFD700"         # Response box border (ANSI)
+      prompt: "#E2E8F0"                  # Prompt text color
+      input_rule: "#334155"              # Input area horizontal rule
+      response_border: "#38BDF8"         # Response box border (ANSI)
       status_bar_bg: "#1a1a2e"           # Status bar background
       status_bar_text: "#C0C0C0"         # Status bar default text
-      status_bar_strong: "#FFD700"       # Status bar highlighted text
+      status_bar_strong: "#38BDF8"       # Status bar highlighted text
       status_bar_dim: "#8B8682"          # Status bar separators/muted text
       status_bar_good: "#8FBC8F"         # Healthy context usage
-      status_bar_warn: "#FFD700"         # Warning context usage
-      status_bar_bad: "#FF8C00"          # High context usage
+      status_bar_warn: "#FACC15"         # Warning context usage
+      status_bar_bad: "#FB7185"          # High context usage
       status_bar_critical: "#FF6B6B"     # Critical context usage
-      session_label: "#DAA520"           # Session label color
+      session_label: "#60A5FA"           # Session label color
       session_border: "#8B8682"          # Session ID dim color
       status_bar_bg: "#1a1a2e"          # TUI status/usage bar background
       voice_status_bg: "#1a1a2e"        # TUI voice status background
@@ -89,7 +89,7 @@ USAGE
     from hermes_cli.skin_engine import get_active_skin, list_skins, set_active_skin
 
     skin = get_active_skin()
-    print(skin.colors["banner_title"])    # "#FFD700"
+    print(skin.colors["banner_title"])    # cool blue default
     print(skin.get_branding("agent_name"))  # "Hermes Agent"
 
     set_active_skin("ares")               # Switch to built-in ares skin
@@ -98,12 +98,12 @@ USAGE
 BUILT-IN SKINS
 ==============
 
-- ``default`` — Classic Hermes gold/kawaii (the current look)
-- ``ares``    — Crimson/bronze war-god theme with custom spinner wings
+- ``default`` — Lil Skrrt Neon cool blue and steel (the current look)
+- ``ares``    — Crimson-and-cyan war-god theme with custom spinner wings
 - ``mono``    — Clean grayscale monochrome
 - ``slate``   — Cool blue developer-focused theme
 - ``daylight`` — Light background theme with dark text and blue accents
-- ``warm-lightmode`` — Warm brown/gold text for light terminal backgrounds
+- ``cool-lightmode`` — Cool slate text for light terminal backgrounds
 
 USER SKINS
 ==========
@@ -162,181 +162,25 @@ class SkinConfig:
 # =============================================================================
 
 _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
-    "lil-skrrt": {
-        "name": "lil-skrrt",
-        "description": "Lil Skrrt — machine hunter silver, white, blue, and red",
-        "colors": {
-            "banner_border": "#C7CED8",
-            "banner_title": "#FFFFFF",
-            "banner_accent": "#E11D48",
-            "banner_dim": "#94A3B8",
-            "banner_text": "#F8FBFF",
-            "ui_accent": "#7CC7FF",
-            "ui_label": "#D8E3F0",
-            "ui_ok": "#93C5FD",
-            "ui_error": "#EF4444",
-            "ui_warn": "#FB7185",
-            "prompt": "#F8FBFF",
-            "input_rule": "#E5E7EB",
-            "response_border": "#C7CED8",
-            "status_bar_bg": "#080D14",
-            "status_bar_text": "#F8FBFF",
-            "status_bar_strong": "#FFFFFF",
-            "status_bar_dim": "#A3B2C5",
-            "status_bar_good": "#7CC7FF",
-            "status_bar_warn": "#FB7185",
-            "status_bar_bad": "#E11D48",
-            "status_bar_critical": "#94A3B8",
-            "session_label": "#D8E3F0",
-            "session_border": "#7CC7FF",
-            "voice_status_bg": "#080D14",
-            "selection_bg": "#2B3440",
-            "completion_menu_bg": "#080D14",
-            "completion_menu_current_bg": "#2B3440",
-            "completion_menu_meta_bg": "#111827",
-            "completion_menu_meta_current_bg": "#374151",
-        },
-        "spinner": {
-            "waiting_faces": ["(▣)", "(▤)", "(▥)", "(▦)"],
-            "thinking_faces": ["(▥)", "(▣)", "(◫)", "(▦)"],
-            "thinking_verbs": [
-                "tracking the target", "locking the frame", "scanning for heat", "hunting the signal",
-                "mapping the threat", "hardened optics online", "charging the rail", "pinning the mark",
-            ],
-            "wings": [
-                ["⟪▣", "▣⟫"],
-                ["⟪◆", "◆⟫"],
-                ["⟪▣", "▣⟫"],
-            ],
-        },
-        "branding": {
-            "agent_name": "Lil Skrrt",
-            "welcome": "Target acquired. Lil Skrrt online.",
-            "goodbye": "Threat neutralized. Lil Skrrt offline.",
-            "response_label": " ◈ Lil Skrrt ",
-            "prompt_symbol": "❯",
-            "help_header": "(◈) Tactical Commands",
-        },
-        "tool_prefix": "┊",
-        "banner_logo": """[bold #FFFFFF]╔══════════════════════════════════════════════════════════════╗[/]
-[bold #C7CED8]║                         L I L   S K R R T                    ║[/]
-[#7CC7FF]║                 machine hunter silver / red / blue           ║[/]
-[bold #E11D48]╚══════════════════════════════════════════════════════════════╝[/]""",
-        "banner_hero": """                          '`' ` ` . ░ ,▄'.`,'░░░░░  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                     .   .,,,▓▓▄▓█████▓██▓▄█▓▄█░▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                      »▄▄▄███████████████████████▓▓▄▄µ¿░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                    '»▓███████████████████████████████▀░░░ ░░░░░░░░░░░░░░░░░░░░░
-
-                    ▄███████████████████████████████████▄,:░░░░░░░░░░░░░░░░░░░░░
-
-                  .▄████████████████████████████████████▀╨.░░░░░░░░░░░░░░░░░░░░░
-
-                   `▓██████▀▀▀╨╙²`²╨╙└``  .    `╨▀███████¿░  ░░░░░░░░░░░░░░░░░░░
-
-                   ▐█████▌                       ░²██████▓░  ░░░░░░░░░░░░░░░░░░░
-
-                   ██████                         .▐█████µ'  ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████           , ,   `        ▐█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ╫█████∩          █▄╫╦▓H,,,,    '"█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████▄▓████████████████████████▓█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████████████████████████████████████      ░░░░░░░░░░░░░░░░░
-
-                   ╫██████████████████²╨████████████████▌~ '  ░░░░░░░░░░░░░░░░░░
-
-                  ,▄███▌╫████████████   ²████████████▀███µ      ░░░░░░░░░░░░░░░░
-
-                  ╫█▀██▌ ╨▀█████████Ü    `▀███████▀▀ ▓██▀█      ░░░░░░░░░░░░░░░░
-
-                  ╫█╫███µ        j█▄▄▄▄▄▄▓▄▄      ,▄███▌▄█      ░░░░░░░░░░░░░░░░
-
-                  `█▌▓████▓▄▄µ    ▀██▀██▀▀▀╩   )███████▓█Ö      ░░░░░░░░░░░░░░░░
-
-                   ╫█`▀██████       ,,  ,.    ."███████╫█░`     ░░░░░░░░░░░░░░░░
-
-                   ²█▓▄█████▌    ▄▓█████▀██▄µ   ████████▀ `     ░░░░░░░░░░░░░░░░
-
-                    `╨╙█▓███▌   ▀▀`,▄▄▄▄▄▄░╨▀▀ ,██████          ░░░░░░░░░░░░░░░░
-
-                       `▓████▄   ▄██████████▄▄▄██████▌    `   ░░░░░░░░░░░░░░░░░░
-
-                        ╫▓▓████µ ╨▀▀²    ²▀▀▀███████████▓▄¿░░░░░░░░░░░░░░░░░░░░░
-
-                      ╥▄▓███████▄,,,,,,,;,µ▄▓███████████████▄¿░ ░░░░░░░░░░░░░░░░
-
-                  ,▄▓██▀▓██▓▓████████████████████╩ ╫███████████▄░░░░░░░░░░░░░░░░
-
-               ,▄▓▓█▀╙╥▓▓████▓█████████████████▀   ▐████████▓▀▀██▄░░░░░░░░░░░░░░
-
-             ,▄▓▓▀╙.▄▓▓▓█████▓▓███████████████Ü .  j██████████▓å▀██▄░░░░░░░░░░░░
-
-            ▄▓▓▓╛,▄▓▓▓▓▓▓████▓▓██████▀╨╙²▀██▌    ::▐████████████▓▒▀██▓µ░░░░░░░░░
-
-          ,▓▓▓▀ ▄▓▓▓▓▓▓██▓███████████H  .j█▀  ~.░.:▓████████████▀╩░╨████▄░░░░░░░
-
-         ▄▓▓▓"╒▓▓▓▓▓▓▓███████▓██▒████H  .░░░'░`░.,▄███████████▄▄▓▓▓▓████▀Ü░░░░░░
-
-       ,▓▓█▌  ╨▀███▓▓██╨▓▓███████`▀▀▀     '░░╓▄▓████████████████████████░░░░░░░░
-
-   ░  ╥▓███▄▄▄▄▄▄▓▓██▀ ▄██████████▄▄▄▄▄▄▄▄▓███████████████████████████▀░░░░░░░░░
-
-   `░ ╨▀▀╨╙╨▀▀██████▌ `█████████████████████████████████████▄░▀▀████▀░░░░░░░░░░░
-
-      ..  .▄▓███████▓  ²████████████████████████████████████▀░░░░╫████▄µ░░░░░░░░
-
-░░░   .░'▄████████████µ `█████████████████████████████████████M░▄█████▀░░░░░░░░░
-
-░░░   :`:²▀████████████▄ `▀██████████████▀░▓███████████████▀▒▄▓████▀Ü░░░░░░░░░░░
-
-░░░░░     , ╨▀█████╩ ╨██▓¿ ▀███████████▀╥▄███████████████▀▐▄█████▀░░░░░░░░░░░░░▒
-
-░░░░░░░   ░ `:²▀█Ü.',▓████µ `▀███████▄▓███████████████▀▐▄█████▀▀░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░ .░░░ 'φ███████▄  ╨███▒▀▀███████████████▀╥▄█████▀░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░   .░'`▀████████µ.`▀██µ▄▀████████████▀▄█████▀░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░   ░.░░`▀███████▄░'╨██████████████Ö▄████▀▀░░░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░░░░░  ░░:░╨▀█████▓░░`▀██████████▀▄████▀░░░░░░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░ `▀█████▄░░²███████▀▄████▀░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀████▓░░▐████▌▄███▀Ü░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╙▀██∩░████████╩░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╨░▐████▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╫█▀╩░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒""",
-    },
     "default": {
         "name": "default",
-        "description": "Classic Hermes — gold and kawaii",
+        "description": "Classic Lil Skrrt — cool neon and steel",
         "colors": {
-            "banner_border": "#CD7F32",
-            "banner_title": "#FFD700",
-            "banner_accent": "#FFBF00",
-            "banner_dim": "#B8860B",
-            "banner_text": "#FFF8DC",
-            "ui_accent": "#FFBF00",
-            "ui_label": "#DAA520",
+            "banner_border": "#9F1C1C",
+            "banner_title": "#38BDF8",
+            "banner_accent": "#22D3EE",
+            "banner_dim": "#64748B",
+            "banner_text": "#E2E8F0",
+            "ui_accent": "#22D3EE",
+            "ui_label": "#60A5FA",
             "ui_ok": "#4caf50",
             "ui_error": "#ef5350",
-            "ui_warn": "#ffa726",
-            "prompt": "#FFF8DC",
-            "input_rule": "#CD7F32",
-            "response_border": "#FFD700",
+            "ui_warn": "#FACC15",
+            "prompt": "#E2E8F0",
+            "input_rule": "#334155",
+            "response_border": "#38BDF8",
             "status_bar_bg": "#1a1a2e",
-            "session_label": "#DAA520",
+            "session_label": "#60A5FA",
             "session_border": "#8B8682",
         },
         "spinner": {
@@ -354,31 +198,31 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     },
     "ares": {
         "name": "ares",
-        "description": "War-god theme — crimson and bronze",
+        "description": "War-god theme — crimson and cyan",
         "colors": {
             "banner_border": "#9F1C1C",
             "banner_title": "#C7A96B",
             "banner_accent": "#DD4A3A",
             "banner_dim": "#6B1717",
-            "banner_text": "#F1E6CF",
+            "banner_text": "#E2E8F0",
             "ui_accent": "#DD4A3A",
             "ui_label": "#C7A96B",
             "ui_ok": "#4caf50",
             "ui_error": "#ef5350",
-            "ui_warn": "#ffa726",
-            "prompt": "#F1E6CF",
+            "ui_warn": "#FACC15",
+            "prompt": "#E2E8F0",
             "input_rule": "#9F1C1C",
             "response_border": "#C7A96B",
             "status_bar_bg": "#2A1212",
-            "status_bar_text": "#F1E6CF",
+            "status_bar_text": "#E2E8F0",
             "status_bar_strong": "#C7A96B",
             "status_bar_dim": "#6E584B",
             "status_bar_good": "#7BC96F",
-            "status_bar_warn": "#C7A96B",
+            "status_bar_warn": "#FACC15",
             "status_bar_bad": "#DD4A3A",
             "status_bar_critical": "#EF5350",
             "session_label": "#C7A96B",
-            "session_border": "#6E584B",
+            "session_border": "#64748B",
         },
         "spinner": {
             "waiting_faces": ["(⚔)", "(⛨)", "(▲)", "(<>)", "(/)"],
@@ -437,7 +281,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "ui_label": "#888888",
             "ui_ok": "#888888",
             "ui_error": "#cccccc",
-            "ui_warn": "#999999",
+            "ui_warn": "#FACC15",
             "prompt": "#c9d1d9",
             "input_rule": "#444444",
             "response_border": "#aaaaaa",
@@ -446,7 +290,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "status_bar_strong": "#E6EDF3",
             "status_bar_dim": "#777777",
             "status_bar_good": "#B5B5B5",
-            "status_bar_warn": "#AAAAAA",
+            "status_bar_warn": "#FACC15",
             "status_bar_bad": "#D0D0D0",
             "status_bar_critical": "#F0F0F0",
             "session_label": "#888888",
@@ -476,7 +320,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "ui_label": "#8EA8FF",
             "ui_ok": "#63D0A6",
             "ui_error": "#F7A072",
-            "ui_warn": "#e6a855",
+            "ui_warn": "#FACC15",
             "prompt": "#c9d1d9",
             "input_rule": "#4169e1",
             "response_border": "#7eb8f6",
@@ -485,7 +329,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "status_bar_strong": "#7EB8F6",
             "status_bar_dim": "#4B5563",
             "status_bar_good": "#63D0A6",
-            "status_bar_warn": "#E6A855",
+            "status_bar_warn": "#FACC15",
             "status_bar_bad": "#F7A072",
             "status_bar_critical": "#FF7A7A",
             "session_label": "#7eb8f6",
@@ -515,7 +359,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "ui_label": "#0F766E",
             "ui_ok": "#15803D",
             "ui_error": "#B91C1C",
-            "ui_warn": "#B45309",
+            "ui_warn": "#FACC15",
             "prompt": "#111827",
             "input_rule": "#93C5FD",
             "response_border": "#2563EB",
@@ -539,31 +383,31 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
         },
         "tool_prefix": "│",
     },
-    "warm-lightmode": {
-        "name": "warm-lightmode",
-        "description": "Warm light mode — dark brown/gold text for light terminal backgrounds",
+    "cool-lightmode": {
+        "name": "cool-lightmode",
+        "description": "Cool light mode — slate text for light terminal backgrounds",
         "colors": {
-            "banner_border": "#8B6914",
-            "banner_title": "#5C3D11",
-            "banner_accent": "#8B4513",
-            "banner_dim": "#8B7355",
-            "banner_text": "#2C1810",
-            "ui_accent": "#8B4513",
-            "ui_label": "#5C3D11",
+            "banner_border": "#475569",
+            "banner_title": "#38BDF8",
+            "banner_accent": "#22D3EE",
+            "banner_dim": "#64748B",
+            "banner_text": "#0F172A",
+            "ui_accent": "#22D3EE",
+            "ui_label": "#60A5FA",
             "ui_ok": "#2E7D32",
             "ui_error": "#C62828",
-            "ui_warn": "#E65100",
-            "prompt": "#2C1810",
-            "input_rule": "#8B6914",
-            "response_border": "#8B6914",
-            "session_label": "#5C3D11",
-            "session_border": "#A0845C",
-            "status_bar_bg": "#F5F0E8",
-            "voice_status_bg": "#F5F0E8",
-            "completion_menu_bg": "#F5EFE0",
-            "completion_menu_current_bg": "#E8DCC8",
-            "completion_menu_meta_bg": "#F0E8D8",
-            "completion_menu_meta_current_bg": "#DFCFB0",
+            "ui_warn": "#FACC15",
+            "prompt": "#0F172A",
+            "input_rule": "#334155",
+            "response_border": "#38BDF8",
+            "session_label": "#60A5FA",
+            "session_border": "#64748B",
+            "status_bar_bg": "#F8FAFC",
+            "voice_status_bg": "#F8FAFC",
+            "completion_menu_bg": "#F8FAFC",
+            "completion_menu_current_bg": "#DBEAFE",
+            "completion_menu_meta_bg": "#EEF2FF",
+            "completion_menu_meta_current_bg": "#BFDBFE",
         },
         "spinner": {},
         "branding": {
@@ -589,7 +433,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "ui_label": "#A9DFFF",
             "ui_ok": "#4caf50",
             "ui_error": "#ef5350",
-            "ui_warn": "#ffa726",
+            "ui_warn": "#FACC15",
             "prompt": "#EAF7FF",
             "input_rule": "#2A6FB9",
             "response_border": "#5DB8F5",
@@ -598,7 +442,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "status_bar_strong": "#A9DFFF",
             "status_bar_dim": "#496884",
             "status_bar_good": "#6ED7B0",
-            "status_bar_warn": "#5DB8F5",
+            "status_bar_warn": "#FACC15",
             "status_bar_bad": "#2A6FB9",
             "status_bar_critical": "#D94F4F",
             "session_label": "#A9DFFF",
@@ -661,7 +505,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "ui_label": "#D3D3D3",
             "ui_ok": "#919191",
             "ui_error": "#E7E7E7",
-            "ui_warn": "#B7B7B7",
+            "ui_warn": "#FACC15",
             "prompt": "#F5F5F5",
             "input_rule": "#656565",
             "response_border": "#B7B7B7",
@@ -670,7 +514,7 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "status_bar_strong": "#F5F5F5",
             "status_bar_dim": "#656565",
             "status_bar_good": "#B7B7B7",
-            "status_bar_warn": "#D3D3D3",
+            "status_bar_warn": "#FACC15",
             "status_bar_bad": "#E7E7E7",
             "status_bar_critical": "#F5F5F5",
             "session_label": "#919191",
@@ -723,44 +567,44 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     },
     "charizard": {
         "name": "charizard",
-        "description": "Volcanic theme — burnt orange and ember",
+        "description": "Volcanic theme — blue flame and steel",
         "colors": {
-            "banner_border": "#C75B1D",
-            "banner_title": "#FFD39A",
-            "banner_accent": "#F29C38",
-            "banner_dim": "#C58A45",
-            "banner_text": "#FFF0D4",
-            "ui_accent": "#F29C38",
-            "ui_label": "#FFD39A",
+            "banner_border": "#0EA5E9",
+            "banner_title": "#7DD3FC",
+            "banner_accent": "#22D3EE",
+            "banner_dim": "#64748B",
+            "banner_text": "#E2E8F0",
+            "ui_accent": "#22D3EE",
+            "ui_label": "#7DD3FC",
             "ui_ok": "#4caf50",
             "ui_error": "#ef5350",
-            "ui_warn": "#ffa726",
-            "prompt": "#FFF0D4",
-            "input_rule": "#C75B1D",
-            "response_border": "#F29C38",
-            "status_bar_bg": "#2B160E",
-            "status_bar_text": "#FFF0D4",
-            "status_bar_strong": "#FFD39A",
-            "status_bar_dim": "#6C4724",
+            "ui_warn": "#FACC15",
+            "prompt": "#E2E8F0",
+            "input_rule": "#334155",
+            "response_border": "#38BDF8",
+            "status_bar_bg": "#0F172A",
+            "status_bar_text": "#E2E8F0",
+            "status_bar_strong": "#7DD3FC",
+            "status_bar_dim": "#64748B",
             "status_bar_good": "#6BCB77",
-            "status_bar_warn": "#F29C38",
-            "status_bar_bad": "#E2832B",
+            "status_bar_warn": "#FACC15",
+            "status_bar_bad": "#FB7185",
             "status_bar_critical": "#EF5350",
-            "session_label": "#FFD39A",
-            "session_border": "#6C4724",
-            "selection_bg": "#5A260D",
-            "completion_menu_bg": "#0B0503",
-            "completion_menu_current_bg": "#4A1B07",
-            "completion_menu_meta_bg": "#120806",
-            "completion_menu_meta_current_bg": "#5A260D",
+            "session_label": "#7DD3FC",
+            "session_border": "#64748B",
+            "selection_bg": "#1E293B",
+            "completion_menu_bg": "#020617",
+            "completion_menu_current_bg": "#0F172A",
+            "completion_menu_meta_bg": "#0F172A",
+            "completion_menu_meta_current_bg": "#1E293B",
         },
         "spinner": {
             "waiting_faces": ["(✦)", "(▲)", "(◇)", "(<>)", "(🔥)"],
             "thinking_faces": ["(✦)", "(▲)", "(◇)", "(⌁)", "(🔥)"],
             "thinking_verbs": [
-                "banking into the draft", "measuring burn", "reading the updraft",
-                "tracking ember fall", "setting wing angle", "holding the flame core",
-                "plotting a hot landing", "coiling for lift",
+                "banking into the draft", "measuring signal", "reading the updraft",
+                "tracking signal loss", "setting wing angle", "holding the signal core",
+                "plotting a cool landing", "coiling for lift",
             ],
             "wings": [
                 ["⟪✦", "✦⟫"],
@@ -778,25 +622,25 @@ _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
             "help_header": "(✦) Available Commands",
         },
         "tool_prefix": "│",
-        "banner_logo": """[bold #FFF0D4] ██████╗██╗  ██╗ █████╗ ██████╗ ██╗███████╗ █████╗ ██████╗ ██████╗        █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
-[bold #FFD39A]██╔════╝██║  ██║██╔══██╗██╔══██╗██║╚══███╔╝██╔══██╗██╔══██╗██╔══██╗      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
-[#F29C38]██║     ███████║███████║██████╔╝██║  ███╔╝ ███████║██████╔╝██║  ██║█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
-[#E2832B]██║     ██╔══██║██╔══██║██╔══██╗██║ ███╔╝  ██╔══██║██╔══██╗██║  ██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
-[#C75B1D]╚██████╗██║  ██║██║  ██║██║  ██║██║███████╗██║  ██║██║  ██║██████╔╝      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
-[#7A3511] ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝       ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]""",
-        "banner_hero": """[#FFD39A]⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#F29C38]⠀⠀⠀⠀⠀⠀⣴⠟⠁⠀⠀⠀⠀⠈⠻⣦⠀⠀⠀⠀⠀⠀[/]
-[#F29C38]⠀⠀⠀⠀⠀⣼⠏⠀⠀⠀✦⠀⠀⠀⠀⠹⣧⠀⠀⠀⠀⠀[/]
-[#E2832B]⠀⠀⠀⠀⢰⡟⠀⠀⣀⣤⣤⣤⣀⠀⠀⠀⢻⡆⠀⠀⠀⠀[/]
-[#E2832B]⠀⠀⣠⡾⠛⠁⣠⣾⠟⠉⠀⠉⠻⣷⣄⠀⠈⠛⢷⣄⠀⠀[/]
-[#C75B1D]⠀⣼⠟⠀⢀⣾⠟⠁⠀⠀⠀⠀⠀⠈⠻⣷⡀⠀⠻⣧⠀[/]
-[#C75B1D]⢸⡟⠀⠀⣿⡟⠀⠀⠀🔥⠀⠀⠀⠀⢻⣿⠀⠀⢻⡇[/]
-[#7A3511]⠀⠻⣦⡀⠘⢿⣧⡀⠀⠀⠀⠀⠀⢀⣼⡿⠃⢀⣴⠟⠀[/]
-[#7A3511]⠀⠀⠈⠻⣦⣀⠙⢿⣷⣤⣤⣤⣾⡿⠋⣀⣴⠟⠁⠀⠀[/]
-[#C75B1D]⠀⠀⠀⠀⠈⠙⠛⠶⠤⠭⠭⠤⠶⠛⠋⠁⠀⠀⠀⠀[/]
-[#F29C38]⠀⠀⠀⠀⠀⠀⠀⠀⣰⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#F29C38]⠀⠀⠀⠀⠀⠀⠀⣼⡟⠀⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[dim #7A3511]⠀⠀⠀⠀⠀⠀⠀tail flame lit⠀⠀⠀⠀⠀⠀⠀⠀[/]""",
+        "banner_logo": """[bold #E2E8F0] ██████╗██╗  ██╗ █████╗ ██████╗ ██╗███████╗ █████╗ ██████╗ ██████╗        █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
+[bold #7DD3FC]██╔════╝██║  ██║██╔══██╗██╔══██╗██║╚══███╔╝██╔══██╗██╔══██╗██╔══██╗      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
+[#22D3EE]██║     ███████║███████║██████╔╝██║  ███╔╝ ███████║██████╔╝██║  ██║█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
+[#0EA5E9]██║     ██╔══██║██╔══██║██╔══██╗██║ ███╔╝  ██╔══██║██╔══██╗██║  ██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
+[#64748B]╚██████╗██║  ██║██║  ██║██║  ██║██║███████╗██║  ██║██║  ██║██████╔╝      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
+[#475569] ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝       ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]""",
+        "banner_hero": """[#7DD3FC]⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⠀⣴⠟⠁⠀⠀⠀⠀⠈⠻⣦⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⣼⠏⠀⠀⠀✦⠀⠀⠀⠀⠹⣧⠀⠀⠀⠀⠀[/]
+[#0EA5E9]⠀⠀⠀⠀⢰⡟⠀⠀⣀⣤⣤⣤⣀⠀⠀⠀⢻⡆⠀⠀⠀⠀[/]
+[#0EA5E9]⠀⠀⣠⡾⠛⠁⣠⣾⠟⠉⠀⠉⠻⣷⣄⠀⠈⠛⢷⣄⠀⠀[/]
+[#64748B]⠀⣼⠟⠀⢀⣾⠟⠁⠀⠀⠀⠀⠀⠈⠻⣷⡀⠀⠻⣧⠀[/]
+[#64748B]⢸⡟⠀⠀⣿⡟⠀⠀⠀🔥⠀⠀⠀⠀⢻⣿⠀⠀⢻⡇[/]
+[#475569]⠀⠻⣦⡀⠘⢿⣧⡀⠀⠀⠀⠀⠀⢀⣼⡿⠃⢀⣴⠟⠀[/]
+[#475569]⠀⠀⠈⠻⣦⣀⠙⢿⣷⣤⣤⣤⣾⡿⠋⣀⣴⠟⠁⠀⠀[/]
+[#0EA5E9]⠀⠀⠀⠀⠈⠙⠛⠶⠤⠭⠭⠤⠶⠛⠋⠁⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⣰⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⣼⡟⠀⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[dim #64748B]⠀⠀⠀⠀⠀⠀⠀tail flame lit⠀⠀⠀⠀⠀⠀⠀⠀[/]""",
     },
 }
 
@@ -1015,12 +859,12 @@ def get_prompt_toolkit_style_overrides() -> Dict[str, str]:
     # color schemes).  Skins can opt into a colored prompt by setting
     # `prompt` explicitly in their YAML.
     prompt = skin.get_color("prompt", "")
-    input_rule = skin.get_color("input_rule", "#CD7F32")
-    title = skin.get_color("banner_title", "#FFD700")
-    text = skin.get_color("banner_text", "#FFF8DC")
+    input_rule = skin.get_color("input_rule", "#334155")
+    title = skin.get_color("banner_title", "#38BDF8")
+    text = skin.get_color("banner_text", "#E2E8F0")
     dim = skin.get_color("banner_dim", "#555555")
     label = skin.get_color("ui_label", title)
-    warn = skin.get_color("ui_warn", "#FF8C00")
+    warn = skin.get_color("ui_warn", "#FACC15")
     error = skin.get_color("ui_error", "#FF6B6B")
     status_bg = skin.get_color("status_bar_bg", "#1a1a2e")
     status_text = skin.get_color("status_bar_text", text)

@@ -265,6 +265,10 @@ def test_list_authenticated_providers_groups_same_endpoint(monkeypatch):
     returned as a single picker row with all their models merged."""
     monkeypatch.setattr("agent.models_dev.fetch_models_dev", lambda: {})
     monkeypatch.setattr(providers_mod, "HERMES_OVERLAYS", {})
+    monkeypatch.setattr(
+        "hermes_cli.models.fetch_api_models",
+        lambda api_key, base_url: ["minimax-m2.7", "glm-5.1", "qwen3-coder"],
+    )
 
     providers = list_authenticated_providers(
         current_provider="custom",
@@ -351,6 +355,14 @@ def test_list_authenticated_providers_distinct_endpoints_stay_separate(monkeypat
     even if some display names happen to be similar."""
     monkeypatch.setattr("agent.models_dev.fetch_models_dev", lambda: {})
     monkeypatch.setattr(providers_mod, "HERMES_OVERLAYS", {})
+    def _fake_fetch_api_models(api_key, base_url):
+        if base_url == "http://localhost:11434/v1":
+            return ["glm-5.1", "qwen3-coder"]
+        if base_url == "https://api.moonshot.cn/v1":
+            return ["moonshot-v1"]
+        return []
+
+    monkeypatch.setattr("hermes_cli.models.fetch_api_models", _fake_fetch_api_models)
 
     providers = list_authenticated_providers(
         user_providers={},
@@ -382,6 +394,8 @@ def test_list_authenticated_providers_same_url_different_keys_disambiguated(monk
     monkeypatch.setattr(providers_mod, "HERMES_OVERLAYS", {})
 
     providers = list_authenticated_providers(
+        current_provider="custom:openai",
+        current_base_url="https://api.openai.com/v1",
         user_providers={},
         custom_providers=[
             {"name": "OpenAI — key A", "base_url": "https://api.openai.com/v1",
@@ -401,6 +415,47 @@ def test_list_authenticated_providers_same_url_different_keys_disambiguated(monk
     models = {p["slug"]: p["models"] for p in custom_groups}
     assert models["custom:openai"] == ["gpt-5.4"]
     assert models["custom:openai-2"] == ["gpt-4.6"]
+    # Only the currently selected provider should be flagged current.
+    assert sum(1 for p in custom_groups if p["is_current"]) == 1
+    assert next(p for p in custom_groups if p["slug"] == "custom:openai")["is_current"] is True
+
+
+def test_list_authenticated_providers_same_url_different_key_env_and_api_mode_stay_separate(monkeypatch):
+    """Same gateway host but different key_env/api_mode entries are distinct providers."""
+    monkeypatch.setattr("agent.models_dev.fetch_models_dev", lambda: {})
+    monkeypatch.setattr(providers_mod, "HERMES_OVERLAYS", {})
+
+    providers = list_authenticated_providers(
+        current_provider="custom:gpt",
+        current_base_url="https://gateway.example.com",
+        user_providers={},
+        custom_providers=[
+            {
+                "name": "gpt",
+                "base_url": "https://gateway.example.com",
+                "key_env": "GPT_KEY",
+                "api_mode": "codex_responses",
+                "model": "gpt-5.5",
+            },
+            {
+                "name": "claude",
+                "base_url": "https://gateway.example.com",
+                "key_env": "CLAUDE_KEY",
+                "api_mode": "anthropic_messages",
+                "model": "claude-opus-4-8",
+            },
+        ],
+        max_models=50,
+    )
+
+    custom = [p for p in providers if p.get("is_user_defined")]
+    by_slug = {p["slug"]: p for p in custom}
+
+    assert set(by_slug) == {"custom:gpt", "custom:claude"}
+    assert by_slug["custom:gpt"]["models"] == ["gpt-5.5"]
+    assert by_slug["custom:claude"]["models"] == ["claude-opus-4-8"]
+    assert by_slug["custom:gpt"]["is_current"] is True
+    assert by_slug["custom:claude"]["is_current"] is False
 
 
 def test_list_authenticated_providers_total_models_reflects_grouped_count(monkeypatch):
@@ -408,6 +463,10 @@ def test_list_authenticated_providers_total_models_reflects_grouped_count(monkey
     the full count, and every grouped model appears in the list."""
     monkeypatch.setattr("agent.models_dev.fetch_models_dev", lambda: {})
     monkeypatch.setattr(providers_mod, "HERMES_OVERLAYS", {})
+    monkeypatch.setattr(
+        "hermes_cli.models.fetch_api_models",
+        lambda api_key, base_url: [f"model-{i}" for i in range(6)],
+    )
 
     entries = [
         {"name": f"Ollama \u2014 Model {i}", "base_url": "http://localhost:11434/v1",

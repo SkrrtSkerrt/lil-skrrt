@@ -26,7 +26,7 @@ Config file: `$HERMES_HOME/mem0.json`
 | Key | Default | Description |
 |-----|---------|-------------|
 | `user_id` | `hermes-user` | User identifier on Mem0 |
-| `agent_id` | `lil-skrrt` | Agent identifier |
+| `agent_id` | `hermes` | Agent identifier |
 | `rerank` | `true` | Enable reranking for recall |
 
 ## Tools

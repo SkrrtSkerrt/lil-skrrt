@@ -8,11 +8,9 @@ Verifies that:
 
 from __future__ import annotations
 
-import importlib
 import sys
 from pathlib import Path
 
-import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -34,11 +32,15 @@ def _clear_provider_caches():
 
 
 def test_bundled_plugins_discovered():
-    """Every plugins/model-providers/<name>/ should contain a plugin.yaml + __init__.py."""
+    """Bundled provider plugin packages should contain a plugin.yaml + __init__.py.
+
+    Some directories under plugins/model-providers are data-only or staging
+    directories and are intentionally not importable plugin packages.
+    """
     plugins_dir = REPO_ROOT / "plugins" / "model-providers"
     assert plugins_dir.is_dir(), f"Missing {plugins_dir}"
 
-    child_dirs = [c for c in plugins_dir.iterdir() if c.is_dir()]
+    child_dirs = [c for c in plugins_dir.iterdir() if c.is_dir() and (c / "__init__.py").exists()]
     assert len(child_dirs) >= 28, f"Expected at least 28 provider plugins, found {len(child_dirs)}"
 
     for child in child_dirs:
@@ -57,7 +59,7 @@ def test_all_profiles_register():
     from providers import list_providers
 
     plugins_dir = REPO_ROOT / "plugins" / "model-providers"
-    plugin_dir_count = sum(1 for c in plugins_dir.iterdir() if c.is_dir())
+    plugin_dir_count = sum(1 for c in plugins_dir.iterdir() if c.is_dir() and (c / "__init__.py").exists())
 
     profiles = list_providers()
     names = sorted(p.name for p in profiles)

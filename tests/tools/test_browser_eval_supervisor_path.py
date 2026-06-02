@@ -355,9 +355,15 @@ class TestEvaluateRuntimeResponseShaping:
         thread.start()
         sup._loop = loop
         try:
+            for _ in range(100):
+                if loop.is_running():
+                    break
+                import time
+                time.sleep(0.01)
             out = sup.evaluate_runtime("1+1")
             assert out["ok"] is False
             assert "session" in out["error"].lower()
         finally:
             loop.call_soon_threadsafe(loop.stop)
             thread.join(timeout=2)
+            loop.close()

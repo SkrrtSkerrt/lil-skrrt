@@ -21,10 +21,8 @@ test runner at ``scripts/run_tests.sh``.
 
 import asyncio
 import os
-import re
 import sys
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -184,6 +182,8 @@ _HERMES_BEHAVIORAL_VARS = frozenset({
     "HERMES_SESSION_SOURCE",
     "HERMES_SESSION_KEY",
     "HERMES_GATEWAY_SESSION",
+    "HERMES_CRON_SESSION",
+    "_HERMES_GATEWAY",
     "HERMES_PLATFORM",
     "HERMES_MODEL",
     "HERMES_INFERENCE_MODEL",
@@ -213,12 +213,22 @@ _HERMES_BEHAVIORAL_VARS = frozenset({
     "HERMES_KANBAN_CLAIM_LOCK",
     "HERMES_KANBAN_DISPATCH_IN_GATEWAY",
     "HERMES_TENANT",
+    # Dashboard OAuth auth gate (PR #30156). When set, the bundled
+    # dashboard-auth `nous` plugin auto-registers itself on plugin discovery,
+    # which is triggered by any `/api/status` call. That leaks a provider
+    # into the dashboard_auth registry across tests in the same worker and
+    # makes assertions like `auth_providers == []` flaky. CI never sets
+    # these, so production tests must not see them either.
+    "HERMES_DASHBOARD_OAUTH_CLIENT_ID",
+    "HERMES_DASHBOARD_PORTAL_URL",
     "TERMINAL_CWD",
     "TERMINAL_ENV",
     "TERMINAL_CONTAINER_CPU",
     "TERMINAL_CONTAINER_DISK",
     "TERMINAL_CONTAINER_MEMORY",
     "TERMINAL_CONTAINER_PERSISTENT",
+    "TERMINAL_DOCKER_PERSIST_ACROSS_PROCESSES",
+    "TERMINAL_DOCKER_ORPHAN_REAPER",
     "TERMINAL_DOCKER_RUN_AS_HOST_USER",
     "BROWSER_CDP_URL",
     "CAMOFOX_URL",
@@ -382,13 +392,82 @@ def _hermetic_environment(tmp_path, monkeypatch):
     monkeypatch.delenv("GMI_API_KEY", raising=False)
     monkeypatch.delenv("GMI_BASE_URL", raising=False)
 
+    # 6. Reset session_context so any leaked ContextVars from a previous test
+    #    are truly returned to their unbound state instead of remaining
+    #    explicitly cleared (which would suppress env fallback in later tests).
+    try:
+        from gateway.session_context import reset_session_vars_for_tests
+        reset_session_vars_for_tests()
+    except Exception:
+        pass
+
 
 # Backward-compat alias — old tests reference this fixture name. Keep it
-# as a no-op wrapper so imports don't break.
 @pytest.fixture(autouse=True)
 def _isolate_hermes_home(_hermetic_environment):
     """Alias preserved for any test that yields this name explicitly."""
     return None
+
+
+@pytest.fixture(autouse=True)
+def _reset_shared_tool_state():
+    """Reset cross-test tool state that can leak under xdist or shared workers.
+
+    A handful of tool modules keep process-global caches / wrappers for speed:
+
+    - tools.computer_use.tool caches its backend instance and approval callback
+    - tools.approval keeps per-session approval maps and a current-session
+      ContextVar
+    - hermes_cli.main can wrap sys.stdout/sys.stderr for hangup protection
+
+    Most tests don't touch these modules, but the full suite does exercise all
+    of them in different orders under xdist. Resetting them before and after
+    each test keeps later tests from inheriting state that a previous test
+    intentionally mutated.
+    """
+
+    def _restore_stdio() -> None:
+        try:
+            from hermes_cli.main import _UpdateOutputStream
+
+            if isinstance(sys.stdout, _UpdateOutputStream):
+                sys.stdout = sys.stdout._original
+            if isinstance(sys.stderr, _UpdateOutputStream):
+                sys.stderr = sys.stderr._original
+        except Exception:
+            pass
+
+    def _reset_approval_state() -> None:
+        try:
+            import tools.approval as approval
+
+            with approval._lock:
+                approval._pending.clear()
+                approval._session_approved.clear()
+                approval._session_yolo.clear()
+                approval._permanent_approved.clear()
+                approval._gateway_queues.clear()
+                approval._gateway_notify_cbs.clear()
+            approval.set_current_session_key("")
+        except Exception:
+            pass
+
+    def _reset_computer_use_state() -> None:
+        try:
+            from tools.computer_use.tool import reset_backend_for_tests, set_approval_callback
+
+            reset_backend_for_tests()
+            set_approval_callback(None)
+        except Exception:
+            pass
+
+    _restore_stdio()
+    _reset_approval_state()
+    _reset_computer_use_state()
+    yield
+    _restore_stdio()
+    _reset_approval_state()
+    _reset_computer_use_state()
 
 
 # ── Module-level state reset — replaced by per-file process isolation ──────

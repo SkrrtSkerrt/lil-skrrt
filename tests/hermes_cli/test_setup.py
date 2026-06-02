@@ -1,12 +1,8 @@
 """Tests for setup.py configuration flows."""
-import json
-import os
 import sys
 import types
 
-import pytest
 
-from hermes_cli.auth import get_active_provider
 from hermes_cli.config import load_config, save_config
 from hermes_cli import setup as setup_mod
 from hermes_cli.setup import setup_model_provider
@@ -180,7 +176,7 @@ def test_setup_gateway_skips_service_install_when_systemctl_missing(monkeypatch,
     out = capsys.readouterr().out
     assert "Messaging platforms configured!" in out
     assert "Start the gateway to bring your bots online:" in out
-    assert "hermes gateway" in out
+    assert "lil-skrrt gateway" in out
 
 
 def test_setup_gateway_in_container_shows_docker_guidance(monkeypatch, capsys):

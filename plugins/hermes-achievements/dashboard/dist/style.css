@@ -67,11 +67,11 @@
 .ha-state-secret { opacity: .5; filter: grayscale(.55); }
 .ha-state-secret:after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(-45deg, transparent 0 8px, rgba(255,255,255,.035) 8px 10px); }
 .ha-tier-pending { --ha-tier: color-mix(in srgb, var(--color-muted-foreground) 64%, transparent); }
-.ha-tier-copper { --ha-tier: #b87333; }
+.ha-tier-copper { --ha-tier: #38bdf8; }
 .ha-tier-silver { --ha-tier: #c0c7d2; }
-.ha-tier-gold { --ha-tier: #f2c94c; box-shadow: 0 0 22px rgba(242,201,76,.08); }
+.ha-tier-gold { --ha-tier: #60a5fa; box-shadow: 0 0 22px rgba(96,165,250,.08); }
 .ha-tier-diamond { --ha-tier: #67e8f9; box-shadow: 0 0 24px rgba(103,232,249,.1); }
-.ha-tier-olympian { --ha-tier: #c084fc; box-shadow: 0 0 34px rgba(192,132,252,.18), 0 0 12px rgba(242,201,76,.1); }
+.ha-tier-olympian { --ha-tier: #a78bfa; box-shadow: 0 0 34px rgba(167,139,250,.18), 0 0 12px rgba(96,165,250,.1); }
 @media (max-width: 980px) { .ha-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ha-guide { grid-template-columns: 1fr; } }
 @media (max-width: 800px) { .ha-stats { grid-template-columns: 1fr; } .ha-hero { flex-direction: column; align-items: stretch; } .ha-card-head { grid-template-columns: 3.1rem 1fr; } .ha-badges { grid-column: 1 / -1; align-items: flex-start; flex-direction: row; } }
 

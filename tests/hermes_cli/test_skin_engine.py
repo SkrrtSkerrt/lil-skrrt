@@ -1,10 +1,6 @@
 """Tests for hermes_cli.skin_engine — the data-driven skin/theme system."""
 
-import json
-import os
 import pytest
-from pathlib import Path
-from unittest.mock import patch
 
 
 @pytest.fixture(autouse=True)
@@ -31,7 +27,7 @@ class TestSkinConfig:
     def test_get_color_with_fallback(self):
         from hermes_cli.skin_engine import load_skin
         skin = load_skin("default")
-        assert skin.get_color("banner_title") == "#FFD700"
+        assert skin.get_color("banner_title") == "#38BDF8"
         assert skin.get_color("nonexistent", "#000") == "#000"
 
     def test_get_branding_with_fallback(self):
@@ -55,7 +51,7 @@ class TestBuiltinSkins:
         assert skin.get_color("banner_border") == "#9F1C1C"
         assert skin.get_color("response_border") == "#C7A96B"
         assert skin.get_color("session_label") == "#C7A96B"
-        assert skin.get_color("session_border") == "#6E584B"
+        assert skin.get_color("session_border") == "#64748B"
         assert skin.get_branding("agent_name") == "Ares Agent"
 
     def test_ares_has_spinner_customization(self):
@@ -92,25 +88,25 @@ class TestBuiltinSkins:
         assert skin.get_color("completion_menu_meta_bg") == "#EEF2FF"
         assert skin.get_color("completion_menu_meta_current_bg") == "#BFDBFE"
 
-    def test_warm_lightmode_skin_loads(self):
+    def test_cool_lightmode_skin_loads(self):
         from hermes_cli.skin_engine import load_skin
 
-        skin = load_skin("warm-lightmode")
-        assert skin.name == "warm-lightmode"
-        assert skin.get_color("banner_text") == "#2C1810"
-        assert skin.get_color("completion_menu_bg") == "#F5EFE0"
+        skin = load_skin("cool-lightmode")
+        assert skin.name == "cool-lightmode"
+        assert skin.get_color("banner_text") == "#0F172A"
+        assert skin.get_color("completion_menu_bg") == "#F8FAFC"
 
-    def test_charizard_skin_has_dark_ember_completion_menu(self):
+    def test_charizard_skin_has_cool_completion_menu(self):
         from hermes_cli.skin_engine import load_skin
 
         skin = load_skin("charizard")
         assert skin.name == "charizard"
-        assert skin.get_color("banner_dim") == "#C58A45"
-        assert skin.get_color("completion_menu_bg") == "#0B0503"
-        assert skin.get_color("completion_menu_current_bg") == "#4A1B07"
-        assert skin.get_color("completion_menu_meta_bg") == "#120806"
-        assert skin.get_color("completion_menu_meta_current_bg") == "#5A260D"
-        assert skin.get_color("selection_bg") == "#5A260D"
+        assert skin.get_color("banner_dim") == "#64748B"
+        assert skin.get_color("completion_menu_bg") == "#020617"
+        assert skin.get_color("completion_menu_current_bg") == "#0F172A"
+        assert skin.get_color("completion_menu_meta_bg") == "#0F172A"
+        assert skin.get_color("completion_menu_meta_current_bg") == "#1E293B"
+        assert skin.get_color("selection_bg") == "#1E293B"
 
     def test_unknown_skin_falls_back_to_default(self):
         from hermes_cli.skin_engine import load_skin
@@ -149,7 +145,7 @@ class TestSkinManagement:
         assert "mono" in names
         assert "slate" in names
         assert "daylight" in names
-        assert "warm-lightmode" in names
+        assert "cool-lightmode" in names
         for s in skins:
             assert "source" in s
             assert s["source"] == "builtin"
@@ -185,7 +181,7 @@ class TestSkinManagement:
 
 class TestUserSkins:
     def test_load_user_skin_from_yaml(self, tmp_path, monkeypatch):
-        from hermes_cli.skin_engine import load_skin, _skins_dir
+        from hermes_cli.skin_engine import load_skin
         # Create a user skin YAML
         skins_dir = tmp_path / "skins"
         skins_dir.mkdir()
@@ -209,7 +205,7 @@ class TestUserSkins:
         assert skin.get_branding("agent_name") == "Custom Agent"
         assert skin.tool_prefix == "▸"
         # Should inherit defaults for unspecified colors
-        assert skin.get_color("banner_border") == "#CD7F32"  # from default
+        assert skin.get_color("banner_border") == "#9F1C1C"  # from default
 
     def test_load_user_skin_invalid_section_types_fall_back_to_defaults(self, tmp_path, monkeypatch):
         from hermes_cli.skin_engine import load_skin
@@ -236,7 +232,7 @@ class TestUserSkins:
         skin = load_skin("broken")
 
         assert skin.name == "broken"
-        assert skin.get_color("banner_title") == "#FFD700"
+        assert skin.get_color("banner_title") == "#38BDF8"
         assert skin.get_branding("agent_name") == "Hermes Agent"
         assert skin.spinner.get("waiting_faces", []) == []
         assert skin.tool_emojis == {}

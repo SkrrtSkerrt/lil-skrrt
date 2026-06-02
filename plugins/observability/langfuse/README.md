@@ -29,7 +29,7 @@ open.
 
 ```bash
 lil-skrrt plugins list                 # observability/langfuse should show "enabled"
-lil-skrrt chat -q "hello"              # then check Langfuse for a "Hermes turn" trace
+lil-skrrt chat -q "hello"              # then check Langfuse for a "Lil Skrrt turn" trace
 ```
 
 ## Optional tuning

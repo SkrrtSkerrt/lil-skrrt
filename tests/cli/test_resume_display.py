@@ -10,7 +10,6 @@ import sys
 from io import StringIO
 from unittest.mock import MagicMock, patch
 
-import pytest
 import cli as cli_mod
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -133,7 +132,7 @@ class TestDisplayResumedHistory:
         output = self._capture_display(cli)
 
         assert "You:" in output
-        assert "Hermes:" in output
+        assert "Lil Skrrt:" in output
         assert "What is Python?" in output
         assert "Python is a high-level programming language." in output
         assert "How do I install it?" in output
@@ -334,7 +333,7 @@ class TestDisplayResumedHistory:
 
         # The assistant entry should be skipped, only the user message shown
         assert "You:" in output
-        assert "Hermes:" not in output
+        assert "Lil Skrrt:" not in output
 
     def test_only_system_messages_no_output(self):
         cli = _make_cli()
@@ -719,7 +718,6 @@ class TestResumeDisplayConfig:
 
     def test_cli_defaults_have_resume_display(self):
         """cli.py load_cli_config defaults include resume_display."""
-        import cli as _cli_mod
         from cli import load_cli_config
 
         with (

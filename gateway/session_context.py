@@ -83,6 +83,58 @@ _VAR_MAP = {
 }
 
 
+def reset_session_vars_for_tests() -> None:
+    """Restore all session ContextVars to their initial unbound state.
+
+    Unlike ``clear_session_vars()``, this puts the vars back to the ``_UNSET``
+    sentinel so ``get_session_env()`` resumes falling back to ``os.environ``.
+
+    The helper mutates ``_VAR_MAP`` in place so modules that imported the map
+    (or helpers that close over it) keep seeing the fresh ContextVar objects.
+    It's intended for test isolation and module-reload cleanup.
+    """
+    global _SESSION_PLATFORM, _SESSION_CHAT_ID, _SESSION_CHAT_NAME
+    global _SESSION_THREAD_ID, _SESSION_USER_ID, _SESSION_USER_NAME
+    global _SESSION_KEY, _SESSION_ID, _SESSION_MESSAGE_ID
+    global _CRON_AUTO_DELIVER_PLATFORM, _CRON_AUTO_DELIVER_CHAT_ID
+    global _CRON_AUTO_DELIVER_THREAD_ID
+
+    _SESSION_PLATFORM = ContextVar("HERMES_SESSION_PLATFORM", default=_UNSET)
+    _SESSION_CHAT_ID = ContextVar("HERMES_SESSION_CHAT_ID", default=_UNSET)
+    _SESSION_CHAT_NAME = ContextVar("HERMES_SESSION_CHAT_NAME", default=_UNSET)
+    _SESSION_THREAD_ID = ContextVar("HERMES_SESSION_THREAD_ID", default=_UNSET)
+    _SESSION_USER_ID = ContextVar("HERMES_SESSION_USER_ID", default=_UNSET)
+    _SESSION_USER_NAME = ContextVar("HERMES_SESSION_USER_NAME", default=_UNSET)
+    _SESSION_KEY = ContextVar("HERMES_SESSION_KEY", default=_UNSET)
+    _SESSION_ID = ContextVar("HERMES_SESSION_ID", default=_UNSET)
+    _SESSION_MESSAGE_ID = ContextVar("HERMES_SESSION_MESSAGE_ID", default=_UNSET)
+    _CRON_AUTO_DELIVER_PLATFORM = ContextVar(
+        "HERMES_CRON_AUTO_DELIVER_PLATFORM", default=_UNSET
+    )
+    _CRON_AUTO_DELIVER_CHAT_ID = ContextVar(
+        "HERMES_CRON_AUTO_DELIVER_CHAT_ID", default=_UNSET
+    )
+    _CRON_AUTO_DELIVER_THREAD_ID = ContextVar(
+        "HERMES_CRON_AUTO_DELIVER_THREAD_ID", default=_UNSET
+    )
+
+    _VAR_MAP.clear()
+    _VAR_MAP.update({
+        "HERMES_SESSION_PLATFORM": _SESSION_PLATFORM,
+        "HERMES_SESSION_CHAT_ID": _SESSION_CHAT_ID,
+        "HERMES_SESSION_CHAT_NAME": _SESSION_CHAT_NAME,
+        "HERMES_SESSION_THREAD_ID": _SESSION_THREAD_ID,
+        "HERMES_SESSION_USER_ID": _SESSION_USER_ID,
+        "HERMES_SESSION_USER_NAME": _SESSION_USER_NAME,
+        "HERMES_SESSION_KEY": _SESSION_KEY,
+        "HERMES_SESSION_ID": _SESSION_ID,
+        "HERMES_SESSION_MESSAGE_ID": _SESSION_MESSAGE_ID,
+        "HERMES_CRON_AUTO_DELIVER_PLATFORM": _CRON_AUTO_DELIVER_PLATFORM,
+        "HERMES_CRON_AUTO_DELIVER_CHAT_ID": _CRON_AUTO_DELIVER_CHAT_ID,
+        "HERMES_CRON_AUTO_DELIVER_THREAD_ID": _CRON_AUTO_DELIVER_THREAD_ID,
+    })
+
+
 def set_current_session_id(session_id: str) -> None:
     """Synchronize ``HERMES_SESSION_ID`` across ContextVar and ``os.environ``.
 

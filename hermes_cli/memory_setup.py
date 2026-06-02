@@ -1,4 +1,4 @@
-"""hermes memory setup|status — configure memory provider plugins.
+"""lil-skrrt memory setup|status — configure memory provider plugins.
 
 Auto-detects installed memory providers via the plugin system.
 Interactive curses-based UI for provider selection, then walks through
@@ -101,7 +101,7 @@ def _install_dependencies(provider_name: str) -> None:
     if not uv_path:
         print(f"  ⚠ uv not found — cannot install dependencies")
         print(f"  Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh")
-        print(f"  Then re-run: hermes memory setup")
+        print(f"  Then re-run: lil-skrrt memory setup")
         return
 
     try:
@@ -191,7 +191,7 @@ def cmd_setup_provider(provider_name: str) -> None:
 
     if not match:
         print(f"\n  Memory provider '{provider_name}' not found.")
-        print("  Run 'hermes memory setup' to see available providers.\n")
+        print("  Run 'lil-skrrt memory setup' to see available providers.\n")
         return
 
     name, _, provider = match
@@ -452,7 +452,11 @@ def memory_command(args) -> None:
     """Route memory subcommands."""
     sub = getattr(args, "memory_command", None)
     if sub == "setup":
-        cmd_setup(args)
+        provider = getattr(args, "provider", None)
+        if provider:
+            cmd_setup_provider(provider)
+        else:
+            cmd_setup(args)
     elif sub == "status":
         cmd_status(args)
     else:

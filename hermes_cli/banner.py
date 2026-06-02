@@ -12,14 +12,16 @@ import threading
 import time
 from pathlib import Path
 from hermes_constants import get_hermes_home
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
-
-from prompt_toolkit import print_formatted_text as _pt_print
-from prompt_toolkit.formatted_text import ANSI as _PT_ANSI
+# rich and prompt_toolkit are imported lazily (inside the functions that use
+# them) rather than at module level.  Importing this module is on the TUI
+# gateway's critical startup path purely to reach the lightweight update-check
+# helpers (``prefetch_update_check``); pulling rich.console + prompt_toolkit
+# eagerly added ~50ms of wasted imports before ``gateway.ready`` could fire.
+# Keep the type-only reference available to checkers without the runtime cost.
+if TYPE_CHECKING:
+    from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +30,7 @@ logger = logging.getLogger(__name__)
 # ANSI building blocks for conversation display
 # =========================================================================
 
-_GOLD = "\033[1;38;2;255;215;0m"  # True-color #FFD700 bold
+_GOLD = "\033[1;38;2;56;189;248m"  # True-color #38BDF8 bold
 _BOLD = "\033[1m"
 _DIM = "\033[2m"
 _RST = "\033[0m"
@@ -36,6 +38,8 @@ _RST = "\033[0m"
 
 def cprint(text: str):
     """Print ANSI-colored text through prompt_toolkit's renderer."""
+    from prompt_toolkit import print_formatted_text as _pt_print
+    from prompt_toolkit.formatted_text import ANSI as _PT_ANSI
     _pt_print(_PT_ANSI(text))
 
 
@@ -50,127 +54,34 @@ def _skin_color(key: str, fallback: str) -> str:
         return get_active_skin().get_color(key, fallback)
     except Exception:
         return fallback
-
-
-def _skin_branding(key: str, fallback: str) -> str:
-    """Get a branding string from the active skin, or return fallback."""
-    try:
-        from hermes_cli.skin_engine import get_active_skin
-        return get_active_skin().get_branding(key, fallback)
-    except Exception:
-        return fallback
-
-
 # =========================================================================
 # ASCII Art & Branding
 # =========================================================================
 
 from hermes_cli import __version__ as VERSION, __release_date__ as RELEASE_DATE
 
-TERMINATOR_AGENT_LOGO = """[bold #FFFFFF]╔══════════════════════════════════════════════════════════════╗[/]
-[bold #C7CED8]║                 M A C H I N E   H U N T E R                 ║[/]
-[#7CC7FF]║                    T E R M I N A T O R  ║[/]
-[bold #E11D48]╚══════════════════════════════════════════════════════════════╝[/]"""
+HERMES_AGENT_LOGO = """[bold #38BDF8]██╗  ██╗███████╗██████╗ ███╗   ███╗███████╗███████╗       █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
+[bold #22D3EE]██║  ██║██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝      ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
+[#0EA5E9]███████║█████╗  ██████╔╝██╔████╔██║█████╗  ███████╗█████╗███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
+[#6366F1]██╔══██║██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ╚════██║╚════╝██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
+[#8B5CF6]██║  ██║███████╗██║  ██║██║ ╚═╝ ██║███████╗███████║      ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
+[#A78BFA]╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝      ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]"""
 
-HERMES_AGENT_LOGO = TERMINATOR_AGENT_LOGO
-
-TERMINATOR_HERO = """                          '`' ` ` . ░ ,▄'.`,'░░░░░  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                     .   .,,,▓▓▄▓█████▓██▓▄█▓▄█░▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                      »▄▄▄███████████████████████▓▓▄▄µ¿░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                    '»▓███████████████████████████████▀░░░ ░░░░░░░░░░░░░░░░░░░░░
-
-                    ▄███████████████████████████████████▄,:░░░░░░░░░░░░░░░░░░░░░
-
-                  .▄████████████████████████████████████▀╨.░░░░░░░░░░░░░░░░░░░░░
-
-                   `▓██████▀▀▀╨╙²`²╨╙└``  .    `╨▀███████¿░  ░░░░░░░░░░░░░░░░░░░
-
-                   ▐█████▌                       ░²██████▓░  ░░░░░░░░░░░░░░░░░░░
-
-                   ██████                         .▐█████µ'  ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████           , ,   `        ▐█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ╫█████∩          █▄╫╦▓H,,,,    '"█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████▄▓████████████████████████▓█████H   ░░░░░░░░░░░░░░░░░░░
-
-                   ▓█████████████████████████████████████      ░░░░░░░░░░░░░░░░░
-
-                   ╫██████████████████²╨████████████████▌~ '  ░░░░░░░░░░░░░░░░░░
-
-                  ,▄███▌╫████████████   ²████████████▀███µ      ░░░░░░░░░░░░░░░░
-
-                  ╫█▀██▌ ╨▀█████████Ü    `▀███████▀▀ ▓██▀█      ░░░░░░░░░░░░░░░░
-
-                  ╫█╫███µ        j█▄▄▄▄▄▄▓▄▄      ,▄███▌▄█      ░░░░░░░░░░░░░░░░
-
-                  `█▌▓████▓▄▄µ    ▀██▀██▀▀▀╩   )███████▓█Ö      ░░░░░░░░░░░░░░░░
-
-                   ╫█`▀██████       ,,  ,.    ."███████╫█░`     ░░░░░░░░░░░░░░░░
-
-                   ²█▓▄█████▌    ▄▓█████▀██▄µ   ████████▀ `     ░░░░░░░░░░░░░░░░
-
-                    `╨╙█▓███▌   ▀▀`,▄▄▄▄▄▄░╨▀▀ ,██████          ░░░░░░░░░░░░░░░░
-
-                       `▓████▄   ▄██████████▄▄▄██████▌    `   ░░░░░░░░░░░░░░░░░░
-
-                        ╫▓▓████µ ╨▀▀²    ²▀▀▀███████████▓▄¿░░░░░░░░░░░░░░░░░░░░░
-
-                      ╥▄▓███████▄,,,,,,,;,µ▄▓███████████████▄¿░ ░░░░░░░░░░░░░░░░
-
-                  ,▄▓██▀▓██▓▓████████████████████╩ ╫███████████▄░░░░░░░░░░░░░░░░
-
-               ,▄▓▓█▀╙╥▓▓████▓█████████████████▀   ▐████████▓▀▀██▄░░░░░░░░░░░░░░
-
-             ,▄▓▓▀╙.▄▓▓▓█████▓▓███████████████Ü .  j██████████▓å▀██▄░░░░░░░░░░░░
-
-            ▄▓▓▓╛,▄▓▓▓▓▓▓████▓▓██████▀╨╙²▀██▌    ::▐████████████▓▒▀██▓µ░░░░░░░░░
-
-          ,▓▓▓▀ ▄▓▓▓▓▓▓██▓███████████H  .j█▀  ~.░.:▓████████████▀╩░╨████▄░░░░░░░
-
-         ▄▓▓▓"╒▓▓▓▓▓▓▓███████▓██▒████H  .░░░'░`░.,▄███████████▄▄▓▓▓▓████▀Ü░░░░░░
-
-       ,▓▓█▌  ╨▀███▓▓██╨▓▓███████`▀▀▀     '░░╓▄▓████████████████████████░░░░░░░░
-
-   ░  ╥▓███▄▄▄▄▄▄▓▓██▀ ▄██████████▄▄▄▄▄▄▄▄▓███████████████████████████▀░░░░░░░░░
-
-   `░ ╨▀▀╨╙╨▀▀██████▌ `█████████████████████████████████████▄░▀▀████▀░░░░░░░░░░░
-
-      ..  .▄▓███████▓  ²████████████████████████████████████▀░░░░╫████▄µ░░░░░░░░
-
-░░░   .░'▄████████████µ `█████████████████████████████████████M░▄█████▀░░░░░░░░░
-
-░░░   :`:²▀████████████▄ `▀██████████████▀░▓███████████████▀▒▄▓████▀Ü░░░░░░░░░░░
-
-░░░░░     , ╨▀█████╩ ╨██▓¿ ▀███████████▀╥▄███████████████▀▐▄█████▀░░░░░░░░░░░░░▒
-
-░░░░░░░   ░ `:²▀█Ü.',▓████µ `▀███████▄▓███████████████▀▐▄█████▀▀░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░ .░░░ 'φ███████▄  ╨███▒▀▀███████████████▀╥▄█████▀░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░   .░'`▀████████µ.`▀██µ▄▀████████████▀▄█████▀░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░   ░.░░`▀███████▄░'╨██████████████Ö▄████▀▀░░░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░░░░░  ░░:░╨▀█████▓░░`▀██████████▀▄████▀░░░░░░░░░░░░░░░░░░░░░░░░░░▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░ `▀█████▄░░²███████▀▄████▀░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▀████▓░░▐████▌▄███▀Ü░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╙▀██∩░████████╩░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╨░▐████▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╫█▀╩░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒"""
-
-HERMES_CADUCEUS = TERMINATOR_HERO
+HERMES_CADUCEUS = """[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⣀⣀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#0EA5E9]⠀⠀⠀⠀⠀⠀⢀⣠⣴⣾⣿⣿⣇⠸⣿⣿⠇⣸⣿⣿⣷⣦⣄⡀⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⢀⣠⣴⣶⠿⠋⣩⡿⣿⡿⠻⣿⡇⢠⡄⢸⣿⠟⢿⣿⢿⣍⠙⠿⣶⣦⣄⡀⠀[/]
+[#22D3EE]⠀⠀⠉⠉⠁⠶⠟⠋⠀⠉⠀⢀⣈⣁⡈⢁⣈⣁⡀⠀⠉⠀⠙⠻⠶⠈⠉⠉⠀⠀[/]
+[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⡿⠛⢁⡈⠛⢿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣦⣤⣈⠁⢠⣴⣿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠻⢿⣿⣦⡉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢷⣦⣈⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⠦⠈⠙⠿⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣤⡈⠁⢤⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠑⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⢰⡆⠈⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠈⣡⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
+[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]"""
 
 
 
@@ -209,7 +120,7 @@ _UPDATE_CHECK_CACHE_SECONDS = 6 * 3600
 # (e.g. nix-built hermes — no local git history to count against).
 UPDATE_AVAILABLE_NO_COUNT = -1
 
-_UPSTREAM_REPO_URL = "https://github.com/SkrrtSkerrt/hermes-agent.git"
+_UPSTREAM_REPO_URL = "https://github.com/NousResearch/hermes-agent.git"
 
 
 def _check_via_rev(local_rev: str) -> Optional[int]:
@@ -314,7 +225,11 @@ def check_for_updates() -> Optional[int]:
     cache_file = hermes_home / ".update_check"
     embedded_rev = os.environ.get("HERMES_REVISION") or None
 
-    # Read cache — invalidate if the embedded rev has changed since last check
+    # Read cache — invalidate if the embedded rev OR installed version has
+    # changed since the last check. The version guard matters for pip installs:
+    # `check_via_pypi()` compares against VERSION, so a `pip install --upgrade`
+    # changes VERSION but leaves rev unchanged (both None), and without this
+    # the stale "behind" count would survive the upgrade for up to 6h. See #34491.
     now = time.time()
     try:
         if cache_file.exists():
@@ -322,6 +237,7 @@ def check_for_updates() -> Optional[int]:
             if (
                 now - cached.get("ts", 0) < _UPDATE_CHECK_CACHE_SECONDS
                 and cached.get("rev") == embedded_rev
+                and cached.get("ver") == VERSION
             ):
                 return cached.get("behind")
     except Exception:
@@ -342,7 +258,9 @@ def check_for_updates() -> Optional[int]:
             behind = _check_via_local_git(repo_dir)
 
     try:
-        cache_file.write_text(json.dumps({"ts": now, "behind": behind, "rev": embedded_rev}))
+        cache_file.write_text(
+            json.dumps({"ts": now, "behind": behind, "rev": embedded_rev, "ver": VERSION})
+        )
     except Exception:
         pass
 
@@ -382,14 +300,42 @@ def _git_short_hash(repo_dir: Path, rev: str) -> Optional[str]:
 
 
 def get_git_banner_state(repo_dir: Optional[Path] = None) -> Optional[dict]:
-    """Return upstream/local git hashes for the startup banner."""
+    """Return upstream/local git hashes for the startup banner.
+
+    For source installs and dev images this runs ``git rev-parse`` against
+    the active checkout.  When no checkout is available — the canonical case
+    is the published Docker image, which excludes ``.git`` from the build
+    context — we fall back to the baked-in build SHA (see
+    ``hermes_cli/build_info.py``) and return it as a frozen
+    ``upstream == local`` state with ``ahead=0``.  A built image is by
+    definition pinned to one commit, so "ahead" is always zero and the
+    banner correctly shows ``· upstream <sha>`` with no carried-commits
+    annotation.
+    """
     repo_dir = repo_dir or _resolve_repo_dir()
     if repo_dir is None:
+        # No git checkout — try the baked build SHA (Docker image path).
+        try:
+            from hermes_cli.build_info import get_build_sha
+            baked = get_build_sha(short=8)
+            if baked:
+                return {"upstream": baked, "local": baked, "ahead": 0}
+        except Exception:
+            pass
         return None
 
     upstream = _git_short_hash(repo_dir, "origin/main")
     local = _git_short_hash(repo_dir, "HEAD")
     if not upstream or not local:
+        # Live-git lookup failed (e.g. shallow clone without origin/main).
+        # Fall back to the baked build SHA if available.
+        try:
+            from hermes_cli.build_info import get_build_sha
+            baked = get_build_sha(short=8)
+            if baked:
+                return {"upstream": baked, "local": baked, "ahead": 0}
+        except Exception:
+            pass
         return None
 
     ahead = 0
@@ -409,7 +355,7 @@ def get_git_banner_state(repo_dir: Optional[Path] = None) -> Optional[dict]:
     return {"upstream": upstream, "local": local, "ahead": max(ahead, 0)}
 
 
-_RELEASE_URL_BASE = "https://github.com/SkrrtSkerrt/hermes-agent/releases/tag"
+_RELEASE_URL_BASE = "https://github.com/NousResearch/hermes-agent/releases/tag"
 _latest_release_cache: Optional[tuple] = None  # (tag, url) once resolved
 
 
@@ -418,7 +364,7 @@ def get_latest_release_tag(repo_dir: Optional[Path] = None) -> Optional[tuple]:
 
     Local-only — runs ``git describe --tags --abbrev=0`` against the
     Hermes checkout. Cached per-process. Release URL always points at the
-    canonical SkrrtSkerrt/hermes-agent repo (forks don't get a link).
+    canonical NousResearch/hermes-agent repo (forks don't get a link).
     """
     global _latest_release_cache
     if _latest_release_cache is not None:
@@ -457,8 +403,7 @@ def get_latest_release_tag(repo_dir: Optional[Path] = None) -> Optional[tuple]:
 
 def format_banner_version_label() -> str:
     """Return the version label shown in the startup banner title."""
-    brand = _skin_branding("agent_name", "Lil Skrrt")
-    base = f"{brand} v{VERSION} ({RELEASE_DATE})"
+    base = f"Hermes Agent v{VERSION} ({RELEASE_DATE})"
     state = get_git_banner_state()
     if not state:
         return base
@@ -530,7 +475,7 @@ def _display_toolset_name(toolset_name: str) -> str:
     )
 
 
-def build_welcome_banner(console: Console, model: str, cwd: str,
+def build_welcome_banner(console: "Console", model: str, cwd: str,
                          tools: List[dict] = None,
                          enabled_toolsets: List[str] = None,
                          session_id: str = None,
@@ -549,6 +494,8 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
         context_length: Model's context window size in tokens.
     """
     from model_tools import check_tool_availability, TOOLSET_REQUIREMENTS
+    from rich.panel import Panel
+    from rich.table import Table
     if get_toolset_for_tool is None:
         from model_tools import get_toolset_for_tool
 
@@ -575,19 +522,19 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
     layout_table.add_column("right", justify="left")
 
     # Resolve skin colors once for the entire banner
-    accent = _skin_color("banner_accent", "#FFBF00")
-    dim = _skin_color("banner_dim", "#B8860B")
-    text = _skin_color("banner_text", "#FFF8DC")
+    accent = _skin_color("banner_accent", "#22D3EE")
+    dim = _skin_color("banner_dim", "#64748B")
+    text = _skin_color("banner_text", "#E2E8F0")
     session_color = _skin_color("session_border", "#8B8682")
 
     # Use skin's custom caduceus art if provided
     try:
         from hermes_cli.skin_engine import get_active_skin
         _bskin = get_active_skin()
-        _hero = _bskin.banner_hero if hasattr(_bskin, 'banner_hero') and _bskin.banner_hero else TERMINATOR_HERO
+        _hero = _bskin.banner_hero if hasattr(_bskin, 'banner_hero') and _bskin.banner_hero else HERMES_CADUCEUS
     except Exception:
         _bskin = None
-        _hero = TERMINATOR_HERO
+        _hero = HERMES_CADUCEUS
     left_lines = ["", _hero, ""]
     model_short = model.split("/")[-1] if "/" in model else model
     if model_short.endswith(".gguf"):
@@ -595,8 +542,7 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
     if len(model_short) > 28:
         model_short = model_short[:25] + "..."
     ctx_str = f" [dim {dim}]·[/] [dim {dim}]{_format_context_length(context_length)} context[/]" if context_length else ""
-    brand_name = _skin_branding("agent_name", "Lil Skrrt")
-    left_lines.append(f"[{accent}]{model_short}[/]{ctx_str} [dim {dim}]·[/] [dim {dim}]{brand_name}[/]")
+    left_lines.append(f"[{accent}]{model_short}[/]{ctx_str} [dim {dim}]·[/] [dim {dim}]Nous Research[/]")
 
     if os.getenv("HERMES_YOLO_MODE"):
         left_lines.append(f"[bold red]⚠ YOLO mode[/] [dim {dim}]— all approval prompts bypassed[/]")
@@ -735,13 +681,49 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
 
     right_lines.append(f"[dim {dim}]{' · '.join(summary_parts)}[/]")
 
-    # Do not surface update prompts automatically in the welcome banner.
+    # Update check — use prefetched result if available
+    try:
+        behind = get_update_result(timeout=0.5)
+        if behind is not None and behind != 0:
+            from hermes_cli.config import get_managed_update_command, recommended_update_command
+            if behind > 0:
+                commits_word = "commit" if behind == 1 else "commits"
+                right_lines.append(
+                    f"[bold yellow]⚠ {behind} {commits_word} behind[/]"
+                    f"[dim yellow] — run [bold]{recommended_update_command()}[/bold] to update[/]"
+                )
+            else:
+                # UPDATE_AVAILABLE_NO_COUNT: nix-built hermes; we know an update
+                # exists but not by how much, and we don't know how the user
+                # installed it (nix run, profile, system flake, home-manager).
+                managed_cmd = get_managed_update_command()
+                line = "[bold yellow]⚠ update available[/]"
+                if managed_cmd:
+                    line += f"[dim yellow] — run [bold]{managed_cmd}[/bold][/]"
+                right_lines.append(line)
+    except Exception:
+        pass  # Never break the banner over an update check
+
+    # Pip-install warning — `pip install hermes-agent` is not the supported
+    # install path (it exists on PyPI for internal/CI reasons, not end users).
+    # Such installs miss the git checkout + installer-managed deps, so updates,
+    # self-update, and issue triage don't behave correctly. Warn, don't block.
+    try:
+        from hermes_cli.config import detect_install_method
+        if detect_install_method() == "pip":
+            right_lines.append(
+                "[bold yellow]⚠ pip install not officially supported[/]"
+                "[dim yellow] — exists for reasons other than user install; "
+                "expect instability and an inability to support issues[/]"
+            )
+    except Exception:
+        pass  # Never break the banner over the install-method check
 
     right_content = "\n".join(right_lines)
     layout_table.add_row(left_content, right_content)
 
-    title_color = _skin_color("banner_title", "#FFD700")
-    border_color = _skin_color("banner_border", "#CD7F32")
+    title_color = _skin_color("banner_title", "#38BDF8")
+    border_color = _skin_color("banner_border", "#38BDF8")
     version_label = format_banner_version_label()
     release_info = get_latest_release_tag()
     if release_info:
@@ -759,7 +741,7 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
     console.print()
     term_width = shutil.get_terminal_size().columns
     if term_width >= 95:
-        _logo = _bskin.banner_logo if _bskin and hasattr(_bskin, 'banner_logo') and _bskin.banner_logo else TERMINATOR_AGENT_LOGO
+        _logo = _bskin.banner_logo if _bskin and hasattr(_bskin, 'banner_logo') and _bskin.banner_logo else HERMES_AGENT_LOGO
         console.print(_logo)
         console.print()
     console.print(outer_panel)

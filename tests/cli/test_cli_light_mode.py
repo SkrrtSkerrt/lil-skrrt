@@ -8,7 +8,6 @@ before the terminal query, which is the path most users hit.
 
 from __future__ import annotations
 
-import importlib
 
 import pytest
 
@@ -76,6 +75,27 @@ class TestLightModeDetection:
         assert cli_mod._detect_light_mode() is True
 
 
+class TestOsc11Probe:
+    """The OSC 11 background probe must never run where its reply can leak
+    into prompt_toolkit's input (a late BEL-terminated reply reads as Ctrl+G
+    = open-editor, trapping the user in a stray editor). Guard the cases we
+    refuse to probe in.
+    """
+
+    @pytest.mark.parametrize("var", ("SSH_CONNECTION", "SSH_CLIENT", "SSH_TTY"))
+    def test_skips_over_ssh(self, cli_mod, monkeypatch, var):
+        monkeypatch.setattr(cli_mod.sys.stdin, "isatty", lambda: True, raising=False)
+        monkeypatch.setattr(cli_mod.sys.stdout, "isatty", lambda: True, raising=False)
+        for v in ("SSH_CONNECTION", "SSH_CLIENT", "SSH_TTY"):
+            monkeypatch.delenv(v, raising=False)
+        monkeypatch.setenv(var, "1.2.3.4 5555 22")
+        assert cli_mod._query_osc11_background() is None
+
+    def test_skips_when_not_a_tty(self, cli_mod, monkeypatch):
+        monkeypatch.setattr(cli_mod.sys.stdin, "isatty", lambda: False, raising=False)
+        assert cli_mod._query_osc11_background() is None
+
+
 class TestLightModeRemap:
     def test_remap_no_op_in_dark_mode(self, cli_mod, monkeypatch):
         monkeypatch.setenv("HERMES_LIGHT", "0")
@@ -86,13 +106,13 @@ class TestLightModeRemap:
         monkeypatch.setenv("HERMES_LIGHT", "1")
         # Force the detect cache to True for this test.
         cli_mod._LIGHT_MODE_CACHE = True
-        assert cli_mod._maybe_remap_for_light_mode("#FFF8DC") == "#1A1A1A"
-        assert cli_mod._maybe_remap_for_light_mode("#FFD700") == "#9A6B00"
+        assert cli_mod._maybe_remap_for_light_mode("#FFF8DC") == "#0F172A"
+        assert cli_mod._maybe_remap_for_light_mode("#FFD700") == "#1D4ED8"
 
     def test_remap_case_insensitive(self, cli_mod, monkeypatch):
         cli_mod._LIGHT_MODE_CACHE = True
         # Lowercase input should still remap.
-        assert cli_mod._maybe_remap_for_light_mode("#fff8dc") == "#1A1A1A"
+        assert cli_mod._maybe_remap_for_light_mode("#fff8dc") == "#0F172A"
 
     def test_remap_unknown_color_passthrough(self, cli_mod, monkeypatch):
         cli_mod._LIGHT_MODE_CACHE = True
@@ -134,7 +154,9 @@ class TestSkinConfigHook:
         after = SkinConfig.get_color
         assert before is after
 
-    def test_skin_color_remaps_through_wrapper_in_light_mode(self, cli_mod, monkeypatch):
+    def test_skin_color_remaps_through_wrapper_in_light_mode(
+        self, cli_mod, monkeypatch
+    ):
         from hermes_cli.skin_engine import SkinConfig
 
         cli_mod._LIGHT_MODE_CACHE = True
@@ -143,8 +165,8 @@ class TestSkinConfigHook:
             colors={"banner_text": "#FFF8DC", "response_border": "#FFD700"},
         )
         # The wrapper kicks in at get_color, not at construction time.
-        assert skin.get_color("banner_text") == "#1A1A1A"
-        assert skin.get_color("response_border") == "#9A6B00"
+        assert skin.get_color("banner_text") == "#0F172A"
+        assert skin.get_color("response_border") == "#1D4ED8"
 
     def test_skin_color_passthrough_in_dark_mode(self, cli_mod, monkeypatch):
         from hermes_cli.skin_engine import SkinConfig

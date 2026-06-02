@@ -40,17 +40,18 @@ const DEFAULT_LAYOUT: ThemeLayout = {
 
 export const defaultTheme: DashboardTheme = {
   name: "default",
-  label: "Hermes Teal",
-  description: "Classic dark teal — the canonical Hermes look",
+  label: "Lil Skrrt Neon",
+  description: "Cool teal and electric blue — the canonical Lil Skrrt look",
   palette: {
     background: { hex: "#041c1c", alpha: 1 },
-    midground: { hex: "#ffe6cb", alpha: 1 },
+    midground: { hex: "#d4ecff", alpha: 1 },
     foreground: { hex: "#ffffff", alpha: 0 },
-    warmGlow: "rgba(255, 189, 56, 0.35)",
+    warmGlow: "rgba(56, 189, 248, 0.32)",
     noiseOpacity: 1,
   },
   typography: DEFAULT_TYPOGRAPHY,
   layout: DEFAULT_LAYOUT,
+  terminalBackground: "#000000",
 };
 
 export const midnightTheme: DashboardTheme = {
@@ -80,13 +81,13 @@ export const midnightTheme: DashboardTheme = {
 
 export const emberTheme: DashboardTheme = {
   name: "ember",
-  label: "Ember",
-  description: "Warm crimson and bronze — forge vibes",
+  label: "Reactor",
+  description: "Deep blue-violet and steel — reactor vibes",
   palette: {
-    background: { hex: "#1a0a06", alpha: 1 },
-    midground: { hex: "#ffd8b0", alpha: 1 },
+    background: { hex: "#07111a", alpha: 1 },
+    midground: { hex: "#d3e7ff", alpha: 1 },
     foreground: { hex: "#ffffff", alpha: 0 },
-    warmGlow: "rgba(249, 115, 22, 0.38)",
+    warmGlow: "rgba(56, 189, 248, 0.28)",
     noiseOpacity: 1,
   },
   typography: {
@@ -101,8 +102,8 @@ export const emberTheme: DashboardTheme = {
     radius: "0.25rem",
   },
   colorOverrides: {
-    destructive: "#c92d0f",
-    warning: "#f97316",
+    destructive: "#ef4444",
+    warning: "#facc15",
   },
 };
 
@@ -190,8 +191,8 @@ export const roseTheme: DashboardTheme = {
  */
 export const defaultLargeTheme: DashboardTheme = {
   name: "default-large",
-  label: "Hermes Teal (Large)",
-  description: "Hermes Teal with bigger fonts and roomier spacing",
+  label: "Lil Skrrt Neon (Large)",
+  description: "Lil Skrrt Neon with bigger fonts and roomier spacing",
   palette: defaultTheme.palette,
   typography: {
     ...DEFAULT_TYPOGRAPHY,
