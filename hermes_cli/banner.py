@@ -120,7 +120,7 @@ _UPDATE_CHECK_CACHE_SECONDS = 6 * 3600
 # (e.g. nix-built hermes — no local git history to count against).
 UPDATE_AVAILABLE_NO_COUNT = -1
 
-_UPSTREAM_REPO_URL = "https://github.com/NousResearch/hermes-agent.git"
+_UPSTREAM_REPO_URL = "https://github.com/SkrrtSkerrt/lil-skrrt.git"
 
 
 def _check_via_rev(local_rev: str) -> Optional[int]:
@@ -403,7 +403,7 @@ def get_latest_release_tag(repo_dir: Optional[Path] = None) -> Optional[tuple]:
 
 def format_banner_version_label() -> str:
     """Return the version label shown in the startup banner title."""
-    base = f"Hermes Agent v{VERSION} ({RELEASE_DATE})"
+    base = f"Lil Skrrt v{VERSION} ({RELEASE_DATE})"
     state = get_git_banner_state()
     if not state:
         return base

@@ -244,7 +244,7 @@ This is the real pain. Traffic flows **LAN device → Windows host → WSL VM**,
      connectaddress=$wslIp connectport=8080
 
    # Allow it through Windows Firewall
-   New-NetFirewallRule -DisplayName "Hermes WSL 8080" `
+   New-NetFirewallRule -DisplayName "Lil Skrrt WSL 8080" `
      -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Allow
    ```
 

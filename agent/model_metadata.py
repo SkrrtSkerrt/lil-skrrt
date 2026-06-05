@@ -400,9 +400,9 @@ def _infer_provider_from_url(base_url: str) -> Optional[str]:
     if not normalized:
         return None
     parsed = urlparse(normalized if "://" in normalized else f"https://{normalized}")
-    host = parsed.netloc.lower() or parsed.path.lower()
+    host = f"{parsed.netloc.lower()}{parsed.path.lower()}"
     for url_part, provider in _URL_TO_PROVIDER.items():
-        if url_part in host:
+        if url_part.lower() in host:
             return provider
     return None
 
@@ -1483,6 +1483,7 @@ def get_model_context_length(
     # "model-name") so cache lookups and server queries use the bare ID that
     # local servers actually know about.  Ollama "model:tag" colons are preserved.
     model = _strip_provider_prefix(model)
+    is_nous_url = provider == "nous" or (base_url and _infer_provider_from_url(base_url) == "nous")
 
     # 1. Check persistent cache (model+provider)
     # LM Studio is excluded — its loaded context length is transient (the
@@ -1520,7 +1521,7 @@ def get_model_context_length(
             # touching the on-disk file when the portal is unreachable.
             # The in-memory 300s endpoint metadata cache makes the per-call
             # cost amortise to ~0 within a process.
-            elif _infer_provider_from_url(base_url) == "nous":
+            elif is_nous_url:
                 logger.debug(
                     "Bypassing persistent cache for %s@%s (Nous portal authoritative)",
                     model, base_url,
@@ -1564,6 +1565,8 @@ def get_model_context_length(
     if _is_custom_endpoint(base_url) and not _is_known_provider_base_url(base_url):
         context_length = _resolve_endpoint_context_length(model, base_url, api_key=api_key)
         if context_length is not None:
+            if provider == "nous" or _infer_provider_from_url(base_url) == "nous":
+                save_context_length(model, base_url, context_length)
             return context_length
         if not _is_known_provider_base_url(base_url):
             # 2b. Ollama native /api/show — any URL might be an Ollama server
@@ -1580,13 +1583,14 @@ def get_model_context_length(
                     if provider != "lmstudio":
                         save_context_length(model, base_url, local_ctx)
                     return local_ctx
-            logger.info(
-                "Could not detect context length for model %r at %s — "
-                "defaulting to %s tokens (probe-down). Set model.context_length "
-                "in config.yaml to override.",
-                model, base_url, f"{DEFAULT_FALLBACK_CONTEXT:,}",
-            )
-            return DEFAULT_FALLBACK_CONTEXT
+            if not is_nous_url:
+                logger.info(
+                    "Could not detect context length for model %r at %s — "
+                    "defaulting to %s tokens (probe-down). Set model.context_length "
+                    "in config.yaml to override.",
+                    model, base_url, f"{DEFAULT_FALLBACK_CONTEXT:,}",
+                )
+                return DEFAULT_FALLBACK_CONTEXT
 
     # 4. Anthropic /v1/models API (only for regular API keys, not OAuth)
     if provider == "anthropic" or (

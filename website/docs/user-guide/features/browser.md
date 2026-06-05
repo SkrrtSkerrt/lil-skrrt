@@ -33,8 +33,8 @@ Key capabilities:
 
 ## Setup
 
-:::tip Nous Subscribers
-If you have a paid [Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. New installs can run `lil-skrrt setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **Nous Subscription** as the browser provider via `lil-skrrt model` or `lil-skrrt tools`.
+:::tip Portal subscribers
+If you have a paid [Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription, you can use browser automation through the **[Tool Gateway](tool-gateway.md)** without any separate API keys. New installs can run `lil-skrrt setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **Portal Subscription** as the browser provider via `lil-skrrt model` or `lil-skrrt tools`.
 :::
 
 ### Browserbase cloud mode
@@ -205,7 +205,7 @@ Then fully restart Lil Skrrt so the new config is picked up.
 Lil Skrrt reads `browser.camofox.managed_persistence`, **not** a top-level `managed_persistence`. A common mistake is writing:
 
 ```yaml
-# ❌ Wrong — Hermes ignores this
+# ❌ Wrong — Lil Skrrt ignores this
 managed_persistence: true
 ```
 
@@ -383,11 +383,11 @@ BROWSERBASE_SESSION_TIMEOUT=600000
 # Inactivity timeout before auto-cleanup in seconds (default: 120)
 BROWSER_INACTIVITY_TIMEOUT=120
 
-# Extra Chromium launch flags (comma- or newline-separated). Hermes auto-injects
+# Extra Chromium launch flags (comma- or newline-separated). Lil Skrrt auto-injects
 # `--no-sandbox,--disable-dev-shm-usage` when it detects root or AppArmor-restricted
 # unprivileged user namespaces (Ubuntu 23.10+, DGX Spark, many container images),
 # so most users don't need to set this. Set it manually only if you need a flag
-# Hermes doesn't add automatically; setting it disables the auto-injection.
+# Lil Skrrt doesn't add automatically; setting it disables the auto-injection.
 AGENT_BROWSER_ARGS=--no-sandbox
 ```
 

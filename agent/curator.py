@@ -105,12 +105,12 @@ def save_state(data: Dict[str, Any]) -> None:
                 f.flush()
                 os.fsync(f.fileno())
             os.replace(tmp, path)
-        except BaseException:
+        finally:
             try:
-                os.unlink(tmp)
+                if os.path.exists(tmp):
+                    os.unlink(tmp)
             except OSError:
                 pass
-            raise
     except Exception as e:
         logger.debug("Failed to save curator state: %s", e, exc_info=True)
 

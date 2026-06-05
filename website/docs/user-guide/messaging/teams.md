@@ -66,7 +66,7 @@ For production, point your bot's endpoint at your server's public domain instead
 
 ```bash
 teams app create \
-  --name "Hermes" \
+  --name "Lil Skrrt" \
   --endpoint "https://<your-tunnel-url>/api/messages"
 ```
 
@@ -205,7 +205,7 @@ For a permanent server, skip devtunnel and register your bot with your server's 
 
 ```bash
 teams app create \
-  --name "Hermes" \
+  --name "Lil Skrrt" \
   --endpoint "https://your-domain.com/api/messages"
 ```
 

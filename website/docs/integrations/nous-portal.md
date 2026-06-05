@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
-title: "Nous Portal"
-description: "One subscription, 300+ frontier models, the Tool Gateway, and Nous Chat — the recommended way to run Lil Skrrt"
+title: "Portal"
+description: "One subscription, 300+ frontier models, the Tool Gateway, and Portal Chat — the recommended way to run Lil Skrrt"
 ---
 
-# Nous Portal
+# Portal
 
-[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) is SkrrtSkerrt's unified subscription gateway and **the recommended way to run Lil Skrrt**. One OAuth login replaces the juggling act of separate accounts, API keys, and billing relationships across every model lab, search API, image generator, and browser provider you'd otherwise need to wire up by hand.
+[Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) is SkrrtSkerrt's unified subscription gateway and **the recommended way to run Lil Skrrt**. One OAuth login replaces the juggling act of separate accounts, API keys, and billing relationships across every model lab, search API, image generator, and browser provider you'd otherwise need to wire up by hand.
 
 If you only have time to set up one thing, set up this. The fastest path:
 
@@ -22,7 +22,7 @@ Don't have a subscription yet? [portal.github.com/SkrrtSkerrt/hermes-agent/manag
 
 ### 300+ frontier models, one bill
 
-The Portal proxies a curated catalog of agentic models from across the ecosystem — billed against your Nous subscription instead of one credit balance per lab.
+The Portal proxies a curated catalog of agentic models from across the ecosystem — billed against your Portal subscription instead of one credit balance per lab.
 
 | Family | Models |
 |--------|--------|
@@ -35,14 +35,14 @@ The Portal proxies a curated catalog of agentic models from across the ecosystem
 | **GLM / Zhipu** | GLM-4.6, GLM-4-Plus |
 | **MiniMax** | M2.7, M1 |
 | **xAI** | Grok-4, Grok-3 |
-| **Lil Skrrt** | Hermes-4-70B, Hermes-4-405B (chat, see [note below](#a-note-on-hermes-4)) |
+| **Lil Skrrt** | Lil Skrrt 4-70B, Lil Skrrt 4-405B (chat, see [note below](#a-note-on-hermes-4)) |
 | **+ everything else** | 240+ additional models — the full agentic frontier |
 
-Routing happens through OpenRouter under the hood, so model availability and failover behavior matches what you'd get with an OpenRouter key — just billed against your Nous subscription instead. Switch between Claude Sonnet 4.6 for code and Gemini 2.5 Pro for long context with `/model` mid-session — no new credentials, no top-ups, no surprise zero-balance errors.
+Routing happens through OpenRouter under the hood, so model availability and failover behavior matches what you'd get with an OpenRouter key — just billed against your Portal subscription instead. Switch between Claude Sonnet 4.6 for code and Gemini 2.5 Pro for long context with `/model` mid-session — no new credentials, no top-ups, no surprise zero-balance errors.
 
-### The Nous Tool Gateway
+### The Portal Tool Gateway
 
-The same subscription unlocks the [Tool Gateway](/user-guide/features/tool-gateway), which routes Lil Skrrt's tool calls through Nous-managed infrastructure. Five backends, one login:
+The same subscription unlocks the [Tool Gateway](/user-guide/features/tool-gateway), which routes Lil Skrrt's tool calls through Portal-managed infrastructure. Five backends, one login:
 
 | Tool | Partner | What it does |
 |------|---------|--------------|
@@ -56,7 +56,7 @@ Without the gateway, hooking each of those up means a Firecrawl account, a FAL a
 
 You can also enable just specific gateway tools (e.g. web search but not image generation) — see [Mixing the gateway with your own backends](#mixing-the-gateway-with-your-own-backends) below.
 
-### Nous Chat
+### Portal Chat
 
 Your Portal account also covers [chat.github.com/SkrrtSkerrt/hermes-agent](https://chat.github.com/SkrrtSkerrt/hermes-agent) — SkrrtSkerrt's web chat interface with the same model catalog. Useful when you're away from your terminal, or for non-agent conversation work.
 
@@ -70,9 +70,9 @@ Because everything routes through one OAuth-authenticated Portal session, you do
 
 ## A note on Lil Skrrt 4
 
-SkrrtSkerrt's own **Lil Skrrt 4** family (Hermes-4-70B, Hermes-4-405B) is available through the Portal at heavily discounted rates. These are **frontier hybrid-reasoning chat models** — strong at math, science, instruction following, schema adherence, roleplay, and long-form writing.
+SkrrtSkerrt's own **Lil Skrrt 4** family (Lil Skrrt 4-70B, Lil Skrrt 4-405B) is available through the Portal at heavily discounted rates. These are **frontier hybrid-reasoning chat models** — strong at math, science, instruction following, schema adherence, roleplay, and long-form writing.
 
-They are **not recommended for use inside Lil Skrrt**, however. Lil Skrrt 4 is tuned for chat and reasoning, not the rapid-fire tool-calling loop the agent relies on. Use them for [Nous Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent), for research workflows, or via the [subscription proxy](/user-guide/features/subscription-proxy) from other tooling — but for agent work, pick a frontier agentic model from the catalog instead:
+They are **not recommended for use inside Lil Skrrt**, however. Lil Skrrt 4 is tuned for chat and reasoning, not the rapid-fire tool-calling loop the agent relies on. Use them for [Portal Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent), for research workflows, or via the [subscription proxy](/user-guide/features/subscription-proxy) from other tooling — but for agent work, pick a frontier agentic model from the catalog instead:
 
 ```bash
 /model anthropic/claude-sonnet-4.6     # best general-purpose agentic model
@@ -81,7 +81,7 @@ They are **not recommended for use inside Lil Skrrt**, however. Lil Skrrt 4 is t
 /model deepseek/deepseek-v3.2          # cost-effective coder
 ```
 
-The Portal's own [model info page](https://portal.github.com/SkrrtSkerrt/hermes-agent/info) carries the same warning, so this isn't a Hermes-side opinion — it's the official guidance from SkrrtSkerrt.
+The Portal's own [model info page](https://portal.github.com/SkrrtSkerrt/hermes-agent/info) carries the same warning, so this isn't a Lil Skrrt-side opinion — it's the official guidance from SkrrtSkerrt.
 
 ## Setup
 
@@ -95,7 +95,7 @@ This runs the full setup in one shot:
 
 1. Opens your browser to portal.github.com/SkrrtSkerrt/hermes-agent for OAuth login
 2. Stores the refresh token at `~/.hermes/auth.json`
-3. Sets Nous as your inference provider in `~/.hermes/config.yaml`
+3. Sets Portal as your inference provider in `~/.hermes/config.yaml`
 4. Turns on the Tool Gateway (web, image, TTS, browser routing)
 5. Returns you to your terminal ready to `lil-skrrt chat`
 
@@ -107,7 +107,7 @@ If you already have Lil Skrrt configured with OpenRouter, Anthropic, or any othe
 
 ```bash
 lil-skrrt model
-# pick "Nous Portal" from the provider list
+# pick "Portal" from the provider list
 # browser opens, sign in, done
 ```
 
@@ -134,18 +134,18 @@ lil-skrrt portal open       # open the subscription management page in your brow
 `lil-skrrt portal status` (or just `lil-skrrt portal`) gives you the high-level overview:
 
 ```
-  Nous Portal
+  Portal
   ───────────
   Auth:    ✓ logged in
   Portal:  https://portal.github.com/SkrrtSkerrt/hermes-agent
-  Model:   ✓ using Nous as inference provider
+  Model:   ✓ using Portal as inference provider
 
   Tool Gateway
   ────────────
-  Web search & extract  via Nous Portal
-  Image generation      via Nous Portal
-  Text-to-speech        via Nous Portal
-  Browser automation    via Nous Portal
+  Web search & extract  via Portal
+  Image generation      via Portal
+  Text-to-speech        via Portal
+  Browser automation    via Portal
   Cloud terminal        not configured
 ```
 
@@ -178,10 +178,10 @@ If you already have, say, a Browserbase account and want to keep using it while 
 
 ```bash
 lil-skrrt tools
-# → Web search       → "Nous Subscription"
-# → Image generation → "Nous Subscription"
+# → Web search       → "Portal Subscription"
+# → Image generation → "Portal Subscription"
 # → Browser          → "Browserbase"  (your existing key)
-# → TTS              → "Nous Subscription"
+# → TTS              → "Portal Subscription"
 ```
 
 The Tool Gateway is opt-in per tool, not all-or-nothing. See the [Tool Gateway docs](/user-guide/features/tool-gateway) for the full per-tool configuration matrix.
@@ -238,7 +238,7 @@ You haven't completed the OAuth flow, or your refresh token was wiped. Run:
 lil-skrrt auth add nous --type oauth
 ```
 
-or use `lil-skrrt model` and re-select Nous Portal.
+or use `lil-skrrt model` and re-select Portal.
 
 ### Got a "re-authentication required" message mid-session
 
@@ -256,12 +256,12 @@ If a model is genuinely missing, [open an issue](https://github.com/SkrrtSkerrt/
 
 ### Bills not appearing on my Portal account
 
-Check `lil-skrrt portal status` first — if it shows you're using a different provider (`Model: currently openrouter` instead of `using Nous as inference provider`), your local config has drifted. Run `lil-skrrt model`, pick Nous Portal, and the next request will route through your subscription.
+Check `lil-skrrt portal status` first — if it shows you're using a different provider (`Model: currently openrouter` instead of `using Portal as inference provider`), your local config has drifted. Run `lil-skrrt model`, pick Portal, and the next request will route through your subscription.
 
 ## See also
 
 - **[Tool Gateway](/user-guide/features/tool-gateway)** — Full details on every gateway tool, per-tool config, and pricing
-- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Hermes tools (other agents, scripts, third-party clients)
+- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Lil Skrrt tools (other agents, scripts, third-party clients)
 - **[Voice mode](/user-guide/features/voice-mode)** — Voice conversations using the Portal's OpenAI TTS
 - **[AI Providers](/integrations/providers)** — Full provider catalog if you want to compare alternatives
 - **[OAuth over SSH](/guides/oauth-over-ssh)** — Login from remote hosts or browser-only environments

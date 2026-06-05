@@ -34,7 +34,7 @@ declares every built-in slash command (`/btw`, `/stop`, `/model`, …),
 every required OAuth scope, every event subscription, and enables Socket
 Mode — all at once.
 
-### Option A: From a Hermes-generated manifest (recommended)
+### Option A: From a Lil Skrrt-generated manifest (recommended)
 
 1. Generate the manifest:
    ```bash
@@ -220,7 +220,7 @@ sudo hermes gateway install --system   # Linux only: boot-time system service
 After starting the gateway, you need to **invite the bot** to any channel where you want it to respond:
 
 ```
-/invite @Hermes Agent
+/invite @Lil Skrrt
 ```
 
 The bot will **not** automatically join channels. You must invite it to each channel individually.
@@ -368,7 +368,7 @@ slack:
   # "auto-engage" — remembering past mentions in a thread and following
   # up on bot-message replies, and resuming active sessions without a
   # fresh mention. With strict_mention ON, every new channel message
-  # must @mention the bot before Hermes will respond.
+  # must @mention the bot before Lil Skrrt will respond.
   strict_mention: false
 
   # Custom mention patterns that trigger the bot

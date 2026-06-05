@@ -410,25 +410,51 @@ class ModelCapabilities:
     model_family: str = ""
 
 
+def _provider_models_dev_ids(provider: str) -> list[str]:
+    """Return candidate models.dev provider IDs for a Hermes provider.
+
+    The primary mapping wins, but a small set of compatibility aliases are
+    included for providers whose models.dev slug has historically moved around
+    in the wild (notably Gemini/Google).
+    """
+    provider_norm = (provider or "").strip().lower()
+    candidates: list[str] = []
+
+    mapped = PROVIDER_TO_MODELS_DEV.get(provider_norm)
+    if mapped:
+        candidates.append(mapped)
+
+    # Keep a tiny compatibility net for Gemini/Google. Some test paths and
+    # external catalogs use "google" while others use "google-ai-studio".
+    if provider_norm in {"gemini", "google"}:
+        for alt in ("google", "google-ai-studio"):
+            if alt not in candidates:
+                candidates.append(alt)
+
+    if provider_norm and provider_norm not in candidates:
+        candidates.append(provider_norm)
+
+    return candidates
+
+
 def _get_provider_models(provider: str) -> Optional[Dict[str, Any]]:
     """Resolve a Hermes provider ID to its models dict from models.dev.
 
     Returns the models dict or None if the provider is unknown or has no data.
     """
-    mdev_provider_id = PROVIDER_TO_MODELS_DEV.get(provider)
-    if not mdev_provider_id:
-        return None
-
     data = fetch_models_dev()
-    provider_data = data.get(mdev_provider_id)
-    if not isinstance(provider_data, dict):
-        return None
+    for mdev_provider_id in _provider_models_dev_ids(provider):
+        provider_data = data.get(mdev_provider_id)
+        if not isinstance(provider_data, dict):
+            continue
 
-    models = provider_data.get("models", {})
-    if not isinstance(models, dict):
-        return None
+        models = provider_data.get("models", {})
+        if not isinstance(models, dict):
+            continue
 
-    return models
+        return models
+
+    return None
 
 
 def _find_model_entry(models: Dict[str, Any], model: str) -> Optional[Dict[str, Any]]:

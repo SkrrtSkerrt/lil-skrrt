@@ -336,6 +336,15 @@ def recommended_update_command_for_method(method: str) -> str:
     return "hermes update"
 
 
+def format_docker_update_message() -> str:
+    """Return the user-facing message for Docker installations."""
+    return (
+        "Hermes is running from a Docker install. "
+        "Update by pulling the latest image, then restart the container:\n"
+        f"  {recommended_update_command_for_method('docker')}"
+    )
+
+
 def recommended_update_command() -> str:
     """Return the best update command for the current installation."""
     managed_cmd = get_managed_update_command()

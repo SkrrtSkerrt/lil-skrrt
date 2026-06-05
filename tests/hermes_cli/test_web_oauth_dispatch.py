@@ -30,7 +30,7 @@ from fastapi.testclient import TestClient
 from hermes_cli.web_server import _SESSION_TOKEN, app
 
 client = TestClient(app)
-HEADERS = {"X-Hermes-Session-Token": _SESSION_TOKEN}
+HEADERS = {"X-Lil-Skrrt-Session-Token": _SESSION_TOKEN}
 
 
 def _fake_nous_device_data():
@@ -52,7 +52,7 @@ def _invoke_scope_refusal():
         400,
         json={
             "error": "invalid_scope",
-            "error_description": "unsupported scope inference:invoke",
+            "error_description": "invalid_scope: unsupported scope inference:invoke",
         },
         request=request,
     )

@@ -201,7 +201,7 @@ TOOL_CATEGORIES = {
         "icon": "🔊",
         "providers": [
             {
-                "name": "Nous Subscription",
+                "name": "Portal Subscription",
                 "badge": "subscription",
                 "tag": "Managed OpenAI TTS billed to your subscription",
                 "env_vars": [],
@@ -281,14 +281,14 @@ TOOL_CATEGORIES = {
         # plugins.web.<vendor>.provider via _plugin_web_search_providers()
         # in _visible_providers(). Only non-provider UX setup-flow rows
         # for the firecrawl backend are listed here:
-        #   - "Nous Subscription" — managed Firecrawl billed via Nous
+        #   - "Portal Subscription" — managed Firecrawl billed via Nous
         #     subscription (requires_nous_auth + override_env_vars).
         #   - "Firecrawl Self-Hosted" — points firecrawl at a private
         #     Docker instance via FIRECRAWL_API_URL only.
         # See PR #25182 for the migration rationale.
         "providers": [
             {
-                "name": "Nous Subscription",
+                "name": "Portal Subscription",
                 "badge": "subscription",
                 "tag": "Managed Firecrawl billed to your subscription",
                 "web_backend": "firecrawl",
@@ -316,14 +316,14 @@ TOOL_CATEGORIES = {
         # ``plugins.image_gen.<vendor>`` package via
         # ``_plugin_image_gen_providers()`` in ``_visible_providers``.
         # Only non-provider UX setup-flow rows remain here:
-        #   - "Nous Subscription" — managed FAL billed via the Nous
+        #   - "Portal Subscription" — managed FAL billed via the Nous
         #     subscription (requires_nous_auth + override_env_vars).
         #     Uses the fal plugin as the underlying backend but has a
         #     distinct setup UX.
         # Mirrors the shape browser/video_gen ship today.
         "providers": [
             {
-                "name": "Nous Subscription",
+                "name": "Portal Subscription",
                 "badge": "subscription",
                 "tag": "Managed FAL image generation billed to your subscription",
                 "env_vars": [],
@@ -383,7 +383,7 @@ TOOL_CATEGORIES = {
         # injected at runtime from plugins.browser.<vendor>.provider via
         # _plugin_browser_providers() in _visible_providers(). Only
         # non-provider UX setup-flow rows remain here:
-        #   - "Nous Subscription (Browser Use cloud)" — managed Browser Use
+        #   - "Portal Subscription (Browser Use cloud)" — managed Browser Use
         #     billed via Nous subscription (requires_nous_auth +
         #     override_env_vars). Uses the browser-use plugin as the
         #     underlying backend but has a distinct setup UX.
@@ -392,7 +392,7 @@ TOOL_CATEGORIES = {
         #     cloud-provider dispatch path via _is_camofox_mode().
         "providers": [
             {
-                "name": "Nous Subscription (Browser Use cloud)",
+                "name": "Portal Subscription (Browser Use cloud)",
                 "badge": "subscription",
                 "tag": "Managed Browser Use billed to your subscription",
                 "env_vars": [],
@@ -1547,9 +1547,59 @@ def _prompt_toolset_checklist(platform_label: str, enabled: Set[str], platform: 
 
 # ─── Provider-Aware Configuration ────────────────────────────────────────────
 
+
+def apply_provider_selection(ts_key: str, provider_name: str, config: dict) -> None:
+    """Persist a provider choice for a configurable toolset.
+
+    This is the non-interactive core used by the web UI and CLI alike.
+    """
+    cat = TOOL_CATEGORIES.get(ts_key)
+    if not cat:
+        raise KeyError(f"Unknown toolset: {ts_key}")
+
+    providers = _visible_providers(cat, config)
+    for provider in providers:
+        if provider.get("name") != provider_name:
+            continue
+
+        managed_feature = provider.get("managed_nous_feature")
+        if provider.get("web_backend"):
+            web_cfg = config.setdefault("web", {})
+            web_cfg["backend"] = provider["web_backend"]
+            web_cfg["use_gateway"] = bool(managed_feature)
+            return
+        if "browser_provider" in provider:
+            browser_cfg = config.setdefault("browser", {})
+            browser_cfg["cloud_provider"] = provider["browser_provider"]
+            browser_cfg["use_gateway"] = bool(managed_feature)
+            return
+        if provider.get("tts_provider"):
+            tts_cfg = config.setdefault("tts", {})
+            tts_cfg["provider"] = provider["tts_provider"]
+            tts_cfg["use_gateway"] = bool(managed_feature)
+            return
+        if provider.get("image_gen_plugin_name"):
+            _select_plugin_image_gen_provider(provider["image_gen_plugin_name"], config)
+            return
+        if provider.get("video_gen_plugin_name"):
+            _select_plugin_video_gen_provider(provider["video_gen_plugin_name"], config)
+            return
+        if provider.get("imagegen_backend"):
+            img_cfg = config.setdefault("image_gen", {})
+            img_cfg["provider"] = provider["imagegen_backend"]
+            img_cfg["use_gateway"] = bool(managed_feature)
+            return
+        if managed_feature:
+            config.setdefault(managed_feature, {})["use_gateway"] = True
+            return
+        return
+
+    raise KeyError(f"Unknown provider: {provider_name}")
+
+
 def _configure_toolset(ts_key: str, config: dict):
     """Configure a toolset - provider selection + API keys.
-    
+
     Uses TOOL_CATEGORIES for provider-aware config, falls back to simple
     env var prompts for toolsets not in TOOL_CATEGORIES.
     """
@@ -1647,7 +1697,7 @@ def _plugin_video_gen_providers() -> list[dict]:
 # PR #25182 — this helper is the sole source of truth for the category's
 # provider rows. The hardcoded entries that used to drive the category
 # were deleted in the same PR; only the two non-provider UX rows
-# ("Nous Subscription" managed-gateway entry, "Firecrawl Self-Hosted")
+# ("Portal Subscription" managed-gateway entry, "Firecrawl Self-Hosted")
 # remain in TOOL_CATEGORIES because they describe alternative *setup
 # flows* for the firecrawl backend rather than distinct providers.
 def _plugin_web_search_providers() -> list[dict]:
@@ -1704,7 +1754,7 @@ def _plugin_web_search_providers() -> list[dict]:
 # for those three in the "Browser Automation" picker. The hardcoded
 # ``TOOL_CATEGORIES["browser"]`` entries that drove the category before
 # were deleted in the same PR; only non-provider UX setup-flow rows remain
-# ("Nous Subscription", "Local Browser", "Camofox") — see the comment block
+# ("Portal Subscription", "Local Browser", "Camofox") — see the comment block
 # in ``TOOL_CATEGORIES["browser"]`` for why each one stays hardcoded.
 def _plugin_browser_providers() -> list[dict]:
     """Build picker-row dicts from plugin-registered cloud browser providers.
@@ -1809,7 +1859,7 @@ def _plugin_tts_providers() -> list[dict]:
     return rows
 
 
-def _visible_providers(cat: dict, config: dict) -> list[dict]:
+def _visible_providers(cat: dict, config: dict, force_fresh: bool = False) -> list[dict]:
     """Return provider entries visible for the current auth/config state."""
     features = get_nous_subscription_features(config)
     visible = []
@@ -1821,7 +1871,7 @@ def _visible_providers(cat: dict, config: dict) -> list[dict]:
         visible.append(provider)
 
     # Inject plugin-registered image_gen backends (OpenAI today, more
-    # later) so the picker lists them alongside FAL / Nous Subscription.
+    # later) so the picker lists them alongside FAL / Portal Subscription.
     if cat.get("name") == "Image Generation":
         visible.extend(_plugin_image_gen_providers())
 
@@ -1833,14 +1883,14 @@ def _visible_providers(cat: dict, config: dict) -> list[dict]:
     # Inject plugin-registered web search backends. After PR #25182, this
     # is the SOLE source of provider rows for the Web Search & Extract
     # category — the per-provider hardcoded entries were deleted. The two
-    # remaining hardcoded rows ("Nous Subscription", "Firecrawl
+    # remaining hardcoded rows ("Portal Subscription", "Firecrawl
     # Self-Hosted") are non-provider UX setup-flow rows for firecrawl.
     if cat.get("name") == "Web Search & Extract":
         visible.extend(_plugin_web_search_providers())
 
     # Inject plugin-registered cloud browser backends. After PR #25214,
     # Browserbase / Browser Use / Firecrawl are the plugin-supplied rows;
-    # the hardcoded "Nous Subscription" / "Local Browser" / "Camofox" rows
+    # the hardcoded "Portal Subscription" / "Local Browser" / "Camofox" rows
     # stay because they're non-provider UX setup flows (subscription auth,
     # local fallback, and the REST-API anti-detection backend respectively).
     if cat.get("name") == "Browser Automation":
@@ -2017,7 +2067,7 @@ def _configure_tool_category(ts_key: str, cat: dict, config: dict):
             # picker unchanged.
             sub_marker = ""
             if _nous_logged_in and p.get("managed_nous_feature"):
-                sub_marker = "  ★ Included with your Nous subscription"
+                sub_marker = "  ★ Included with your Portal subscription"
             provider_choices.append(f"{p['name']}{badge}{tag}{configured}{sub_marker}")
 
         # Add skip option
@@ -2036,7 +2086,7 @@ def _configure_tool_category(ts_key: str, cat: dict, config: dict):
         _configure_provider(providers[provider_idx], config)
 
 
-def _is_provider_active(provider: dict, config: dict) -> bool:
+def _is_provider_active(provider: dict, config: dict, force_fresh: bool = False) -> bool:
     """Check if a provider entry matches the currently active config."""
     plugin_name = provider.get("image_gen_plugin_name")
     if plugin_name:
@@ -2411,7 +2461,7 @@ def _configure_provider(provider: dict, config: dict):
     if provider.get("requires_nous_auth"):
         features = get_nous_subscription_features(config)
         if not features.nous_auth_present:
-            _print_warning("  Nous Subscription is only available after logging into Nous Portal.")
+            _print_warning("  Portal subscription is only available after logging into Portal.")
             return
 
     # Set TTS provider in config if applicable
@@ -2458,7 +2508,7 @@ def _configure_provider(provider: dict, config: dict):
             _run_post_setup(provider["post_setup"])
         _print_success(f"  {provider['name']} - no configuration needed!")
         if managed_feature:
-            _print_info("  Requests for this tool will be billed to your Nous subscription.")
+            _print_info("  Requests for this tool will be billed to your Portal subscription.")
         # Plugin-registered image_gen provider: write image_gen.provider
         # and route model selection to the plugin's own catalog.
         plugin_name = provider.get("image_gen_plugin_name")
@@ -2507,7 +2557,7 @@ def _configure_provider(provider: dict, config: dict):
             _show_portal_hint = False
 
     if _show_portal_hint:
-        _print_info("  Available through Nous Portal subscription.")
+        _print_info("  Available through Portal subscription.")
 
     for var in env_vars:
         existing = get_env_value(var["key"])
@@ -2720,7 +2770,7 @@ def _reconfigure_provider(provider: dict, config: dict):
     if provider.get("requires_nous_auth"):
         features = get_nous_subscription_features(config)
         if not features.nous_auth_present:
-            _print_warning("  Nous Subscription is only available after logging into Nous Portal.")
+            _print_warning("  Portal subscription is only available after logging into Portal.")
             return
 
     if provider.get("tts_provider"):
@@ -2766,7 +2816,7 @@ def _reconfigure_provider(provider: dict, config: dict):
             _run_post_setup(provider["post_setup"])
         _print_success(f"  {provider['name']} - no configuration needed!")
         if managed_feature:
-            _print_info("  Requests for this tool will be billed to your Nous subscription.")
+            _print_info("  Requests for this tool will be billed to your Portal subscription.")
         plugin_name = provider.get("image_gen_plugin_name")
         if plugin_name:
             _select_plugin_image_gen_provider(plugin_name, config)
@@ -2889,7 +2939,7 @@ def tools_command(args=None, first_install: bool = False, config: dict = None):
                 print(color("    (none enabled)", Colors.DIM))
         print()
         return
-    print(color("⚕ Hermes Tool Configuration", Colors.CYAN, Colors.BOLD))
+    print(color("⚕ Lil Skrrt Tool Configuration", Colors.CYAN, Colors.BOLD))
     print(color("  Enable or disable tools per platform.", Colors.DIM))
     print(color("  Tools that need API keys will be configured when enabled.", Colors.DIM))
     print(color("  Guide: https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/user-guide/features/tools", Colors.DIM))
@@ -2925,7 +2975,7 @@ def tools_command(args=None, first_install: bool = False, config: dict = None):
             if managed_nous_tools_enabled():
                 for ts_key in sorted(auto_configured):
                     label = next((l for k, l, _ in CONFIGURABLE_TOOLSETS if k == ts_key), ts_key)
-                    print(color(f"  ✓ {label}: using your Nous subscription defaults", Colors.GREEN))
+                    print(color(f"  ✓ {label}: using your Portal subscription defaults", Colors.GREEN))
 
             # Walk through ALL selected tools that have provider options or
             # need API keys.  This ensures browser (Local vs Browserbase),

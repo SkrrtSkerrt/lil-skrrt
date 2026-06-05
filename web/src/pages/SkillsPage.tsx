@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useState, useMemo } from "react";
+import type * as React from "react";
+import type { ChangeEvent, KeyboardEvent } from "react";
 import {
   Package,
   Search,
@@ -19,16 +21,16 @@ import {
 } from "lucide-react";
 import { api } from "@/lib/api";
 import type { SkillInfo, ToolsetInfo, SkillHubResult } from "@/lib/api";
-import { useToast } from "@nous-research/ui/hooks/use-toast";
-import { Toast } from "@nous-research/ui/ui/components/toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@nous-research/ui/ui/components/card";
+import { useToast } from "@/hooks/useToast";
+import { Toast } from "@/components/Toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@nous-research/ui/ui/components/badge";
 import { Button } from "@nous-research/ui/ui/components/button";
 import { ListItem } from "@nous-research/ui/ui/components/list-item";
 import { Spinner } from "@nous-research/ui/ui/components/spinner";
 import { Switch } from "@nous-research/ui/ui/components/switch";
 import { cn } from "@/lib/utils";
-import { Input } from "@nous-research/ui/ui/components/input";
+import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n";
 import { usePageHeader } from "@/contexts/usePageHeader";
 import { PluginSlot } from "@/plugins";
@@ -210,7 +212,7 @@ export default function SkillsPage() {
           className="h-8 rounded-none pl-8 pr-7 text-xs"
           placeholder={t.common.search}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
         />
         {search && (
           <Button
@@ -661,8 +663,8 @@ function HubBrowser({
                 className="h-8 pl-8 text-sm"
                 placeholder="Search the skill hub (GitHub, official, community)…"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Enter") void runSearch();
                 }}
               />

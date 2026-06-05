@@ -432,6 +432,7 @@ def test_apply_missing_project_id(monkeypatch):
 
 
 def test_apply_does_not_override_existing(monkeypatch, tmp_path):
+    monkeypatch.delenv("NEW_KEY", raising=False)
     monkeypatch.setenv("BWS_ACCESS_TOKEN", "0.t")
     monkeypatch.setenv("OPENAI_API_KEY", "existing-value")
     fake_binary = tmp_path / "bws"

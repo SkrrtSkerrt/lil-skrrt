@@ -202,7 +202,7 @@ Scripts that dump megabytes of output will slow down the agent and may hit token
 lil-skrrt cron list                    # Show all jobs, states, next_run times
 lil-skrrt cron run <job_id>            # Schedule for next tick (for testing)
 lil-skrrt cron edit <job_id>           # Fix configuration issues
-lil-skrrt logs                         # View recent Hermes logs
+lil-skrrt logs                         # View recent Lil Skrrt logs
 lil-skrrt skills list                  # Verify installed skills
 ```
 

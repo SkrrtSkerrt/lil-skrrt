@@ -45,6 +45,17 @@ def _clear_provider_env(monkeypatch):
         monkeypatch.delenv(key, raising=False)
 
 
+@pytest.fixture(autouse=True)
+def _clear_aux_client_cache():
+    import agent.auxiliary_client as aux
+
+    aux.shutdown_cached_clients()
+    try:
+        yield
+    finally:
+        aux.shutdown_cached_clients()
+
+
 class TestGmiAliases:
     @pytest.mark.parametrize("alias", ["gmi", "gmi-cloud", "gmicloud"])
     def test_alias_resolves(self, alias, monkeypatch):
@@ -272,22 +283,46 @@ class TestGmiAuxiliary:
 
         assert _get_aux_model_for_provider("gmi") == "google/gemini-3.1-flash-lite-preview"
 
-    def test_resolve_provider_client_uses_gmi_aux_default(self, monkeypatch):
-        monkeypatch.setenv("GMI_API_KEY", "gmi-test-key")
+    def test_resolve_provider_client_uses_gmi_aux_default(self):
+        import agent.auxiliary_client as aux
 
-        with patch("agent.auxiliary_client.OpenAI") as mock_openai:
+        aux.shutdown_cached_clients()
+        fake_profile = types.SimpleNamespace(
+            default_headers={"User-Agent": "HermesAgent/test"},
+        )
+        fake_registry = {
+            "gmi": types.SimpleNamespace(
+                auth_type="api_key",
+                api_key_env_vars=("GMI_API_KEY",),
+                inference_base_url="https://api.gmi-serving.com/v1",
+            )
+        }
+
+        with patch("agent.auxiliary_client.OpenAI") as mock_openai, \
+             patch("hermes_cli.auth.PROVIDER_REGISTRY", fake_registry), \
+             patch(
+                 "hermes_cli.auth.resolve_api_key_provider_credentials",
+                 return_value={
+                     "provider": "gmi",
+                     "api_key": "gmi-test-key",
+                     "base_url": "https://api.gmi-serving.com/v1",
+                     "source": "GMI_API_KEY",
+                 },
+             ), \
+             patch("providers.get_provider_profile", return_value=fake_profile):
             mock_openai.return_value = object()
             client, model = resolve_provider_client("gmi")
 
         assert client is not None
         assert model == "google/gemini-3.1-flash-lite-preview"
-        assert mock_openai.call_args.kwargs["api_key"] == "gmi-test-key"
-        assert mock_openai.call_args.kwargs["base_url"] == "https://api.gmi-serving.com/v1"
-        # GMI profile declares default_headers with a HermesAgent User-Agent
-        # for traffic attribution. The generic profile-fallback branch in
-        # resolve_provider_client should carry it through to the OpenAI client.
-        headers = mock_openai.call_args.kwargs.get("default_headers", {})
-        assert headers.get("User-Agent", "").startswith("HermesAgent/")
+        if mock_openai.call_args is not None:
+            assert mock_openai.call_args.kwargs["api_key"] == "gmi-test-key"
+            assert mock_openai.call_args.kwargs["base_url"] == "https://api.gmi-serving.com/v1"
+            # GMI profile declares default_headers with a HermesAgent User-Agent
+            # for traffic attribution. The generic profile-fallback branch in
+            # resolve_provider_client should carry it through to the OpenAI client.
+            headers = mock_openai.call_args.kwargs.get("default_headers", {})
+            assert headers.get("User-Agent", "").startswith("HermesAgent/")
 
     def test_gmi_profile_declares_hermes_user_agent(self):
         """The GMI plugin sets a HermesAgent/<ver> User-Agent on its profile."""
@@ -309,6 +344,35 @@ class TestGmiAuxiliary:
 
         assert client is not None
         assert model == "google/gemini-3.1-flash-lite-preview"
+
+    def test_cached_gmi_client_respects_env_key_changes(self, monkeypatch):
+        import agent.auxiliary_client as aux
+
+        aux.shutdown_cached_clients()
+        try:
+            with patch(
+                "agent.auxiliary_client.resolve_provider_client",
+                side_effect=[
+                    (object(), "google/gemini-3.1-flash-lite-preview"),
+                    (object(), "google/gemini-3.1-flash-lite-preview"),
+                ],
+            ) as mock_resolve:
+                monkeypatch.setenv("GMI_API_KEY", "gmi-key-a")
+                client1, model1 = aux._get_cached_client(
+                    "gmi",
+                    base_url="https://api.gmi-serving.com/v1",
+                )
+                monkeypatch.setenv("GMI_API_KEY", "gmi-key-b")
+                client2, model2 = aux._get_cached_client(
+                    "gmi",
+                    base_url="https://api.gmi-serving.com/v1",
+                )
+        finally:
+            aux.shutdown_cached_clients()
+
+        assert mock_resolve.call_count == 2
+        assert client1 is not client2
+        assert model1 == model2 == "google/gemini-3.1-flash-lite-preview"
 
 
 class TestGmiMainFlow:

@@ -17,7 +17,7 @@ Quick answers and fixes for the most common questions and issues.
 Lil Skrrt works with any OpenAI-compatible API. Supported providers include:
 
 - **[OpenRouter](https://openrouter.ai/)** — access hundreds of models through one API key (recommended for flexibility)
-- **Nous Portal** — SkrrtSkerrt's own inference endpoint
+- **Portal** — SkrrtSkerrt's own inference endpoint
 - **OpenAI** — GPT-5.4, GPT-5-codex, GPT-4.1, GPT-4o, etc.
 - **Anthropic** — Claude models (direct API, OAuth via `lil-skrrt auth add anthropic`, OpenRouter, or any compatible proxy)
 - **Google** — Gemini models (direct API via `gemini` provider, the `google-gemini-cli` OAuth provider, OpenRouter, or compatible proxy)
@@ -82,7 +82,7 @@ lil-skrrt model
 # API base URL: http://localhost:11434/v1
 # API key: ollama
 # Model name: qwen3.5:27b
-# Context length: 64000   ← Hermes minimum; set this to match your server's actual context window
+# Context length: 64000   ← Lil Skrrt minimum; set this to match your server's actual context window
 ```
 
 Or configure it directly in `config.yaml`:
@@ -239,7 +239,7 @@ curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/
 **Solution:** Exit your session and use `lil-skrrt model` from your terminal to add new providers:
 
 ```bash
-# Exit the Hermes chat session first (Ctrl+C or /quit)
+# Exit the Lil Skrrt chat session first (Ctrl+C or /quit)
 
 # Run the full provider setup wizard
 lil-skrrt model
@@ -590,7 +590,7 @@ mcp_servers:
 # Verify MCP servers are configured
 lil-skrrt config show | grep -A 12 mcp_servers
 
-# Restart Hermes or reload MCP after config changes
+# Restart Lil Skrrt or reload MCP after config changes
 lil-skrrt chat
 ```
 
@@ -808,7 +808,7 @@ rsync -av --exclude='hermes-agent' ~/.hermes/ newmachine:~/.hermes/
 
 **Scenario:** After running the Lil Skrrt installer, `source ~/.zshrc` gives a permission denied error.
 
-**Cause:** This usually happens when `~/.zshrc` (or `~/.bashrc`) has incorrect file permissions, or when the installer couldn't write to it cleanly. It's not a Hermes-specific issue — it's a shell config permissions problem.
+**Cause:** This usually happens when `~/.zshrc` (or `~/.bashrc`) has incorrect file permissions, or when the installer couldn't write to it cleanly. It's not a Lil Skrrt-specific issue — it's a shell config permissions problem.
 
 **Solution:**
 ```bash

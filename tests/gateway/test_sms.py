@@ -444,6 +444,19 @@ class TestTwilioSignatureValidation:
 class TestWebhookSignatureEnforcement:
     """Integration tests for signature validation in _handle_webhook."""
 
+    @pytest.fixture(autouse=True)
+    def _force_real_web_response(self, monkeypatch):
+        class _Response:
+            def __init__(self, *args, **kwargs):
+                self.status = kwargs.get("status", 200)
+                self.text = kwargs.get("text", "")
+                self.content_type = kwargs.get("content_type", "")
+
+        from types import SimpleNamespace
+        import aiohttp
+
+        monkeypatch.setattr(aiohttp, "web", SimpleNamespace(Response=_Response), raising=False)
+
     def _make_adapter(self, webhook_url=""):
         from gateway.platforms.sms import SmsAdapter
 
@@ -469,11 +482,11 @@ class TestWebhookSignatureEnforcement:
     async def test_insecure_flag_skips_validation(self):
         """With SMS_INSECURE_NO_SIGNATURE=true and no URL, requests are accepted."""
         env = {"SMS_INSECURE_NO_SIGNATURE": "true"}
-        with patch.dict(os.environ, env):
+        with patch.dict(os.environ, env, clear=True):
             adapter = self._make_adapter(webhook_url="")
-        body = b"From=%2B15551234567&To=%2B15550001111&Body=hello&MessageSid=SM123"
-        request = self._mock_request(body)
-        resp = await adapter._handle_webhook(request)
+            body = b"From=%2B15551234567&To=%2B15550001111&Body=hello&MessageSid=SM123"
+            request = self._mock_request(body)
+            resp = await adapter._handle_webhook(request)
         assert resp.status == 200
 
     @pytest.mark.asyncio

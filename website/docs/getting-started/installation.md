@@ -109,14 +109,14 @@ lil-skrrt config set     # Set individual config values
 lil-skrrt setup          # Or run the full setup wizard to configure everything at once
 ```
 
-:::tip Fastest path: Nous Portal
+:::tip Fastest path: Portal
 One subscription covers 300+ models plus the [Tool Gateway](/user-guide/features/tool-gateway) (web search, image generation, TTS, cloud browser). Skip the per-tool key juggling:
 
 ```bash
 lil-skrrt setup --portal
 ```
 
-That logs you in, sets Nous as your provider, and turns on the Tool Gateway in one command.
+That logs you in, sets Portal as your provider, and turns on the Tool Gateway in one command.
 :::
 
 ---

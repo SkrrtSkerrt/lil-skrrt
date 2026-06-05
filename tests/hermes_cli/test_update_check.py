@@ -10,6 +10,18 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def _reset_banner_update_state():
+    """Keep banner update-check globals isolated across tests."""
+    import hermes_cli.banner as banner
+
+    banner._update_result = None
+    banner._update_check_done = threading.Event()
+    yield
+    banner._update_result = None
+    banner._update_check_done = threading.Event()
+
+
 def test_version_string_no_v_prefix():
     """__version__ should be bare semver without a 'v' prefix."""
     from hermes_cli import __version__
@@ -25,8 +37,12 @@ def test_check_for_updates_uses_cache(tmp_path, monkeypatch):
     repo_dir.mkdir()
     (repo_dir / ".git").mkdir()
 
+    import hermes_cli.banner as banner
+
     cache_file = tmp_path / ".update_check"
-    cache_file.write_text(json.dumps({"ts": time.time(), "behind": 3}))
+    cache_file.write_text(
+        json.dumps({"ts": time.time(), "behind": 3, "rev": None, "ver": banner.VERSION})
+    )
 
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     with patch("hermes_cli.banner.subprocess.run") as mock_run:

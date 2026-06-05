@@ -1,9 +1,11 @@
 """Tests for Ollama Cloud provider integration."""
 
+import importlib
 import os
 import pytest
 from unittest.mock import patch, MagicMock
 
+import agent.models_dev as models_dev_module
 from hermes_cli.auth import PROVIDER_REGISTRY, resolve_provider, resolve_api_key_provider_credentials
 from hermes_cli.models import _PROVIDER_MODELS, _PROVIDER_LABELS, _PROVIDER_ALIASES, normalize_provider
 from hermes_cli.model_normalize import normalize_model_for_provider
@@ -11,7 +13,21 @@ from agent.model_metadata import _URL_TO_PROVIDER, _PROVIDER_PREFIXES
 from agent.models_dev import PROVIDER_TO_MODELS_DEV, list_agentic_models
 
 
-# ── Provider Registry ──
+@pytest.fixture(autouse=True)
+def _reset_models_dev_state():
+    fresh = importlib.import_module("agent.models_dev")
+    if fresh is not models_dev_module:
+        globals()["models_dev_module"] = fresh
+    globals()["PROVIDER_TO_MODELS_DEV"] = fresh.PROVIDER_TO_MODELS_DEV
+    globals()["list_agentic_models"] = fresh.list_agentic_models
+    try:
+        setattr(fresh, "_models_dev_cache", {})
+        setattr(fresh, "_models_dev_cache_time", 0)
+    except Exception:
+        pass
+    yield
+
+
 
 class TestOllamaCloudProviderRegistry:
     def test_ollama_cloud_in_registry(self):
@@ -338,7 +354,7 @@ class TestOllamaCloudModelsDev:
             }
         }
         with patch("agent.models_dev.fetch_models_dev", return_value=mock_data):
-            result = list_agentic_models("ollama-cloud")
+            result = models_dev_module.list_agentic_models("ollama-cloud")
         assert "qwen3.5:397b" in result
         assert "glm-5" in result
         assert "nemotron-3-nano:30b" in result

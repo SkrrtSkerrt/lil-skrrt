@@ -461,13 +461,27 @@ def _reset_shared_tool_state():
         except Exception:
             pass
 
+    def _reset_auxiliary_client_state() -> None:
+        try:
+            from agent.auxiliary_client import (
+                _reset_aux_unhealthy_cache,
+                shutdown_cached_clients,
+            )
+
+            shutdown_cached_clients()
+            _reset_aux_unhealthy_cache()
+        except Exception:
+            pass
+
     _restore_stdio()
     _reset_approval_state()
     _reset_computer_use_state()
+    _reset_auxiliary_client_state()
     yield
     _restore_stdio()
     _reset_approval_state()
     _reset_computer_use_state()
+    _reset_auxiliary_client_state()
 
 
 # ── Module-level state reset — replaced by per-file process isolation ──────

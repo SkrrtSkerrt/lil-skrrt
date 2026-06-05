@@ -60,3 +60,11 @@ def test_docker_detected_via_dockerenv(tmp_path):
 def test_recommended_update_command_docker():
     from hermes_cli.config import recommended_update_command_for_method
     assert "docker pull" in recommended_update_command_for_method("docker")
+
+
+def test_format_docker_update_message_mentions_pull_command():
+    from hermes_cli.config import format_docker_update_message
+
+    message = format_docker_update_message()
+    assert "Docker" in message
+    assert "docker pull nousresearch/hermes-agent:latest" in message

@@ -3165,7 +3165,14 @@ def resolve_provider_client(
     # main_model also empty), the branches still hit their own
     # missing-credentials returns and ``_resolve_auto`` falls through to
     # the Step-2 chain as before.
-    if not model:
+    if provider == "xai-oauth":
+        # xAI OAuth has no safe catalog default.  Preserve a real None
+        # (the public default argument) so callers can detect "no model was
+        # provided" and fail closed. Keep the empty-string compatibility
+        # path used by older aux-client callers that explicitly passed "".
+        if model == "":
+            model = _get_aux_model_for_provider(provider) or _read_main_model() or model
+    elif not model:
         model = _get_aux_model_for_provider(provider) or _read_main_model() or model
 
     def _needs_codex_wrap(client_obj, base_url_str: str, model_str: str) -> bool:
@@ -4321,11 +4328,38 @@ def _get_cached_client(
         except RuntimeError:
             pass
     runtime = _normalize_main_runtime(main_runtime)
+
+    # For API-key providers that source credentials from env/config rather
+    # than an explicit argument, resolve the active key before building the
+    # cache key. Without this, tests (and runtime config reloads) that swap
+    # GMI / similar credentials can accidentally reuse a stale cached client
+    # from a previous key because the key identity was not part of the cache
+    # discriminator when api_key=None.
+    effective_api_key = api_key
+    if not effective_api_key:
+        try:
+            from hermes_cli.auth import PROVIDER_REGISTRY, resolve_api_key_provider_credentials
+
+            normalized_provider = _normalize_aux_provider(provider)
+            pconfig = PROVIDER_REGISTRY.get(normalized_provider)
+            if pconfig is not None and getattr(pconfig, "auth_type", None) == "api_key":
+                creds = resolve_api_key_provider_credentials(normalized_provider)
+                effective_api_key = str(creds.get("api_key", "")).strip() or effective_api_key
+        except Exception:
+            pass
+
+    if not effective_api_key:
+        _pe = _peek_pool_entry(_normalize_aux_provider(provider))
+        if _pe is not None:
+            _pk = _pool_runtime_api_key(_pe)
+            if _pk:
+                effective_api_key = _pk
+
     cache_key = _client_cache_key(
         provider,
         async_mode=async_mode,
         base_url=base_url,
-        api_key=api_key,
+        api_key=effective_api_key,
         api_mode=api_mode,
         main_runtime=main_runtime,
         is_vision=is_vision,

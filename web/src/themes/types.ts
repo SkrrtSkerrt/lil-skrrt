@@ -148,6 +148,8 @@ export interface DashboardTheme {
   label: string;
   name: string;
   palette: ThemePalette;
+  /** Legacy terminal backdrop used by older built-in presets. */
+  terminalBackground?: string;
   typography: ThemeTypography;
   layout: ThemeLayout;
   /** Overall shell layout. Defaults to `"standard"` when absent. */

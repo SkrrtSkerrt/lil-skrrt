@@ -21,15 +21,12 @@ class TestMattermostWSAuthRetry:
 
     def test_401_handshake_stops_reconnect(self):
         """A WSServerHandshakeError with status 401 should stop the loop."""
-        import aiohttp
+        class HandshakeError(Exception):
+            def __init__(self, status):
+                super().__init__(f"HTTP {status} Unauthorized")
+                self.status = status
 
-        exc = aiohttp.WSServerHandshakeError(
-            request_info=MagicMock(),
-            history=(),
-            status=401,
-            message="Unauthorized",
-            headers=MagicMock(),
-        )
+        exc = HandshakeError(401)
 
         from plugins.platforms.mattermost.adapter import MattermostAdapter
         adapter = MattermostAdapter.__new__(MattermostAdapter)
@@ -51,15 +48,12 @@ class TestMattermostWSAuthRetry:
 
     def test_403_handshake_stops_reconnect(self):
         """A WSServerHandshakeError with status 403 should stop the loop."""
-        import aiohttp
+        class HandshakeError(Exception):
+            def __init__(self, status):
+                super().__init__(f"HTTP {status} Forbidden")
+                self.status = status
 
-        exc = aiohttp.WSServerHandshakeError(
-            request_info=MagicMock(),
-            history=(),
-            status=403,
-            message="Forbidden",
-            headers=MagicMock(),
-        )
+        exc = HandshakeError(403)
 
         from plugins.platforms.mattermost.adapter import MattermostAdapter
         adapter = MattermostAdapter.__new__(MattermostAdapter)

@@ -88,21 +88,21 @@ The single most important setup step. Use `lil-skrrt model` to walk through the 
 lil-skrrt model
 ```
 
-:::tip Easiest path: Nous Portal
+:::tip Easiest path: Portal
 One subscription covers 300+ models plus the [Tool Gateway](../user-guide/features/tool-gateway.md) (web search, image generation, TTS, cloud browser). On a fresh install:
 
 ```bash
 lil-skrrt setup --portal
 ```
 
-That logs you in, sets Nous as your provider, and turns on the Tool Gateway in one command.
+That logs you in, sets Portal as your provider, and turns on the Tool Gateway in one command.
 :::
 
 Good defaults:
 
 | Provider | What it is | How to set up |
 |----------|-----------|---------------|
-| **Nous Portal** | Subscription-based, zero-config | OAuth login via `lil-skrrt model` |
+| **Portal** | Subscription-based, zero-config | OAuth login via `lil-skrrt model` |
 | **OpenAI Codex** | ChatGPT OAuth, uses Codex models | Device code auth via `lil-skrrt model` |
 | **Anthropic** | Claude models directly — Max plan + extra usage credits (OAuth), or API key for pay-per-token | `lil-skrrt model` → OAuth login (requires Max + extra credits), or an Anthropic API key |
 | **OpenRouter** | Multi-provider routing across many models | Enter your API key |
@@ -258,7 +258,7 @@ lil-skrrt config set terminal.backend ssh       # Remote server
 ### Voice mode
 
 ```bash
-# From the Hermes install directory (the curl installer placed it at
+# From the Lil Skrrt install directory (the curl installer placed it at
 # ~/.hermes/hermes-agent on Linux/macOS or %LOCALAPPDATA%\hermes\hermes-agent on Windows):
 cd ~/.hermes/hermes-agent
 uv pip install -e ".[voice]"

@@ -45,7 +45,7 @@ lil-skrrt [global-options] <command> [subcommand/options]
 | `lil-skrrt setup` | Interactive setup wizard for all or part of the configuration. |
 | `lil-skrrt whatsapp` | Configure and pair the WhatsApp bridge. |
 | `lil-skrrt slack` | Slack helpers (currently: generate the app manifest with every command as a native slash). |
-| `lil-skrrt auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Nous/Anthropic. |
+| `lil-skrrt auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Portal/Anthropic. |
 | `lil-skrrt login` / `logout` | **Deprecated** — use `lil-skrrt auth` instead. |
 | `lil-skrrt status` | Show agent, auth, and platform status. |
 | `lil-skrrt cron` | Inspect and tick the cron scheduler. |
@@ -69,7 +69,7 @@ lil-skrrt [global-options] <command> [subcommand/options]
 | `lil-skrrt acp` | Run Lil Skrrt as an ACP server for editor integration. |
 | `lil-skrrt mcp` | Manage MCP server configurations and run Lil Skrrt as an MCP server. |
 | `lil-skrrt plugins` | Manage Lil Skrrt plugins (install, enable, disable, remove). |
-| `lil-skrrt portal` | Nous Portal status, subscription link, and Tool Gateway routing. See [Tool Gateway](../user-guide/features/tool-gateway.md). |
+| `lil-skrrt portal` | Portal status, subscription link, and Tool Gateway routing. See [Tool Gateway](../user-guide/features/tool-gateway.md). |
 | `lil-skrrt tools` | Configure enabled tools per platform. |
 | `lil-skrrt computer-use` | Install or check the cua-driver backend (macOS Computer Use). |
 | `lil-skrrt sessions` | Browse, export, prune, rename, and delete sessions. |
@@ -284,7 +284,7 @@ Options:
 | `--non-interactive` | Use defaults / environment values without prompts. |
 | `--reset` | Reset configuration to defaults before setup. |
 | `--reconfigure` | Backwards-compat alias — bare `lil-skrrt setup` on an existing install now does this by default. |
-| `--portal` | One-shot Nous Portal setup: log in via OAuth, set Nous as the inference provider, and opt into the [Tool Gateway](../user-guide/features/tool-gateway.md). Skips the rest of the wizard. |
+| `--portal` | One-shot Portal setup: log in via OAuth, set Portal as the inference provider, and opt into the [Tool Gateway](../user-guide/features/tool-gateway.md). Skips the rest of the wizard. |
 
 ## `lil-skrrt portal`
 
@@ -292,13 +292,13 @@ Options:
 lil-skrrt portal [status|open|tools]
 ```
 
-Inspect Nous Portal auth, Tool Gateway routing, and reach the subscription page. Subcommand-less invocation runs `status`.
+Inspect Portal auth, Tool Gateway routing, and reach the subscription page. Subcommand-less invocation runs `status`.
 
 | Subcommand | Description |
 |------------|-------------|
 | `status` (default) | Portal auth state + per-tool Tool Gateway routing summary. Also shown when no subcommand is given. |
 | `open` | Open `portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription` in your default browser. |
-| `tools` | List every Tool Gateway partner (Firecrawl, FAL, OpenAI TTS, Browser Use, Modal) and which are routed via Nous. |
+| `tools` | List every Tool Gateway partner (Firecrawl, FAL, OpenAI TTS, Browser Use, Modal) and which are routed via Portal. |
 
 For configuration of the gateway itself, see [Tool Gateway](../user-guide/features/tool-gateway.md). For the one-shot setup path, see `lil-skrrt setup --portal` above.
 
@@ -357,7 +357,7 @@ lil-skrrt auth remove openrouter 2                          # Remove by index
 lil-skrrt auth reset openrouter                             # Clear cooldowns
 lil-skrrt auth status anthropic                             # Show auth status for a provider
 lil-skrrt auth logout anthropic                             # Log out and clear stored auth state
-lil-skrrt auth spotify                                      # Authenticate Hermes with Spotify via PKCE
+lil-skrrt auth spotify                                      # Authenticate Lil Skrrt with Spotify via PKCE
 ```
 
 Subcommands: `add`, `list`, `remove`, `reset`, `status`, `logout`, `spotify`. When called with no subcommand, launches the interactive management wizard.
@@ -1001,8 +1001,8 @@ Manage MCP (Model Context Protocol) server configurations and run Lil Skrrt as a
 
 | Subcommand | Description |
 |------------|-------------|
-| *(none)* or `picker` | Interactive catalog picker — browse Nous-approved MCPs and install/enable/disable. |
-| `catalog` | List Nous-approved MCPs (plain text, scriptable). |
+| *(none)* or `picker` | Interactive catalog picker — browse Portal-approved MCPs and install/enable/disable. |
+| `catalog` | List Portal-approved MCPs (plain text, scriptable). |
 | `install <name>` | Install a catalog entry (e.g. `lil-skrrt mcp install n8n`). |
 | `serve [-v\|--verbose]` | Run Lil Skrrt as an MCP server — expose conversations to other agents. |
 | `add <name> [--url URL] [--command CMD] [--args ...] [--auth oauth\|header]` | Add a custom MCP server with automatic tool discovery. |

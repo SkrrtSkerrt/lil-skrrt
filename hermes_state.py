@@ -214,6 +214,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     cost_source TEXT,
     pricing_version TEXT,
     title TEXT,
+    archived INTEGER NOT NULL DEFAULT 0,
     api_call_count INTEGER DEFAULT 0,
     handoff_state TEXT,
     handoff_platform TEXT,
@@ -1056,6 +1057,16 @@ class SessionDB:
         rowcount = self._execute_write(_do)
         return rowcount > 0
 
+    def set_session_archived(self, session_id: str, archived: bool) -> bool:
+        """Soft-archive or restore a session."""
+        def _do(conn):
+            cursor = conn.execute(
+                "UPDATE sessions SET archived = ? WHERE id = ?",
+                (1 if archived else 0, session_id),
+            )
+            return cursor.rowcount
+        return self._execute_write(_do) > 0
+
     def get_session_title(self, session_id: str) -> Optional[str]:
         """Get the title for a session, or None."""
         with self._lock:
@@ -1183,6 +1194,9 @@ class SessionDB:
         include_children: bool = False,
         project_compression_tips: bool = True,
         order_by_last_active: bool = False,
+        min_message_count: int = 0,
+        include_archived: bool = False,
+        archived_only: bool = False,
     ) -> List[Dict[str, Any]]:
         """List sessions with preview (first user message) and last active timestamp.
 
@@ -1235,6 +1249,16 @@ class SessionDB:
             placeholders = ",".join("?" for _ in exclude_sources)
             where_clauses.append(f"s.source NOT IN ({placeholders})")
             params.extend(exclude_sources)
+
+        min_message_count = max(0, int(min_message_count or 0))
+        if min_message_count:
+            where_clauses.append("s.message_count >= ?")
+            params.append(min_message_count)
+
+        if archived_only:
+            where_clauses.append("COALESCE(s.archived, 0) = 1")
+        elif not include_archived:
+            where_clauses.append("COALESCE(s.archived, 0) = 0")
 
         where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
         if order_by_last_active:
@@ -1317,6 +1341,7 @@ class SessionDB:
         sessions = []
         for row in rows:
             s = dict(row)
+            s.setdefault("cwd", None)
             # Build the preview from the raw substring
             raw = s.pop("_preview_raw", "").strip()
             if raw:
@@ -1391,6 +1416,7 @@ class SessionDB:
         if not row:
             return None
         s = dict(row)
+        s.setdefault("cwd", None)
         raw = s.pop("_preview_raw", "").strip()
         if raw:
             text = raw[:60]
@@ -2456,15 +2482,32 @@ class SessionDB:
     # Utility
     # =========================================================================
 
-    def session_count(self, source: str = None) -> int:
-        """Count sessions, optionally filtered by source."""
+    def session_count(
+        self,
+        source: str = None,
+        min_message_count: int = 0,
+        include_archived: bool = False,
+        archived_only: bool = False,
+    ) -> int:
+        """Count sessions with the same filters used by list_sessions_rich."""
+        where_clauses = []
+        params = []
+        if source:
+            where_clauses.append("source = ?")
+            params.append(source)
+        min_message_count = max(0, int(min_message_count or 0))
+        if min_message_count:
+            where_clauses.append("message_count >= ?")
+            params.append(min_message_count)
+        if archived_only:
+            where_clauses.append("COALESCE(archived, 0) = 1")
+        elif not include_archived:
+            where_clauses.append("COALESCE(archived, 0) = 0")
+        sql = "SELECT COUNT(*) FROM sessions"
+        if where_clauses:
+            sql += " WHERE " + " AND ".join(where_clauses)
         with self._lock:
-            if source:
-                cursor = self._conn.execute(
-                    "SELECT COUNT(*) FROM sessions WHERE source = ?", (source,)
-                )
-            else:
-                cursor = self._conn.execute("SELECT COUNT(*) FROM sessions")
+            cursor = self._conn.execute(sql, tuple(params))
             return cursor.fetchone()[0]
 
     def message_count(self, session_id: str = None) -> int:

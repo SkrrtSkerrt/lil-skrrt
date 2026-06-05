@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SkrrtSkerrt/Hermes-Agent.git"
+    "url": "git+https://github.com/SkrrtSkerrt/lil-skrrt.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SkrrtSkerrt/Hermes-Agent/issues"
+    "url": "https://github.com/SkrrtSkerrt/lil-skrrt/issues"
   },
-  "homepage": "https://github.com/SkrrtSkerrt/Hermes-Agent#readme",
+  "homepage": "https://github.com/SkrrtSkerrt/lil-skrrt#readme",
   "dependencies": {
     "agent-browser": "^0.26.0"
   },

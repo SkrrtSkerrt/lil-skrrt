@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
-title: "Run Lil Skrrt with Nous Portal"
+title: "Run Lil Skrrt with Portal"
 description: "Start-to-finish walkthrough: subscribe, set up, switch models, enable gateway tools, and verify routing"
 ---
 
-# Run Lil Skrrt with Nous Portal
+# Run Lil Skrrt with Portal
 
-This guide walks you through running Lil Skrrt on a [Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [Nous Portal integration page](/integrations/nous-portal). This page is the task script.
+This guide walks you through running Lil Skrrt on a [Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription end to end — from signing up to verifying that every tool routes correctly. If you just want the overview of what the Portal is and what's in the subscription, see the [Portal integration page](/integrations/nous-portal). This page is the task script.
 
 ## Prerequisites
 
@@ -67,17 +67,17 @@ You should see:
   ───────────
   Auth:    ✓ logged in
   Portal:  https://portal.github.com/SkrrtSkerrt/hermes-agent
-  Model:   ✓ using Nous as inference provider
+  Model:   ✓ using Portal as inference provider
 
   Tool Gateway
   ────────────
-  Web search & extract  via Nous Portal
-  Image generation      via Nous Portal
-  Text-to-speech        via Nous Portal
-  Browser automation    via Nous Portal
+  Web search & extract  via Portal
+  Image generation      via Portal
+  Text-to-speech        via Portal
+  Browser automation    via Portal
 ```
 
-If any line shows something other than "via Nous Portal" or the auth line says "not logged in", jump to [Troubleshooting](#troubleshooting) below.
+If any line shows something other than "via Portal" or the auth line says "not logged in", jump to [Troubleshooting](#troubleshooting) below.
 
 ## 4. Run your first conversation
 
@@ -88,7 +88,7 @@ lil-skrrt chat
 Try something that exercises both the model and the Tool Gateway:
 
 ```
-Hey, search the web for "Hermes Agent release notes" and summarize the top 3 hits.
+Hey, search the web for "Lil Skrrt release notes" and summarize the top 3 hits.
 ```
 
 You should see Lil Skrrt call `web_search` (Firecrawl-backed, through the gateway) and respond with a summary. If the search runs and the response makes sense, you're done — the Portal is wired up end to end.
@@ -118,11 +118,11 @@ Pick a different default permanently:
 lil-skrrt config set model.default anthropic/claude-sonnet-4.6
 ```
 
-### Don't pick Hermes-4 for agent work
+### Don't pick Lil Skrrt 4 for agent work
 
-Hermes-4-70B and Hermes-4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [Nous Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Lil Skrrt itself, stick to the frontier agentic models above.
+Lil Skrrt 4-70B and Lil Skrrt 4-405B are available on the Portal at deep discounts, but they're **chat/reasoning models**, not tool-call-tuned. They will struggle with multi-step agent loops. Use them via [Portal Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent) for conversation/research work, or through the [subscription proxy](/user-guide/features/subscription-proxy) from non-agent tools. For Lil Skrrt itself, stick to the frontier agentic models above.
 
-The Portal's own [info page](https://portal.github.com/SkrrtSkerrt/hermes-agent/info) carries this warning too — it's the official Nous guidance, not just a Hermes-side opinion.
+The Portal's own [info page](https://portal.github.com/SkrrtSkerrt/hermes-agent/info) carries this warning too — it's the official Portal guidance, not just a Hermes-side opinion.
 
 ## 6. (Optional) Customize Tool Gateway routing
 
@@ -130,10 +130,10 @@ The gateway is opt-in per tool, not all-or-nothing. If you already have a Browse
 
 ```bash
 lil-skrrt tools
-# → Web search       → "Nous Subscription"     (recommended)
-# → Image generation → "Nous Subscription"     (recommended)
+# → Web search       → "Portal Subscription"     (recommended)
+# → Image generation → "Portal Subscription"     (recommended)
 # → Browser          → "Browserbase"           (your existing key)
-# → TTS              → "Nous Subscription"     (recommended)
+# → TTS              → "Portal Subscription"     (recommended)
 ```
 
 Verify your mix with:
@@ -142,7 +142,7 @@ Verify your mix with:
 lil-skrrt portal tools
 ```
 
-You'll see per-tool routing — `via Nous Portal` for the ones routed through the subscription, and the partner name (`browserbase`, `firecrawl`, etc.) for the ones using your own keys.
+You'll see per-tool routing — `via Portal` for the ones routed through the subscription, and the partner name (`browserbase`, `firecrawl`, etc.) for the ones using your own keys.
 
 ## 7. (Optional) Enable voice mode
 
@@ -150,7 +150,7 @@ Because the Tool Gateway includes OpenAI TTS, [voice mode](/user-guide/features/
 
 ```bash
 lil-skrrt setup voice
-# → pick "Nous Subscription" for TTS
+# → pick "Portal Subscription" for TTS
 # → pick a speech-to-text backend (local faster-whisper is free, no setup)
 ```
 
@@ -197,18 +197,18 @@ Or interactively:
 
 ```bash
 lil-skrrt model
-# pick Nous Portal
+# pick Portal
 ```
 
 Re-verify with `lil-skrrt portal status`.
 
-### Tool Gateway tools showing partner names instead of "via Nous Portal"
+### Tool Gateway tools showing partner names instead of "via Portal"
 
 Per-tool config is overriding the gateway. Run:
 
 ```bash
 lil-skrrt tools
-# pick "Nous Subscription" for any tool you want gateway-routed
+# pick "Portal Subscription" for any tool you want gateway-routed
 ```
 
 Some users intentionally mix — e.g. routing web through Nous but using their own Browserbase key for browser. If that's intentional, leave it alone. If not, this command fixes it.
@@ -265,9 +265,9 @@ That's the deal. If you're using more than two of those backends anyway, the sub
 
 ## See also
 
-- **[Nous Portal integration page](/integrations/nous-portal)** — Overview of what's in the subscription
+- **[Portal integration page](/integrations/nous-portal)** — Overview of what's in the subscription
 - **[Tool Gateway](/user-guide/features/tool-gateway)** — Full details on every gateway-routed tool
-- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Hermes tools
+- **[Subscription proxy](/user-guide/features/subscription-proxy)** — Use your Portal subscription from non-Lil Skrrt tools
 - **[Voice mode](/user-guide/features/voice-mode)** — Set up voice conversations on the Portal subscription
 - **[OAuth over SSH](/guides/oauth-over-ssh)** — Remote / headless login patterns
 - **[Profiles](/user-guide/profiles)** — Share one Portal login across multiple Lil Skrrt configurations

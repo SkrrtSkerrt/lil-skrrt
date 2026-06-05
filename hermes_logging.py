@@ -199,6 +199,12 @@ def setup_logging(
     log_dir = home / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
 
+    # Some startup paths intentionally silence stdlib logging with
+    # logging.disable(logging.CRITICAL) (for example oneshot / -z mode).
+    # Logging setup still needs to emit to file handlers, so restore the
+    # global logging threshold here.
+    logging.disable(logging.NOTSET)
+
     # Read config defaults (best-effort — config may not be loaded yet).
     cfg_level, cfg_max_size, cfg_backup = _read_logging_config()
 
@@ -346,12 +352,15 @@ def _add_rotating_handler(
         Optional filter to attach to the handler (e.g. ``_ComponentFilter``
         for gateway.log).
     """
-    resolved = path.resolve()
+    # Use lexical path normalization instead of Path.resolve(): some test
+    # harnesses point HERMES_HOME at temporary directories that may be removed
+    # between tests, and resolving those stale handler paths can become
+    # unexpectedly expensive.  We only need stable duplicate detection, not
+    # symlink resolution.
+    resolved = os.path.abspath(os.fspath(path))
     for existing in logger.handlers:
-        if (
-            isinstance(existing, RotatingFileHandler)
-            and Path(getattr(existing, "baseFilename", "")).resolve() == resolved
-        ):
+        existing_path = getattr(existing, "baseFilename", "")
+        if isinstance(existing, RotatingFileHandler) and os.path.abspath(str(existing_path)) == resolved:
             return  # already attached
 
     path.parent.mkdir(parents=True, exist_ok=True)

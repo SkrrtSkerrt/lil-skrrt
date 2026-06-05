@@ -1580,7 +1580,7 @@ def _optional_base_url(value: Any) -> Optional[str]:
 # dev/staging escape hatch and the env source is already trusted (the
 # user set it themselves).
 _ALLOWED_NOUS_INFERENCE_HOSTS: FrozenSet[str] = frozenset({
-    "inference-api.github.com/SkrrtSkerrt/hermes-agent",
+    "inference-api.github.com",
 })
 
 

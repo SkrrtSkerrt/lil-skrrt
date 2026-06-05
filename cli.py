@@ -4969,8 +4969,10 @@ class HermesCLI:
                         file=sys.stderr,
                     )
                 else:
-                    _cprint(f"\033[1;31mSession not found: {self.session_id}{_RST}")
-                    _cprint(f"{_DIM}Use a session ID from a previous CLI run (hermes sessions list).{_RST}")
+                    print(f"Session not found: {self.session_id}")
+                    print(
+                        "Use a session ID from a previous CLI run (hermes sessions list)."
+                    )
                 return False
             # If the requested session is the (empty) head of a compression
             # chain, walk to the descendant that actually holds the messages.
@@ -7432,7 +7434,7 @@ class HermesCLI:
             app_loop = None
 
         in_main_thread = threading.current_thread() is threading.main_thread()
-        if not in_main_thread and app_loop is None:
+        if not in_main_thread:
             return self._prompt_text_input("Choice [1/2/3]: ")
 
         response_queue = queue.Queue()

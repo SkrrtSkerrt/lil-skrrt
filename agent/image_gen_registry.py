@@ -40,14 +40,21 @@ def register_provider(provider: ImageGenProvider) -> None:
     a debug message — this makes hot-reload scenarios (tests, dev loops)
     behave predictably.
     """
-    if not isinstance(provider, ImageGenProvider):
+    name = getattr(provider, "name", None)
+    if not isinstance(name, str):
         raise TypeError(
-            f"register_provider() expects an ImageGenProvider instance, "
+            f"register_provider() expects an ImageGenProvider-like object, "
             f"got {type(provider).__name__}"
         )
-    name = provider.name
-    if not isinstance(name, str) or not name.strip():
+    name = name.strip()
+    if not name:
         raise ValueError("Image gen provider .name must be a non-empty string")
+    generate = getattr(provider, "generate", None)
+    if not callable(generate):
+        raise TypeError(
+            f"register_provider() expects an ImageGenProvider-like object, "
+            f"got {type(provider).__name__}"
+        )
     with _lock:
         existing = _providers.get(name)
         _providers[name] = provider

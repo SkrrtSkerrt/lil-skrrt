@@ -70,8 +70,8 @@ Lil Skrrt will connect to your BlueBubbles server, register a webhook, and start
 ## How It Works
 
 ```
-iMessage → Messages.app → BlueBubbles Server → Webhook → Hermes
-Hermes → BlueBubbles REST API → Messages.app → iMessage
+iMessage → Messages.app → BlueBubbles Server → Webhook → Lil Skrrt
+Lil Skrrt → BlueBubbles REST API → Messages.app → iMessage
 ```
 
 - **Inbound:** BlueBubbles sends webhook events to a local listener when new messages arrive. No polling — instant delivery.

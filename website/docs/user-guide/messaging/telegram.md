@@ -418,7 +418,7 @@ platforms:
       base_url: "http://127.0.0.1:8081/bot"
       base_file_url: "http://127.0.0.1:8081/file/bot"
       local_mode: true        # see Step 5 below — only set this if the bot's data
-                              # directory is readable by the Hermes process
+                              # directory is readable by the Lil Skrrt process
 ```
 
 :::caution Use `platforms.telegram.extra`, not `telegram.extra`

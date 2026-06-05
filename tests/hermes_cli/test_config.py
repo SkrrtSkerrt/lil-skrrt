@@ -24,6 +24,23 @@ from hermes_cli.config import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _restore_process_env():
+    """Keep config tests from leaking process-wide env mutations.
+
+    ``save_env_value`` intentionally updates ``os.environ`` in addition to
+    persisting to ``~/.hermes/.env``. That matches runtime behavior, but it
+    means tests that write integration keys can contaminate later tests in the
+    same worker unless the process environment is restored after each test.
+    """
+    env_snapshot = os.environ.copy()
+    try:
+        yield
+    finally:
+        os.environ.clear()
+        os.environ.update(env_snapshot)
+
+
 class TestGetHermesHome:
     def test_default_path(self):
         with patch.dict(os.environ, {}, clear=False):

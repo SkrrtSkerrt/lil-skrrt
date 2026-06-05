@@ -14,7 +14,7 @@ You need at least one way to connect to an LLM. Use `lil-skrrt model` to switch 
 
 | Provider | Setup |
 |----------|-------|
-| **Nous Portal** | `lil-skrrt model` (OAuth, subscription-based) |
+| **Portal** | `lil-skrrt model` (OAuth, subscription-based) |
 | **OpenAI Codex** | `lil-skrrt model` (ChatGPT OAuth, uses Codex models) |
 | **GitHub Copilot** | `lil-skrrt model` (OAuth device code flow, `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, or `gh auth token`) |
 | **GitHub Copilot ACP** | `lil-skrrt model` (spawns local `copilot --acp --stdio`) |
@@ -51,19 +51,19 @@ In the `model:` config section, you can use either `default:` or `model:` as the
 :::
 
 
-### Nous Portal
+### Portal
 
-[Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) is SkrrtSkerrt's unified subscription gateway and **the recommended way to run Lil Skrrt**. One OAuth login covers 300+ frontier agentic models (Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, MiniMax, Grok, ...) plus the [Tool Gateway](/user-guide/features/tool-gateway) (web search, image generation, TTS, browser automation) plus [Nous Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent) — billed against your Nous subscription instead of separate per-provider accounts.
+[Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) is SkrrtSkerrt's unified subscription gateway and **the recommended way to run Lil Skrrt**. One OAuth login covers 300+ frontier agentic models (Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, MiniMax, Grok, ...) plus the [Tool Gateway](/user-guide/features/tool-gateway) (web search, image generation, TTS, browser automation) plus [Portal Chat](https://chat.github.com/SkrrtSkerrt/hermes-agent) — billed against your Portal subscription instead of separate per-provider accounts.
 
 ```bash
 lil-skrrt setup --portal     # fresh install — OAuth + provider + gateway in one command
-lil-skrrt model              # existing install — pick "Nous Portal" from the list
+lil-skrrt model              # existing install — pick "Portal" from the list
 lil-skrrt portal status      # inspect login + routing at any time
 ```
 
 Don't have a subscription yet? Get one at [portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription](https://portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription).
 
-**For full details:** see the dedicated [Nous Portal integration page](/integrations/nous-portal) (what's in the subscription, model catalog, troubleshooting) and the step-by-step [Run Lil Skrrt with Nous Portal guide](/guides/run-hermes-with-nous-portal).
+**For full details:** see the dedicated [Portal integration page](/integrations/nous-portal) (what's in the subscription, model catalog, troubleshooting) and the step-by-step [Run Lil Skrrt with Portal guide](/guides/run-hermes-with-nous-portal).
 
 
 :::info Codex Note
@@ -73,11 +73,11 @@ If a token refresh fails with a terminal error (HTTP 4xx, `invalid_grant`, revok
 :::
 
 :::warning
-Even when using Nous Portal, Codex, or a custom endpoint, some tools (vision, web summarization, MoA) use a separate "auxiliary" model. By default (`auxiliary.*.provider: "auto"`), Lil Skrrt routes these tasks to your **main chat model** — the same model you picked in `lil-skrrt model`. You can override each task individually to route it to a cheaper/faster model (e.g. Gemini Flash on OpenRouter) — see [Auxiliary Models](/user-guide/configuration#auxiliary-models).
+Even when using Portal, Codex, or a custom endpoint, some tools (vision, web summarization, MoA) use a separate "auxiliary" model. By default (`auxiliary.*.provider: "auto"`), Lil Skrrt routes these tasks to your **main chat model** — the same model you picked in `lil-skrrt model`. You can override each task individually to route it to a cheaper/faster model (e.g. Gemini Flash on OpenRouter) — see [Auxiliary Models](/user-guide/configuration#auxiliary-models).
 :::
 
 :::tip Nous Tool Gateway
-Paid Nous Portal subscribers also get access to the **[Tool Gateway](/user-guide/features/tool-gateway)** — web search, image generation, TTS, and browser automation routed through your subscription. No extra API keys needed. On a fresh install, `lil-skrrt setup --portal` logs you in, sets Nous as your provider, and turns the gateway on in one command. Existing users can enable it from `lil-skrrt model` or per-tool from `lil-skrrt tools`. Inspect routing at any time with `lil-skrrt portal status`.
+Paid Portal subscribers also get access to the **[Tool Gateway](/user-guide/features/tool-gateway)** — web search, image generation, TTS, and browser automation routed through your subscription. No extra API keys needed. On a fresh install, `lil-skrrt setup --portal` logs you in, sets Nous as your provider, and turns the gateway on in one command. Existing users can enable it from `lil-skrrt model` or per-tool from `lil-skrrt tools`. Inspect routing at any time with `lil-skrrt portal status`.
 :::
 
 ### Two Commands for Model Management
@@ -108,7 +108,7 @@ export ANTHROPIC_API_KEY=***
 lil-skrrt chat --provider anthropic --model claude-sonnet-4-6
 
 # Preferred: authenticate through `hermes model`
-# Hermes will use Claude Code's credential store directly when available
+# Lil Skrrt will use Claude Code's credential store directly when available
 lil-skrrt model
 
 # Manual override with a setup-token (fallback / legacy)
@@ -526,7 +526,7 @@ lil-skrrt model
 # → pick "Google Gemini (OAuth)"
 # → see policy warning, confirm
 # → browser opens to accounts.google.com, sign in
-# → done — Hermes auto-provisions your free tier on first request
+# → done — Lil Skrrt auto-provisions your free tier on first request
 ```
 
 Lil Skrrt ships Google's **public** `gemini-cli` desktop OAuth client by default —
@@ -1034,7 +1034,7 @@ The model outputs something like `{"name": "web_search", "arguments": {...}}` as
 **Diagnosis:**
 
 ```bash
-# Check what Hermes thinks the context is
+# Check what Lil Skrrt thinks the context is
 # Look at startup line: "Context limit: X tokens"
 
 # Check your server's actual context
@@ -1174,7 +1174,7 @@ Lil Skrrt uses a multi-source resolution chain to detect the correct context win
 4. **Endpoint `/models`** — queries your server's API (local/custom endpoints)
 5. **Anthropic `/v1/models`** — queries Anthropic's API for `max_input_tokens` (API-key users only)
 6. **OpenRouter API** — live model metadata from OpenRouter
-7. **Nous Portal** — suffix-matches Nous model IDs against OpenRouter metadata
+7. **Portal** — suffix-matches Nous model IDs against OpenRouter metadata
 8. **[models.dev](https://models.dev)** — community-maintained registry with provider-specific context lengths for 3800+ models across 100+ providers
 9. **Fallback defaults** — broad model family patterns (128K default)
 
@@ -1220,7 +1220,7 @@ If you work with multiple custom endpoints (e.g., a local dev server and a remot
 custom_providers:
   - name: local
     base_url: http://localhost:8080/v1
-    # api_key omitted — Hermes uses "no-key-required" for keyless local servers
+    # api_key omitted — Lil Skrrt uses "no-key-required" for keyless local servers
   - name: work
     base_url: https://gpu-server.internal.corp/v1
     key_env: CORP_API_KEY
@@ -1376,7 +1376,7 @@ model:
 
 | Use Case | Recommended |
 |----------|-------------|
-| **Just want it to work** | OpenRouter (default) or Nous Portal |
+| **Just want it to work** | OpenRouter (default) or Portal |
 | **Local models, easy setup** | Ollama |
 | **Production GPU serving** | vLLM or SGLang |
 | **Mac / no GPU** | Ollama or llama.cpp |

@@ -127,7 +127,7 @@ In this setup, Lil Skrrt does **not** connect to Chrome directly. Instead:
 Mental model:
 
 ```text
-Hermes (WSL) -> MCP stdio bridge -> Windows Chrome
+Lil Skrrt (WSL) -> MCP stdio bridge -> Windows Chrome
 ```
 
 ### Why this mode is useful
@@ -216,7 +216,7 @@ There are two categories of MCP-exposed functionality in Lil Skrrt:
   - `tools.include`
   - `tools.exclude`
 
-2. Hermes-added utility wrappers
+2. Lil Skrrt-added utility wrappers
 - filtered with:
   - `tools.resources`
   - `tools.prompts`

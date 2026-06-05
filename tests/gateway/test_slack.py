@@ -9,6 +9,7 @@ We mock the slack modules at import time to avoid collection errors.
 """
 
 import asyncio
+import importlib.util
 import os
 import sys
 from unittest.mock import AsyncMock, MagicMock, patch, call
@@ -53,8 +54,10 @@ def _ensure_slack_mock():
     ]:
         sys.modules.setdefault(name, mod)
 
-    # aiohttp is imported alongside slack-bolt; mock it if missing
-    sys.modules.setdefault("aiohttp", MagicMock())
+    # aiohttp is imported alongside slack-bolt; mock it only when the real
+    # package is genuinely unavailable so we don't poison later tests.
+    if importlib.util.find_spec("aiohttp") is None and "aiohttp" not in sys.modules:
+        sys.modules.setdefault("aiohttp", MagicMock())
 
 
 _ensure_slack_mock()

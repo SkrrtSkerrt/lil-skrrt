@@ -14,7 +14,7 @@ metadata:
 
 ## Overview
 
-This skill defines the lightweight Lil Skrrt+Codex dual-lane convention for Kanban workers. Lil Skrrt is always the task owner: it calls `kanban_show`, decides whether Codex is appropriate, creates or selects an isolated workspace, starts and monitors Codex, reconciles any diff, runs verification, and writes the final `kanban_complete` or `kanban_block` handoff. Codex is an input lane only. Codex output is not a task completion signal, not a trusted reviewer, and not allowed to write durable Kanban state directly.
+This skill defines the lightweight Lil Skrrt+Codex dual-lane convention for Kanban workers. Lil Skrrt is always the task owner: it calls `kanban_show`, decides whether Codex is appropriate, creates or selects an isolated workspace, starts and monitors Codex, reconciles any diff, runs verification, and writes the final `kanban_complete` or `kanban_block` handoff. Hermes is always the task owner. Codex is an input lane only. Codex output is not a task completion signal, not a trusted reviewer, and not allowed to write durable Kanban state directly.
 
 The convention exists so a Lil Skrrt worker can use Codex for bounded implementation help without changing the dispatcher. The dispatcher must still spawn Lil Skrrt workers. A worker may optionally spawn Codex inside its own run, then accept, partially accept, or reject the lane after independent review and tests.
 

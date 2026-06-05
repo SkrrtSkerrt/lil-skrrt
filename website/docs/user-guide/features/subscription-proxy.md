@@ -1,14 +1,14 @@
 ---
 sidebar_position: 15
 title: "Subscription Proxy"
-description: "Use your Nous Portal subscription (or other OAuth provider) as an OpenAI-compatible endpoint for external apps"
+description: "Use your Portal subscription (or other OAuth provider) as an OpenAI-compatible endpoint for external apps"
 ---
 
 # Subscription Proxy
 
 The subscription proxy is a local HTTP server that lets external apps —
 OpenViking, Karakeep, Open WebUI, anything that speaks OpenAI-compatible
-chat completions — use your Hermes-managed provider subscription as their
+chat completions — use your Lil Skrrt-managed provider subscription as their
 LLM endpoint. The proxy attaches the right credentials (refreshing them
 automatically) so the app never needs a static API key.
 
@@ -32,7 +32,7 @@ proxy when you just want **the model** through your subscription.
 lil-skrrt auth add nous
 ```
 
-This opens your browser for the Nous Portal OAuth flow. Lil Skrrt stores
+This opens your browser for the Portal OAuth flow. Lil Skrrt stores
 the refresh token in `~/.hermes/auth.json` — the same place all Lil Skrrt
 provider logins live.
 
@@ -43,7 +43,7 @@ lil-skrrt proxy start
 ```
 
 ```
-Starting Hermes proxy for Nous Portal
+Starting Lil Skrrt proxy for Portal
   Listening on:  http://127.0.0.1:8645/v1
   Forwarding to: (resolved per-request from your subscription)
   Use any bearer token in the client — the proxy attaches your real credential.
@@ -59,7 +59,7 @@ Any OpenAI-compatible app config takes the same triple:
 ```
 Base URL:   http://127.0.0.1:8645/v1
 API key:    anything (e.g. "sk-unused")
-Model:      Hermes-4-70B    # or Hermes-4.3-36B, Hermes-4-405B
+Model:      Lil Skrrt 4-70B    # or Lil Skrrt 4.3-36B, Lil Skrrt 4-405B
 ```
 
 The proxy ignores the `Authorization` header from your app and attaches
@@ -72,7 +72,7 @@ automatically when the bearer approaches expiry.
 lil-skrrt proxy providers
 ```
 
-Currently shipped: `nous` (Nous Portal). More OAuth providers can be
+Currently shipped: `nous` (Portal). More OAuth providers can be
 added by implementing the `UpstreamAdapter` interface in
 `hermes_cli/proxy/adapters/`.
 
@@ -83,7 +83,7 @@ lil-skrrt proxy status
 ```
 
 ```
-Hermes proxy upstream adapters
+Lil Skrrt proxy upstream adapters
 
   [nous    ] Nous Portal — ready (bearer expires 2026-05-15T06:43:21Z)
 ```
@@ -95,7 +95,7 @@ happens if you signed out from the Portal web UI) — just re-run
 
 ## Allowed paths
 
-The proxy only forwards paths the upstream actually serves. For Nous
+The proxy only forwards paths the upstream actually serves. For Portal
 Portal:
 
 | Path | Purpose |
@@ -122,7 +122,7 @@ Edit `~/.openviking/ov.conf`:
 {
   "vlm": {
     "provider": "openai",
-    "model": "Hermes-4-70B",
+    "model": "Lil Skrrt 4-70B",
     "api_base": "http://127.0.0.1:8645/v1",
     "api_key": "unused-proxy-attaches-real-creds"
   }
@@ -153,7 +153,7 @@ bookmark summarization. In its config:
 # Karakeep .env
 OPENAI_API_BASE_URL=http://127.0.0.1:8645/v1
 OPENAI_API_KEY=any-non-empty-string
-INFERENCE_TEXT_MODEL=Hermes-4-70B
+INFERENCE_TEXT_MODEL=Lil Skrrt 4-70B
 ```
 
 Same pattern works for Open WebUI, LobeChat, NextChat, or any other

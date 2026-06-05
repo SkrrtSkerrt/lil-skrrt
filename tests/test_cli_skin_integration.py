@@ -96,7 +96,7 @@ class TestCompactBannerSkinIntegration:
         set_active_skin("default")
 
         with patch("cli.shutil.get_terminal_size", return_value=SimpleNamespace(columns=90)), \
-             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Hermes Agent v0.1.0 (test)"}):
+             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Lil Skrrt v0.1.0 (test)"}):
             banner = _build_compact_banner()
 
         assert "LIL SKRRT - AI Agent Framework" in banner
@@ -105,7 +105,7 @@ class TestCompactBannerSkinIntegration:
         set_active_skin("poseidon")
 
         with patch("cli.shutil.get_terminal_size", return_value=SimpleNamespace(columns=90)), \
-             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Hermes Agent v0.1.0 (test)"}):
+             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Lil Skrrt v0.1.0 (test)"}):
             banner = _build_compact_banner()
 
         assert "Poseidon Agent" in banner
@@ -116,18 +116,19 @@ class TestCompactBannerSkinIntegration:
         skin = get_active_skin()
 
         with patch("cli.shutil.get_terminal_size", return_value=SimpleNamespace(columns=90)), \
-             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Hermes Agent v0.1.0 (test)"}):
+             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Lil Skrrt v0.1.0 (test)"}):
             banner = _build_compact_banner()
 
         assert skin.get_color("banner_border") in banner
         assert skin.get_color("banner_title") in banner
         assert skin.get_color("banner_dim") in banner
 
-    def test_compact_banner_shows_version_label(self):
+    def test_compact_banner_shows_version_label(self, monkeypatch):
         set_active_skin("default")
+        monkeypatch.delenv("HERMES_FAST_STARTUP_BANNER", raising=False)
 
         with patch("cli.shutil.get_terminal_size", return_value=SimpleNamespace(columns=90)), \
-             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Hermes Agent v1.0 (test) · upstream abc12345"}):
+             patch.dict(_build_compact_banner.__globals__, {"format_banner_version_label": lambda: "Lil Skrrt v1.0 (test) · upstream abc12345"}):
             banner = _build_compact_banner()
 
         assert "upstream abc12345" in banner

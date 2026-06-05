@@ -32,8 +32,8 @@ High-level categories:
 
 For the authoritative code-derived registry, see [Built-in Tools Reference](/reference/tools-reference) and [Toolsets Reference](/reference/toolsets-reference).
 
-:::tip Nous Tool Gateway
-Paid [Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscribers can use web search, image generation, TTS, and browser automation through the **[Tool Gateway](tool-gateway.md)** — no separate API keys needed. Run `lil-skrrt model` to enable it, or configure individual tools with `lil-skrrt tools`.
+:::tip Portal Tool Gateway
+Paid [Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscribers can use web search, image generation, TTS, and browser automation through the **[Tool Gateway](tool-gateway.md)** — no separate API keys needed. Run `lil-skrrt model` to enable it, or configure individual tools with `lil-skrrt tools`.
 :::
 
 ## Using Toolsets

@@ -1,6 +1,6 @@
 """Tests for SIGHUP protection and stdout mirroring in ``hermes update``.
 
-Covers ``_UpdateOutputStream``, ``_install_hangup_protection``, and
+Covers ``main_mod._UpdateOutputStream``, ``_install_hangup_protection``, and
 ``_finalize_update_output`` in ``hermes_cli/main.py``.  These exist so
 that ``hermes update`` survives a terminal disconnect mid-install
 (SSH drop, shell close) without leaving the venv half-installed.
@@ -14,8 +14,8 @@ import sys
 
 import pytest
 
+import hermes_cli.main as main_mod
 from hermes_cli.main import (
-    _UpdateOutputStream,
     _finalize_update_output,
     _install_hangup_protection,
 )
@@ -24,14 +24,14 @@ from hermes_cli.main import (
 @pytest.fixture(autouse=True)
 def _reset_stdio():
     """Keep stdio clean between tests even if a prior test leaked wrappers."""
-    if isinstance(sys.stdout, _UpdateOutputStream):
+    if isinstance(sys.stdout, main_mod._UpdateOutputStream):
         sys.stdout = sys.stdout._original
-    if isinstance(sys.stderr, _UpdateOutputStream):
+    if isinstance(sys.stderr, main_mod._UpdateOutputStream):
         sys.stderr = sys.stderr._original
     yield
-    if isinstance(sys.stdout, _UpdateOutputStream):
+    if isinstance(sys.stdout, main_mod._UpdateOutputStream):
         sys.stdout = sys.stdout._original
-    if isinstance(sys.stderr, _UpdateOutputStream):
+    if isinstance(sys.stderr, main_mod._UpdateOutputStream):
         sys.stderr = sys.stderr._original
 
 
@@ -41,7 +41,7 @@ class TestUpdateOutputStream:
     def test_write_mirrors_to_both_original_and_log(self):
         original = io.StringIO()
         log = io.StringIO()
-        stream = _UpdateOutputStream(original, log)
+        stream = main_mod._UpdateOutputStream(original, log)
 
         stream.write("hello world\n")
 
@@ -63,7 +63,7 @@ class TestUpdateOutputStream:
             def flush(self):
                 raise BrokenPipeError("terminal gone")
 
-        stream = _UpdateOutputStream(_BrokenStream(), log)
+        stream = main_mod._UpdateOutputStream(_BrokenStream(), log)
 
         # First write triggers the broken-pipe path.
         stream.write("first line\n")
@@ -88,7 +88,7 @@ class TestUpdateOutputStream:
                 raise self._exc
 
         for exc in (OSError("EIO"), ValueError("closed file")):
-            stream = _UpdateOutputStream(_RaisingStream(exc), log)
+            stream = main_mod._UpdateOutputStream(_RaisingStream(exc), log)
             stream.write("x\n")
             assert stream._original_broken is True
 
@@ -102,7 +102,7 @@ class TestUpdateOutputStream:
                 raise OSError("disk full")
 
         original = io.StringIO()
-        stream = _UpdateOutputStream(original, _BrokenLog())
+        stream = main_mod._UpdateOutputStream(original, _BrokenLog())
 
         stream.write("data\n")
 
@@ -117,7 +117,7 @@ class TestUpdateOutputStream:
                 raise BrokenPipeError("gone")
 
         log = io.StringIO()
-        stream = _UpdateOutputStream(_BrokenStream(), log)
+        stream = main_mod._UpdateOutputStream(_BrokenStream(), log)
         stream.flush()  # must not raise
         assert stream._original_broken is True
 
@@ -132,7 +132,7 @@ class TestUpdateOutputStream:
             def flush(self):
                 return None
 
-        stream = _UpdateOutputStream(_TtyStream(), io.StringIO())
+        stream = main_mod._UpdateOutputStream(_TtyStream(), io.StringIO())
         assert stream.isatty() is True
 
     def test_isatty_returns_false_after_broken(self):
@@ -146,7 +146,7 @@ class TestUpdateOutputStream:
             def flush(self):
                 return None
 
-        stream = _UpdateOutputStream(_BrokenStream(), io.StringIO())
+        stream = main_mod._UpdateOutputStream(_BrokenStream(), io.StringIO())
         stream.write("x")  # marks broken
         assert stream.isatty() is False
 
@@ -160,7 +160,7 @@ class TestUpdateOutputStream:
             def flush(self):
                 return None
 
-        stream = _UpdateOutputStream(_StreamWithEncoding(), io.StringIO())
+        stream = main_mod._UpdateOutputStream(_StreamWithEncoding(), io.StringIO())
         assert stream.encoding == "utf-8"
 
 
@@ -221,8 +221,8 @@ class TestInstallHangupProtection:
         try:
             # On Windows (no SIGHUP) we still wrap stdio and create the log.
             assert state["installed"] is True
-            assert isinstance(sys.stdout, _UpdateOutputStream)
-            assert isinstance(sys.stderr, _UpdateOutputStream)
+            assert isinstance(sys.stdout, main_mod._UpdateOutputStream)
+            assert isinstance(sys.stderr, main_mod._UpdateOutputStream)
             assert state["log_file"] is not None
 
             sys.stdout.write("checking mirror\n")

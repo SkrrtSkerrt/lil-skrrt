@@ -1,15 +1,15 @@
 ---
-title: "Nous Tool Gateway"
-description: "One subscription, every tool. Web search, image generation, TTS, and cloud browsers — all routed through Nous Portal with no extra API keys."
+title: "Portal Tool Gateway"
+description: "One subscription, every tool. Web search, image generation, TTS, and cloud browsers — all routed through Portal with no extra API keys."
 sidebar_label: "Tool Gateway"
 sidebar_position: 2
 ---
 
-# Nous Tool Gateway
+# Portal Tool Gateway
 
 **One subscription. Every tool built in.**
 
-The Tool Gateway is included with every paid [Nous Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription. It routes Lil Skrrt' tool calls — web search, image generation, text-to-speech, and cloud browser automation — through infrastructure Nous already runs, so you don't have to sign up with Firecrawl, FAL, OpenAI, Browser Use, or anyone else just to make your agent useful.
+The Tool Gateway is included with every paid [Portal](https://portal.github.com/SkrrtSkerrt/hermes-agent) subscription. It routes Lil Skrrt's tool calls — web search, image generation, text-to-speech, and cloud browser automation — through infrastructure Portal already runs, so you don't have to sign up with Firecrawl, FAL, OpenAI, Browser Use, or anyone else just to make your agent useful.
 
 <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', margin: '1.5rem 0'}}>
   <a href="https://portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription" style={{background: 'var(--ifm-color-primary)', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold'}}>Start or manage subscription →</a>
@@ -24,15 +24,15 @@ The Tool Gateway is included with every paid [Nous Portal](https://portal.github
 | 🔊 | **Text-to-speech** | OpenAI TTS voices wired into the `text_to_speech` tool. Drop voice notes into Telegram, generate audio for pipelines, narrate anything. |
 | 🌐 | **Cloud browser automation** | Headless Chromium sessions via Browser Use. `browser_navigate`, `browser_click`, `browser_type`, `browser_vision` — all the agent-driving primitives, no Browserbase account required. |
 
-All four are pay-as-you-use billed against your Nous subscription. Use any combination — run the gateway for web and images while keeping your own ElevenLabs key for TTS, or route everything through Nous.
+All four are pay-as-you-use billed against your Portal subscription. Use any combination — run the gateway for web and images while keeping your own ElevenLabs key for TTS, or route everything through Portal.
 
 ## Why it's here
 
 Building an agent that can actually *do things* means stitching together 5+ API subscriptions — each with their own signup, rate limits, billing, and quirks. The gateway collapses that into one account:
 
-- **One bill.** Pay Nous; we handle the rest.
+- **One bill.** Pay Portal; we handle the rest.
 - **One signup.** No Firecrawl, FAL, Browser Use, or OpenAI audio accounts to manage.
-- **One key.** Your Nous Portal OAuth covers every tool.
+- **One key.** Your Portal OAuth covers every tool.
 - **Same quality.** Same backends the direct-key route uses — just fronted by us.
 
 Bring your own keys anytime — per-tool, whenever you want to. The gateway isn't a lock-in, it's a shortcut.
@@ -42,16 +42,16 @@ Bring your own keys anytime — per-tool, whenever you want to. The gateway isn'
 The fastest path for a fresh install:
 
 ```bash
-lil-skrrt setup --portal     # Nous OAuth, set Nous as provider, and turn on the Tool Gateway in one go
+lil-skrrt setup --portal     # Portal OAuth, set Portal as provider, and turn on the Tool Gateway in one go
 ```
 
 Already have Lil Skrrt configured? Just switch your provider:
 
 ```bash
-lil-skrrt model              # Pick Nous Portal — Hermes will offer to turn on the Tool Gateway
+lil-skrrt model              # Pick Portal — Lil Skrrt will offer to turn on the Tool Gateway
 ```
 
-When you select Nous Portal, Lil Skrrt offers to turn on the Tool Gateway. Accept, and you're done — every supported tool is live on the next run.
+When you select Portal, Lil Skrrt offers to turn on the Tool Gateway. Accept, and you're done — every supported tool is live on the next run.
 
 Check what's active at any time:
 
@@ -64,26 +64,26 @@ lil-skrrt status             # Full system status (Tool Gateway is one section)
 `lil-skrrt portal status` shows a section like:
 
 ```
-◆ Nous Tool Gateway
-  Nous Portal     ✓ managed tools available
-  Web tools       ✓ active via Nous subscription
-  Image gen       ✓ active via Nous subscription
-  TTS             ✓ active via Nous subscription
+◆ Portal Tool Gateway
+  Portal          ✓ managed tools available
+  Web tools       ✓ active via Portal subscription
+  Image gen       ✓ active via Portal subscription
+  TTS             ✓ active via Portal subscription
   Browser         ○ active via Browser Use key
 ```
 
-Tools marked "active via Nous subscription" are going through the gateway. Anything else is using your own keys.
+Tools marked "active via Portal subscription" are going through the gateway. Anything else is using your own keys.
 
 ## Eligibility
 
-The Tool Gateway is a **paid-subscription** feature. Free-tier Nous accounts can use Portal for inference but don't include managed tools — [upgrade your plan](https://portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription) to unlock the gateway.
+The Tool Gateway is a **paid-subscription** feature. Free-tier Portal accounts can use Portal for inference but don't include managed tools — [upgrade your plan](https://portal.github.com/SkrrtSkerrt/hermes-agent/manage-subscription) to unlock the gateway.
 
 ## Mix and match
 
 The gateway is per-tool. Turn it on for just what you want:
 
-- **All tools through Nous** — easiest; one subscription, done.
-- **Gateway for web + images, bring your own TTS** — keep your ElevenLabs voice, let Nous handle the rest.
+- **All tools through Portal** — easiest; one subscription, done.
+- **Gateway for web + images, bring your own TTS** — keep your ElevenLabs voice, let Portal handle the rest.
 - **Gateway only for things you don't have keys for** — "I already pay for Browserbase, but I don't want a Firecrawl account" works fine.
 
 Switch any tool at any time via:
@@ -92,7 +92,7 @@ Switch any tool at any time via:
 lil-skrrt tools          # Interactive picker for each tool category
 ```
 
-Select the tool, pick **Nous Subscription** as the provider (or any direct provider you prefer). No config editing required.
+Select the tool, pick **Portal Subscription** as the provider (or any direct provider you prefer). No config editing required.
 
 ## Using individual image models
 
@@ -139,20 +139,20 @@ browser:
   use_gateway: true
 ```
 
-Precedence: `use_gateway: true` routes through Nous regardless of any direct keys in `.env`. `use_gateway: false` (or absent) uses direct keys if available and only falls back to the gateway when none exist.
+Precedence: `use_gateway: true` routes through Portal regardless of any direct keys in `.env`. `use_gateway: false` (or absent) uses direct keys if available and only falls back to the gateway when none exist.
 
 ### Disabling the gateway
 
 ```yaml
 web:
-  use_gateway: false   # Hermes now uses FIRECRAWL_API_KEY from .env
+  use_gateway: false   # Lil Skrrt now uses FIRECRAWL_API_KEY from .env
 ```
 
 `lil-skrrt tools` automatically clears the flag when you pick a non-gateway provider, so this usually happens for you.
 
 ### Self-hosted gateway (advanced)
 
-Running your own Nous-compatible gateway? Override endpoints in `~/.hermes/.env`:
+Running your own Portal-compatible gateway? Override endpoints in `~/.hermes/.env`:
 
 ```bash
 TOOL_GATEWAY_DOMAIN=your-domain.example.com
@@ -175,11 +175,11 @@ Tools routed through the gateway stop working until you renew or swap in direct 
 
 ### Can I see usage or costs per tool?
 
-Yes — the [Nous Portal dashboard](https://portal.github.com/SkrrtSkerrt/hermes-agent) breaks usage down by tool so you can see what's driving your bill.
+Yes — the [Portal dashboard](https://portal.github.com/SkrrtSkerrt/hermes-agent) breaks usage down by tool so you can see what's driving your bill.
 
 ### Is Modal (serverless terminal) included?
 
-Modal is available as an **optional add-on** through the Nous subscription, not part of the default Tool Gateway bundle. Configure it via `lil-skrrt setup terminal` or directly in `config.yaml` when you want a remote sandbox for shell execution.
+Modal is available as an **optional add-on** through the Portal subscription, not part of the default Tool Gateway bundle. Configure it via `lil-skrrt setup terminal` or directly in `config.yaml` when you want a remote sandbox for shell execution.
 
 ### Do I need to delete my existing API keys when I enable the gateway?
 

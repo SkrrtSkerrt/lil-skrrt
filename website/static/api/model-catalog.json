@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-05-26T20:49:36Z",
+  "updated_at": "2026-06-03T14:15:23Z",
   "metadata": {
     "source": "hermes-agent repo",
     "docs": "https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent/docs/reference/model-catalog"
@@ -140,7 +140,7 @@
     },
     "nous": {
       "metadata": {
-        "display_name": "Nous Portal",
+        "display_name": "Portal",
         "note": "Free-tier gating is determined live via Portal pricing (partition_nous_models_by_tier), not this manifest."
       },
       "models": [

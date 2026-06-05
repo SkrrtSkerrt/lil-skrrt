@@ -3799,6 +3799,27 @@ class AIAgent:
             opts = self._lmstudio_reasoning_options_cached()
             # "off-only" (or absent) means no real reasoning capability.
             return any(opt and opt != "off" for opt in opts)
+        provider_lower = (self.provider or "").strip().lower()
+        model = (self.model or "").lower()
+        if provider_lower == "nous":
+            # Nous Portal is an OpenAI-compatible proxy to several upstream
+            # model families. Allow reasoning on the same families we already
+            # treat as reasoning-capable on OpenRouter so the kwargs builder
+            # can emit the same payload shape without needing to contact the
+            # remote service.
+            reasoning_model_prefixes = (
+                "minimax/",
+                "deepseek/",
+                "anthropic/",
+                "openai/",
+                "x-ai/",
+                "google/gemini-2",
+                "google/gemma-4",
+                "qwen/qwen3",
+                "tencent/hy3-preview",
+                "xiaomi/",
+            )
+            return any(model.startswith(prefix) for prefix in reasoning_model_prefixes)
         if "openrouter" not in self._base_url_lower:
             return False
         if "api.mistral.ai" in self._base_url_lower:

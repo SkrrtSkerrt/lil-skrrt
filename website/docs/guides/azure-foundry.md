@@ -28,9 +28,9 @@ lil-skrrt model
 # → Choose Authentication:
 #     1. API key
 #     2. Microsoft Entra ID  (managed identity / workload identity / az login)
-# → (Entra) Hermes probes DefaultAzureCredential; on success it never asks for a key
+# → (Entra) Lil Skrrt probes DefaultAzureCredential; on success it never asks for a key
 # → (API key) Enter your API key
-# Hermes probes the endpoint and auto-detects transport + models
+# Lil Skrrt probes the endpoint and auto-detects transport + models
 # → Pick a model from the list (or type a deployment name manually)
 ```
 
@@ -92,7 +92,7 @@ lil-skrrt model
 # → Authentication: 2 (Microsoft Entra ID)
 # → (optional) user-assigned managed identity client ID
 # → (optional) Azure tenant ID
-# → Hermes probes DefaultAzureCredential() and reports which inner
+# → Lil Skrrt probes DefaultAzureCredential() and reports which inner
 #    credential succeeded (e.g. AzureCliCredential, ManagedIdentityCredential)
 ```
 

@@ -20,7 +20,7 @@ ssh -N -L 56121:127.0.0.1:56121 user@remote-host
 
 # In your existing SSH session on the remote machine:
 lil-skrrt auth add xai-oauth --no-browser
-# → Hermes prints an authorize URL. Open it in a browser on your laptop.
+# → Lil Skrrt prints an authorize URL. Open it in a browser on your laptop.
 # → Your browser redirects to 127.0.0.1:56121/callback, the tunnel forwards
 #   the request to the remote listener, login completes.
 ```
@@ -33,7 +33,7 @@ If you don't have a regular SSH client — for example because you're running Li
 
 ```bash
 lil-skrrt auth add xai-oauth --manual-paste
-# → Hermes prints an authorize URL. Open it in a browser on your laptop.
+# → Lil Skrrt prints an authorize URL. Open it in a browser on your laptop.
 # → Approve in the browser. The redirect to 127.0.0.1:56121/callback fails
 #   to load — that's expected.
 # → Copy the FULL URL from the failed page's address bar.

@@ -45,7 +45,7 @@ xAI's backend enforces its own allowlist on the OAuth API surface and has been s
 # Launch the provider and model picker
 lil-skrrt model
 # → Select "xAI Grok OAuth (SuperGrok / X Premium+)" from the provider list
-# → Hermes opens your browser to accounts.x.ai
+# → Lil Skrrt opens your browser to accounts.x.ai
 # → Approve access in the browser
 # → Pick a model (grok-4.3 is at the top)
 # → Start chatting

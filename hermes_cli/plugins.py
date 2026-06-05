@@ -537,17 +537,17 @@ class PluginContext:
         ``config.yaml`` matches against when routing ``image_generate``
         tool calls.
         """
-        from agent.image_gen_provider import ImageGenProvider
         from agent.image_gen_registry import register_provider
 
-        if not isinstance(provider, ImageGenProvider):
+        try:
+            register_provider(provider)
+        except (TypeError, ValueError):
             logger.warning(
                 "Plugin '%s' tried to register an image_gen provider that does "
                 "not inherit from ImageGenProvider. Ignoring.",
                 self.manifest.name,
             )
             return
-        register_provider(provider)
         logger.info(
             "Plugin '%s' registered image_gen provider: %s",
             self.manifest.name, provider.name,

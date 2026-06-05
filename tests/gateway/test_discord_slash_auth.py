@@ -126,6 +126,48 @@ def adapter():
 _SENTINEL = object()
 
 
+def _make_dm_channel():
+    import discord
+
+    dm_cls = getattr(discord, "DMChannel", None)
+    if dm_cls is None:
+        return type("DMChannel", (), {})()
+
+    try:
+        return dm_cls()
+    except TypeError:
+        try:
+            stub_cls = type("DMChannelStub", (dm_cls,), {})
+            return object.__new__(stub_cls)
+        except Exception:
+            return type("DMChannel", (), {})()
+
+
+
+def _make_thread_channel(channel_id, parent_channel_id):
+    import discord
+
+    thread_cls = getattr(discord, "Thread", None)
+    if thread_cls is None:
+        channel = type("Thread", (), {})()
+        channel.id = channel_id
+        channel.parent_id = parent_channel_id
+        return channel
+
+    try:
+        channel = thread_cls()
+    except TypeError:
+        try:
+            stub_cls = type("ThreadStub", (thread_cls,), {})
+            channel = object.__new__(stub_cls)
+        except Exception:
+            channel = type("Thread", (), {})()
+    channel.id = channel_id
+    channel.parent_id = parent_channel_id
+    return channel
+
+
+
 def _make_interaction(
     user_id, *, channel_id=12345, guild_id=42, in_dm=False, in_thread=False,
     parent_channel_id=None, user=_SENTINEL,
@@ -141,11 +183,9 @@ def _make_interaction(
     response = SimpleNamespace(send_message=AsyncMock(), defer=AsyncMock())
 
     if in_dm:
-        channel = discord.DMChannel()
+        channel = _make_dm_channel()
     elif in_thread:
-        channel = discord.Thread()
-        channel.id = channel_id
-        channel.parent_id = parent_channel_id
+        channel = _make_thread_channel(channel_id, parent_channel_id)
     elif channel_id is None:
         channel = None
     else:

@@ -29,7 +29,7 @@ echo "GOOGLE_API_KEY=..." >> ~/.hermes/.env
 # Select Gemini as your provider
 lil-skrrt model
 # → Choose "More providers..." → "Google AI Studio"
-# → Hermes checks your key tier and shows Gemini models
+# → Lil Skrrt checks your key tier and shows Gemini models
 # → Select a model
 
 # Start chatting

@@ -56,9 +56,9 @@ Defaults:
 Useful overrides:
 
 ```bash
-OPEN_WEBUI_NAME='My Hermes UI' \
+OPEN_WEBUI_NAME='My Lil Skrrt UI' \
 OPEN_WEBUI_ENABLE_SIGNUP=true \
-HERMES_API_MODEL_NAME='My Hermes Agent' \
+HERMES_API_MODEL_NAME='My Lil Skrrt Agent' \
 bash scripts/setup_open_webui.sh
 ```
 

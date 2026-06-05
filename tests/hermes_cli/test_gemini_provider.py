@@ -1,5 +1,6 @@
 """Tests for Google AI Studio (Gemini) provider integration."""
 
+import importlib
 import os
 import pytest
 from unittest.mock import patch, MagicMock
@@ -8,7 +9,19 @@ from hermes_cli.auth import PROVIDER_REGISTRY, resolve_provider, resolve_api_key
 from hermes_cli.models import _PROVIDER_MODELS, _PROVIDER_LABELS, _PROVIDER_ALIASES, normalize_provider
 from hermes_cli.model_normalize import normalize_model_for_provider, detect_vendor
 from agent.model_metadata import get_model_context_length
+import agent.models_dev as models_dev_module
 from agent.models_dev import PROVIDER_TO_MODELS_DEV, list_agentic_models, _NOISE_PATTERNS
+
+
+@pytest.fixture(autouse=True)
+def _reset_models_dev_state():
+    fresh = importlib.import_module("agent.models_dev")
+    if fresh is not models_dev_module:
+        globals()["models_dev_module"] = fresh
+    globals()["PROVIDER_TO_MODELS_DEV"] = fresh.PROVIDER_TO_MODELS_DEV
+    globals()["list_agentic_models"] = fresh.list_agentic_models
+    globals()["_NOISE_PATTERNS"] = fresh._NOISE_PATTERNS
+    yield
 
 
 # ── Provider Registry ──

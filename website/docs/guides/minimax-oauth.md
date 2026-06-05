@@ -36,7 +36,7 @@ The transport reuses the `anthropic_messages` adapter (MiniMax exposes an Anthro
 # Launch the provider and model picker
 lil-skrrt model
 # → Select "MiniMax (OAuth)" from the provider list
-# → Hermes opens your browser to the MiniMax authorization page
+# → Lil Skrrt opens your browser to the MiniMax authorization page
 # → Approve access in the browser
 # → Select a model (MiniMax-M2.7 or MiniMax-M2.7-highspeed)
 # → Start chatting

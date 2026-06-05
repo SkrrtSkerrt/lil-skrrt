@@ -3,11 +3,11 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Hermes Agent',
+  title: 'Lil Skrrt',
   tagline: 'The self-improving AI agent',
   favicon: 'img/favicon.ico',
 
-  url: 'https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent',
+  url: 'https://lil-skrrt.github.com/SkrrtSkerrt/lil-skrrt',
   baseUrl: '/docs/',
 
   organizationName: 'SkrrtSkerrt',
@@ -73,7 +73,7 @@ const config: Config = {
         docs: {
           routeBasePath: '/',  // Docs at the root of /docs/
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/SkrrtSkerrt/hermes-agent/edit/main/website/',
+          editUrl: 'https://github.com/SkrrtSkerrt/lil-skrrt/edit/main/website/',
         },
         blog: false,
         theme: {
@@ -96,9 +96,9 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'Hermes Agent',
+      title: 'Lil Skrrt',
       logo: {
-        alt: 'Hermes Agent',
+        alt: 'Lil Skrrt',
         src: 'img/logo.png',
       },
       items: [
@@ -118,12 +118,12 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://hermes-agent.github.com/SkrrtSkerrt/hermes-agent',
+          href: 'https://lil-skrrt.github.com/SkrrtSkerrt/lil-skrrt',
           label: 'Home',
           position: 'right',
         },
         {
-          href: 'https://github.com/SkrrtSkerrt/hermes-agent',
+          href: 'https://github.com/SkrrtSkerrt/lil-skrrt',
           label: 'GitHub',
           position: 'right',
         },
@@ -157,8 +157,8 @@ const config: Config = {
         {
           title: 'More',
           items: [
-            { label: 'GitHub', href: 'https://github.com/SkrrtSkerrt/hermes-agent' },
-            { label: 'SkrrtSkerrt', href: 'https://github.com/SkrrtSkerrt/hermes-agent' },
+            { label: 'GitHub', href: 'https://github.com/SkrrtSkerrt/lil-skrrt' },
+            { label: 'SkrrtSkerrt', href: 'https://github.com/SkrrtSkerrt/lil-skrrt' },
           ],
         },
       ],

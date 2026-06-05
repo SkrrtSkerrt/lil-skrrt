@@ -1590,8 +1590,10 @@ def list_authenticated_providers(
             if not raw_name or not api_url:
                 continue
             api_key = (entry.get("api_key") or "").strip()
+            key_env = (entry.get("key_env") or "").strip().lower()
+            api_mode = (entry.get("api_mode") or "").strip().lower()
 
-            group_key = (api_url, api_key)
+            group_key = (api_url, api_key, key_env, api_mode)
             if group_key not in groups:
                 # Strip per-model suffix so "Ollama — GLM 5.1" becomes
                 # "Ollama" for the grouped row. Em dash is the convention
@@ -1604,23 +1606,21 @@ def list_authenticated_providers(
                         break
                 if not display_name:
                     display_name = raw_name
-                # If this endpoint matches the currently active one, use
-                # ``current_provider`` as the slug so picker-driven switches
-                # route through the live credential pipeline.
+                candidate_slug = custom_provider_slug(display_name)
+                # Preserve the active custom-provider slug only when this
+                # row naturally maps to it; otherwise keep the slug derived
+                # from the provider's display name so siblings on the same
+                # endpoint remain distinct.
                 if (
                     current_base_url
                     and api_url == current_base_url.strip().rstrip("/")
+                    and current_provider
+                    and current_provider != "custom"
+                    and current_provider == candidate_slug
                 ):
-                    # Guard against bare "custom" slug left by a prior
-                    # failed switch — always resolve to the canonical
-                    # custom:<name> form.  (GH #17478)
-                    slug = (
-                        current_provider
-                        if current_provider and current_provider != "custom"
-                        else custom_provider_slug(display_name)
-                    )
+                    slug = current_provider
                 else:
-                    slug = custom_provider_slug(display_name)
+                    slug = candidate_slug
                 groups[group_key] = {
                     "slug": slug,
                     "name": display_name,
@@ -1649,7 +1649,7 @@ def list_authenticated_providers(
 
         _section4_emitted_slugs: set = set()
         for grp_key, grp in groups.items():
-            api_url, api_key = grp_key
+            api_url, api_key, key_env, api_mode = grp_key
             slug = grp["slug"]
             # If the slug is already claimed by a built-in / overlay /
             # user-provider row (sections 1-3), skip this custom group

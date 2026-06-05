@@ -63,7 +63,7 @@ async function getSessionToken(): Promise<string> {
     _sessionToken = injected;
     return _sessionToken;
   }
-  throw new Error("Session token not available — page must be served by the Hermes dashboard server");
+  throw new Error("Session token not available — page must be served by the Lil Skrrt dashboard server");
 }
 
 export const api = {
@@ -209,6 +209,18 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, enabled }),
     }),
+  searchSkillsHub: (q: string, source = "all", limit = 20) =>
+    fetchJSON<SkillsHubSearchResponse>(
+      `/api/skills/hub/search?q=${encodeURIComponent(q)}&source=${encodeURIComponent(source)}&limit=${limit}`,
+    ),
+  installSkillFromHub: (identifier: string) =>
+    fetchJSON<ActionResponse>("/api/skills/hub/install", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier }),
+    }),
+  updateSkillsFromHub: () =>
+    fetchJSON<ActionResponse>("/api/skills/hub/update", { method: "POST" }),
   getToolsets: () => fetchJSON<ToolsetInfo[]>("/api/tools/toolsets"),
 
   // Session search (FTS5)
@@ -581,6 +593,18 @@ export interface SkillInfo {
   description: string;
   category: string;
   enabled: boolean;
+}
+
+export interface SkillHubResult {
+  description: string;
+  identifier: string;
+  name: string;
+  source: string;
+  trust_level: string;
+}
+
+export interface SkillsHubSearchResponse {
+  results: SkillHubResult[];
 }
 
 export interface ToolsetInfo {
