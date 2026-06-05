@@ -676,5 +676,5 @@ def run_uninstall(args):
         print(color("Reload your shell to complete the process:", Colors.YELLOW))
         print("  source ~/.bashrc  # or ~/.zshrc")
     print()
-    print("Thank you for using Lil Skrrt! ⚕")
+    print("Thank you for using lil-Skrrt, I hope nothing bad happens whilst i'm away")
     print()
