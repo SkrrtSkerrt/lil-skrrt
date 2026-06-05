@@ -140,7 +140,7 @@ You no longer need to wrap `lil-skrrt update` in `screen` or `tmux` to survive a
 lil-skrrt version
 ```
 
-Compare against the latest release at the [GitHub releases page](https://github.com/SkrrtSkerrt/hermes-agent/releases).
+Compare against the latest release at the [GitHub releases page](https://github.com/SkrrtSkerrt/lil-skrrt/releases).
 
 ### Updating from Messaging Platforms
 

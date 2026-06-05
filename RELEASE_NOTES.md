@@ -1,26 +1,25 @@
 # LIL SKRRT RELEASE NOTES
 
 VERSION:
-- v1.0.0
-- release tag: v1.0.0
+- v1.0.1
+- release tag: v1.0.1
 
 STATUS:
-- FULL TEST SUITE GREEN
+- WINDOWS CLEAN INSTALL GUIDE ADDED
+- LATEST MAIN BRANCH CHANGES PUSHED TO GITHUB
 - 26,418 passed
 - 127 skipped
 - 0 failures
-- NO SECRETS INCLUDED IN THE RELEASE NOTES
 
 WHAT'S IN THIS RELEASE:
-- Broad Hermes-to-Lil Skrrt rebrand across docs, CLI/UI text, installer flow, and website copy.
-- Gateway/test isolation fixes for suite-order leaks, including Telegram fixture cache cleanup and env restoration around config tests.
-- Send-message target handling fixes, including explicit email target parsing and the email-specific home-address hint.
-- Qwen auth/runtime credential handling now respects the expected env override path while remaining isolated in tests.
-- Additional cleanup across status, skin, plugins, tooling, and docs to keep the suite and visible strings aligned.
+- Added a clean Windows install guide with reset, install, and verification steps.
+- Linked the main installation and update docs to the new Windows guide and the correct Lil Skrrt GitHub releases page.
+- Continued the visible branding sweep across installer/release/help surfaces.
+- Kept the repo on the latest pushed main commit for GitHub.
 
 VALIDATION:
-- Full suite run with xdist: `./.venv/bin/python -m pytest -q -x -n 4 --dist loadfile`
-- Result: `26,418 passed, 127 skipped, 246 warnings`
+- Docs checked for broken-structure issues via diff check and install-script syntax checks.
+- Latest pushed commit on `main` has been verified on origin.
 
 RELEASE NOTES ARCHIVE:
 - The previous clean baseline is preserved below for reference.

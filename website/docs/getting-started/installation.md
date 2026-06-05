@@ -24,6 +24,8 @@ curl -fsSL https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/
 Native Windows support is **early beta**. It installs and works for the common paths, but hasn't been road-tested as broadly as our POSIX installers. Please [file issues](https://github.com/SkrrtSkerrt/lil-skrrt/issues) when you hit rough edges. For the most battle-tested setup on Windows today, use the Linux/macOS one-liner above inside **WSL2** instead.
 :::
 
+If you want a clean, step-by-step Windows walkthrough, see the [Windows Clean Install guide](./windows-clean-install.md).
+
 Open PowerShell and run:
 
 ```powershell
