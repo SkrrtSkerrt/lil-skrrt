@@ -60,36 +60,42 @@ def _skin_color(key: str, fallback: str) -> str:
 
 from hermes_cli import __version__ as VERSION, __release_date__ as RELEASE_DATE
 
-LIL_SKRRT_LOGO = """[bold #38BDF8]██╗     ██╗██╗██╗      ███████╗    ███████╗██╗  ██╗██████╗ ███████╗████████╗[/]
-[bold #22D3EE]██║     ██║██║██║      ██╔════╝    ██╔════╝██║  ██║██╔══██╗██╔════╝╚══██╔══╝[/]
-[#0EA5E9]██║     ██║██║██║      ███████╗    ███████╗███████║██████╔╝█████╗     ██║   [/]
-[#6366F1]██║     ██║██║██║      ╚════██║    ╚════██║██╔══██║██╔══██╗██╔══╝     ██║   [/]
-[#8B5CF6]███████╗██║██║███████╗ ███████║    ███████║██║  ██║██║  ██║███████╗   ██║   [/]
-[#A78BFA]╚══════╝╚═╝╚═╝╚══════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   [/]"""
-
-LIL_SKRRT_ICON = """[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⢀⣀⡀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⢀⣠⣴⣾⣿⣿⣷⣦⣄⡀⢀⣠⣴⣾⣿⣿⣷⣦⣄⡀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⢀⣠⣴⣶⠿⠋⣩⡿⢿⣿⡿⠿⢿⣿⣍⠙⠿⢿⣿⡿⢿⣿⣿⠿⣷⣦⣄⡀⠀[/]
-[#22D3EE]⠀⠀⠉⠉⠁⠶⠟⠋⠀⠉⠁⠀⠀⠀⠉⠻⠶⠈⠉⠉⠀⠀⠈⠙⠻⠶⠈⠉⠉⠀⠀[/]
-[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⡿⠛⢁⡈⠛⢿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣦⣤⣈⠁⢠⣴⣿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠻⢿⣿⣦⡉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢷⣦⣈⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⠦⠈⠙⠿⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣤⡈⠁⢤⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠑⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⢰⡆⠈⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠈⣡⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]"""
+_BRAND_PULSE_HEX = ("#ff5a5a", "#b30000")
 
 
+def _pulse_brand_hex() -> str:
+    """Return the current red pulse shade for the Lil Skrrt brand text."""
+    return _BRAND_PULSE_HEX[int(time.monotonic() * 2) % len(_BRAND_PULSE_HEX)]
 
-# =========================================================================
-# Skills scanning
-# =========================================================================
 
-def get_available_skills() -> Dict[str, List[str]]:
+def _pulse_brand_markup(text: str) -> str:
+    return f"[{_pulse_brand_hex()} bold]{text}[/]"
+
+LIL_SKRRT_LOGO = """[#8B5CF6]██╗     ██╗ ██╗         ███████╗ ██╗   ██╗ ███████╗ ███████╗ ████████╗[/]
+[#7C3AED]██║     ██║ ██║         ██╔════╝ ██║  ██╔╝ ██╔══██╗ ██╔══██╗ ╚══██╔══╝[/]
+[#0EA5E9]██║     ██║ ██║         ███████╗ ██████╔╝  ██████╔╝ ██████╔╝    ██║   [/]
+[#64748B]██║     ██║ ██║         ╚════██║ ██╔══██║  ██╔══██╗ ██╔══██╗    ██║   [/]
+[#94A3B8]███████╗██║ ███████╗    ███████║ ██║   ██║ ██║  ██║ ██║  ██║    ██║   [/]
+[#CBD5E1]╚══════╝╚═╝ ╚══════╝    ╚══════╝ ╚═╝   ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝   [/]"""
+
+# ASCII Art - Lil Skrrt icon (compact, fits in left panel)
+LIL_SKRRT_ICON = '''[#A855F7]         __[/]
+[#A25DF4]      ,g$$$sk.[/]
+[#9B64EF]    ,d$$$$$$$$$k.[/]
+[#946BEA]  ,?^?$7°`  `?$SS$$L.[/]
+[#8D72E5] ,?   S$L._ ,d$iIS$$SL[/]
+[#8679E0]j$$u/$$$$$$$$?:iI$$$$b[/]
+[#7F80DB]:?º?^4$S$$"º?$$L:iIS$$SI:[/]
+[#7887D6]:'   '/`?$'.   `?Li$$SI:[/]
+[#718ED1] .`     '    _   ?kiSSI?[/]
+[#6A95CC]  :.        $k _ `?Si?[/]
+[#639CC7] .,_,_     i$$/7.:i'[/]
+[#5CA3C2] ?%uS%uo,d$$?'.?ª`[/]
+[#5699B9]S$$$$$$$$$$$i[/]
+[#64748B] ?$$$?[/]'''
+
+
+def _find_skills_by_category(platform: str | None = None, include_disabled: bool = False) -> Dict[str, List[str]]:
     """Return skills grouped by category, filtered by platform and disabled state.
 
     Delegates to ``_find_all_skills()`` from ``tools/skills_tool`` which already
@@ -107,6 +113,10 @@ def get_available_skills() -> Dict[str, List[str]]:
         category = skill.get("category") or "general"
         skills_by_category.setdefault(category, []).append(skill["name"])
     return skills_by_category
+
+def get_available_skills() -> Dict[str, List[str]]:
+    """Return available skills grouped by category for the banner UI."""
+    return _find_skills_by_category()
 
 
 # =========================================================================
@@ -355,7 +365,7 @@ def get_git_banner_state(repo_dir: Optional[Path] = None) -> Optional[dict]:
     return {"upstream": upstream, "local": local, "ahead": max(ahead, 0)}
 
 
-_RELEASE_URL_BASE = "https://github.com/NousResearch/hermes-agent/releases/tag"
+_RELEASE_URL_BASE = "https://github.com/SkrrtSkerrt/lil-skrrt/releases/tag"
 _latest_release_cache: Optional[tuple] = None  # (tag, url) once resolved
 
 
@@ -518,7 +528,7 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
             disabled_tools.update(tools_in_ts)
 
     layout_table = Table.grid(padding=(0, 2))
-    layout_table.add_column("left", justify="center")
+    layout_table.add_column("left", justify="left")
     layout_table.add_column("right", justify="left")
 
     # Resolve skin colors once for the entire banner
@@ -535,6 +545,8 @@ def build_welcome_banner(console: "Console", model: str, cwd: str,
     except Exception:
         _bskin = None
         _hero = LIL_SKRRT_ICON
+    if _hero == LIL_SKRRT_ICON:
+        _hero = _pulse_brand_markup(_hero)
     left_lines = ["", _hero, ""]
     model_short = model.split("/")[-1] if "/" in model else model
     if model_short.endswith(".gguf"):

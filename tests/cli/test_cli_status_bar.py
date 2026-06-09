@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import cli as cli_module
 from cli import HermesCLI
 
 
@@ -61,6 +62,13 @@ class TestCLIStatusBar:
         assert cli_obj._status_bar_context_style(50) == "class:status-bar-warn"
         assert cli_obj._status_bar_context_style(81) == "class:status-bar-bad"
         assert cli_obj._status_bar_context_style(95) == "class:status-bar-critical"
+
+    def test_pulse_brand_hex_alternates_by_time(self, monkeypatch):
+        monkeypatch.setattr(cli_module.time, "monotonic", lambda: 0.0)
+        assert cli_module._pulse_brand_hex() == "#ff5a5a"
+
+        monkeypatch.setattr(cli_module.time, "monotonic", lambda: 0.6)
+        assert cli_module._pulse_brand_hex() == "#b30000"
 
     def test_build_status_bar_text_for_wide_terminal(self):
         cli_obj = _attach_agent(
@@ -194,7 +202,7 @@ class TestCLIStatusBar:
 
         text = cli_obj._build_status_bar_text(width=60)
 
-        assert "⟡" in text
+        assert "☠︎" in text
         assert "$0.06" not in text  # cost hidden by default
         assert "15m" in text
         assert "200K" not in text
@@ -204,7 +212,7 @@ class TestCLIStatusBar:
 
         text = cli_obj._build_status_bar_text(width=100)
 
-        assert "⟡" in text
+        assert "☠︎" in text
         assert "claude-sonnet-4-20250514" in text
 
     def test_compression_count_shown_in_wide_status_bar(self):

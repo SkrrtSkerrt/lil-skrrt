@@ -1499,6 +1499,22 @@ def _hex_to_ansi(hex_color: str, *, bold: bool = False) -> str:
         return _ACCENT_ANSI_DEFAULT if bold else "\033[38;2;184;134;11m"
 
 
+_BRAND_PULSE_HEX = ("#ff5a5a", "#b30000")
+
+
+def _pulse_brand_hex() -> str:
+    """Return the current red pulse shade for the Lil Skrrt brand text."""
+    return _BRAND_PULSE_HEX[int(time.monotonic() * 2) % len(_BRAND_PULSE_HEX)]
+
+
+def _pulse_brand_ansi(*, bold: bool = False) -> str:
+    return _hex_to_ansi(_pulse_brand_hex(), bold=bold)
+
+
+def _pulse_brand_prompt_toolkit_style() -> str:
+    return f"fg:{_pulse_brand_hex()} bold"
+
+
 # ────────────────────────────────────────────────────────────────────────
 # Light/dark terminal mode detection.
 #
@@ -2726,30 +2742,28 @@ class ChatConsole:
         yield self
 
 # ASCII Art - Lil Skrrt wordmark (full width, single line - requires ~95 char terminal)
-LIL_SKRRT_LOGO = """[bold #38BDF8]██╗     ██╗██╗██╗      ███████╗    ███████╗██╗  ██╗██████╗ ███████╗████████╗[/]
-[bold #22D3EE]██║     ██║██║██║      ██╔════╝    ██╔════╝██║  ██║██╔══██╗██╔════╝╚══██╔══╝[/]
-[#0EA5E9]██║     ██║██║██║      ███████╗    ███████╗███████║██████╔╝█████╗     ██║   [/]
-[#6366F1]██║     ██║██║██║      ╚════██║    ╚════██║██╔══██║██╔══██╗██╔══╝     ██║   [/]
-[#8B5CF6]███████╗██║██║███████╗ ███████║    ███████║██║  ██║██║  ██║███████╗   ██║   [/]
-[#A78BFA]╚══════╝╚═╝╚═╝╚══════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   [/]"""
+LIL_SKRRT_LOGO = """[#8B5CF6]██╗     ██╗ ██╗         ███████╗ ██╗   ██╗ ███████╗ ███████╗ ████████╗[/]
+[#7C3AED]██║     ██║ ██║         ██╔════╝ ██║  ██╔╝ ██╔══██╗ ██╔══██╗ ╚══██╔══╝[/]
+[#0EA5E9]██║     ██║ ██║         ███████╗ ██████╔╝  ██████╔╝ ██████╔╝    ██║   [/]
+[#64748B]██║     ██║ ██║         ╚════██║ ██╔══██║  ██╔══██╗ ██╔══██╗    ██║   [/]
+[#94A3B8]███████╗██║ ███████╗    ███████║ ██║   ██║ ██║  ██║ ██║  ██║    ██║   [/]
+[#CBD5E1]╚══════╝╚═╝ ╚══════╝    ╚══════╝ ╚═╝   ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝   [/]"""
 
 # ASCII Art - Lil Skrrt icon (compact, fits in left panel)
-LIL_SKRRT_ICON = """[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⢀⣀⡀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⢀⣠⣴⣾⣿⣿⣷⣦⣄⡀⢀⣠⣴⣾⣿⣿⣷⣦⣄⡀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⢀⣠⣴⣶⠿⠋⣩⡿⢿⣿⡿⠿⢿⣿⣍⠙⠿⢿⣿⡿⢿⣿⣿⠿⣷⣦⣄⡀⠀[/]
-[#22D3EE]⠀⠀⠉⠉⠁⠶⠟⠋⠀⠉⠁⠀⠀⠀⠉⠻⠶⠈⠉⠉⠀⠀⠈⠙⠻⠶⠈⠉⠉⠀⠀[/]
-[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⡿⠛⢁⡈⠛⢿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#38BDF8]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣦⣤⣈⠁⢠⣴⣿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠻⢿⣿⣦⡉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#22D3EE]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢷⣦⣈⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⠦⠈⠙⠿⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#0EA5E9]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣤⡈⠁⢤⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠑⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⢰⡆⠈⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠈⣡⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]
-[#64748B]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[/]"""
-
+LIL_SKRRT_ICON = '''[#A855F7]         __[/]
+[#A25DF4]      ,g$$$sk.[/]
+[#9B64EF]    ,d$$$$$$$$$k.[/]
+[#946BEA]  ,?^?$7°`  `?$SS$$L.[/]
+[#8D72E5] ,?   S$L._ ,d$iIS$$SL[/]
+[#8679E0]j$$u/$$$$$$$$?:iI$$$$b[/]
+[#7F80DB]:?º?^4$S$$"º?$$L:iIS$$SI:[/]
+[#7887D6]:'   '/`?$'.   `?Li$$SI:[/]
+[#718ED1] .`     '    _   ?kiSSI?[/]
+[#6A95CC]  :.        $k _ `?Si?[/]
+[#639CC7] .,_,_     i$$/7.:i'[/]
+[#5CA3C2] ?%uS%uo,d$$?'.?ª`[/]
+[#5699B9]S$$$$$$$$$$$i[/]
+[#64748B] ?$$$?[/]'''
 
 
 def _build_compact_banner() -> str:
@@ -3839,12 +3853,12 @@ class LilSkrrtCLI:
 
             yolo_active = self._is_session_yolo_active()
             if width < 52:
-                text = f"⟡ {snapshot['model_short']} · {duration_label}"
+                text = f"☠︎ {snapshot['model_short']} · {duration_label}"
                 if yolo_active:
                     text += " · ⚠ YOLO"
                 return self._trim_status_bar_text(text, width)
             if width < 76:
-                parts = [f"⟡ {snapshot['model_short']}", percent_label]
+                parts = [f"☠︎ {snapshot['model_short']}", percent_label]
                 compressions = snapshot.get("compressions", 0)
                 if compressions:
                     parts.append(f"🗜️ {compressions}")
@@ -3867,7 +3881,7 @@ class LilSkrrtCLI:
                 context_label = "ctx --"
 
             compressions = snapshot.get("compressions", 0)
-            parts = [f"⟡ {snapshot['model_short']}", context_label, percent_label]
+            parts = [f"☠︎ {snapshot['model_short']}", context_label, percent_label]
             if compressions:
                 parts.append(f"🗜️ {compressions}")
             bg_count = snapshot.get("active_background_tasks", 0)
@@ -3884,7 +3898,7 @@ class LilSkrrtCLI:
                 parts.append("⚠ YOLO")
             return self._trim_status_bar_text(" │ ".join(parts), width)
         except Exception:
-            return f"⟡ {self.model if getattr(self, 'model', None) else 'Lil Skrrt'}"
+            return f"☠︎ {self.model if getattr(self, 'model', None) else 'Lil Skrrt'}"
 
     def _get_status_bar_fragments(self):
         if not self._status_bar_visible or getattr(self, '_model_picker_state', None):
@@ -3900,10 +3914,12 @@ class LilSkrrtCLI:
             duration_label = snapshot["duration"]
             yolo_active = self._is_session_yolo_active()
 
+            brand_style = _pulse_brand_prompt_toolkit_style()
+
             if width < 52:
                 frags = [
-                    ("class:status-bar", " ⟡ "),
-                    ("class:status-bar-strong", snapshot["model_short"]),
+                    (brand_style, " ☠︎ "),
+                    (brand_style, snapshot["model_short"]),
                     ("class:status-bar-dim", " · "),
                     ("class:status-bar-dim", duration_label),
                 ]
@@ -3919,8 +3935,8 @@ class LilSkrrtCLI:
                     bg_count = snapshot.get("active_background_tasks", 0)
                     bg_proc_count = snapshot.get("active_background_processes", 0)
                     frags = [
-                        ("class:status-bar", " ⟡ "),
-                        ("class:status-bar-strong", snapshot["model_short"]),
+                        (brand_style, " ☠︎ "),
+                        (brand_style, snapshot["model_short"]),
                         ("class:status-bar-dim", " · "),
                         (self._status_bar_context_style(percent), percent_label),
                     ]
@@ -3954,8 +3970,8 @@ class LilSkrrtCLI:
                     bg_count = snapshot.get("active_background_tasks", 0)
                     bg_proc_count = snapshot.get("active_background_processes", 0)
                     frags = [
-                        ("class:status-bar", " ⟡ "),
-                        ("class:status-bar-strong", snapshot["model_short"]),
+                        (brand_style, " ☠︎ "),
+                        (brand_style, snapshot["model_short"]),
                         ("class:status-bar-dim", " │ "),
                         ("class:status-bar-dim", context_label),
                         ("class:status-bar-dim", " │ "),
@@ -4483,10 +4499,10 @@ class LilSkrrtCLI:
             try:
                 from hermes_cli.skin_engine import get_active_skin
                 _skin = get_active_skin()
-                label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
+                label = _skin.get_branding("response_label", "☠︎ Lil Skrrt")
                 _text_hex = _skin.get_color("banner_text", "#FFF8DC")
             except Exception:
-                label = "⟡ Lil Skrrt"
+                label = "☠︎ Lil Skrrt"
                 _text_hex = "#FFF8DC"
             # Build a true-color ANSI escape for the response text color
             # so streamed content matches the Rich Panel appearance.
@@ -4501,7 +4517,7 @@ class LilSkrrtCLI:
                 label = f"{label} {datetime.now().strftime('%H:%M')}"
             w = self._scrollback_box_width()
             fill = w - 2 - LilSkrrtCLI._status_bar_display_width(label)
-            _cprint(f"\n{_ACCENT}╭─{label}{'─' * max(fill - 1, 0)}╮{_RST}")
+            _cprint(f"\n{_ACCENT}╭─{_pulse_brand_ansi(bold=True)}{label}{_ACCENT}{'─' * max(fill - 1, 0)}╮{_RST}")
 
         self._stream_buf += text
 
@@ -9164,18 +9180,18 @@ class LilSkrrtCLI:
                     try:
                         from hermes_cli.skin_engine import get_active_skin
                         _skin = get_active_skin()
-                        label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
+                        label = _skin.get_branding("response_label", "☠︎ Lil Skrrt")
                         _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#38BDF8"))
                         _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#FFF8DC"))
                     except Exception:
-                        label = "⟡ Lil Skrrt"
+                        label = "☠︎ Lil Skrrt"
                         _resp_color = "#38BDF8"
                         _resp_text = "#FFF8DC"
 
                     _chat_console = ChatConsole()
                     _chat_console.print(Panel(
                         _render_final_assistant_content(response, mode=self.final_response_markdown),
-                        title=f"[{_resp_color} bold]{label} (background #{task_num})[/]",
+                        title=f"[{_pulse_brand_hex()} bold]{label} (background #{task_num})[/]",
                         title_align="left",
                         border_style=_resp_color,
                         style=_resp_text,
@@ -12121,7 +12137,7 @@ class LilSkrrtCLI:
                         if self.show_timestamps:
                             label = f"{label}{datetime.now().strftime('%H:%M')} "
                         fill = w - 2 - LilSkrrtCLI._status_bar_display_width(label)
-                        _cprint(f"\n{_ACCENT}╭─{label}{'─' * max(fill - 1, 0)}╮{_RST}")
+                        _cprint(f"\n{_ACCENT}╭─{_pulse_brand_ansi(bold=True)}{label}{_ACCENT}{'─' * max(fill - 1, 0)}╮{_RST}")
                     _cprint(f"{_STREAM_PAD}{sentence.rstrip()}")
 
                 tts_thread = threading.Thread(
@@ -12451,11 +12467,11 @@ class LilSkrrtCLI:
                 try:
                     from hermes_cli.skin_engine import get_active_skin
                     _skin = get_active_skin()
-                    label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
+                    label = _skin.get_branding("response_label", "☠︎ Lil Skrrt")
                     _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#38BDF8"))
                     _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#E2E8F0"))
                 except Exception:
-                    label = "⟡ Lil Skrrt"
+                    label = "☠︎ Lil Skrrt"
                     _resp_color = _maybe_remap_for_light_mode("#38BDF8")
                     _resp_text = _maybe_remap_for_light_mode("#E2E8F0")
 
@@ -12473,7 +12489,7 @@ class LilSkrrtCLI:
                     _chat_console = ChatConsole()
                     _chat_console.print(Panel(
                         _render_final_assistant_content(response, mode=self.final_response_markdown),
-                        title=f"[{_resp_color} bold]{label}[/]",
+                        title=f"[{_pulse_brand_hex()} bold]{label}[/]",
                         title_align="left",
                         border_style=_resp_color,
                         style=_resp_text,
