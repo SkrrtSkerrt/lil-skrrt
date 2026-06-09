@@ -348,7 +348,7 @@ def _cmd_migrate(args):
     )
     print(
         color(
-            "│          ⚕ Lil Skrrt — OpenClaw Migration                 │",
+            "│          ⟡ Lil Skrrt — OpenClaw Migration                 │",
             Colors.MAGENTA,
         )
     )
@@ -574,7 +574,7 @@ def _cmd_cleanup(args):
     )
     print(
         color(
-            "│          ⚕ Lil Skrrt — OpenClaw Cleanup                   │",
+            "│          ⟡ Lil Skrrt — OpenClaw Cleanup                   │",
             Colors.MAGENTA,
         )
     )

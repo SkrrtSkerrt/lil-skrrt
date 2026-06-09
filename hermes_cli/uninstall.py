@@ -452,7 +452,7 @@ def run_uninstall(args):
 
     print()
     print(color("┌─────────────────────────────────────────────────────────┐", Colors.MAGENTA, Colors.BOLD))
-    print(color("│            ⚕ Lil Skrrt Uninstaller                     │", Colors.MAGENTA, Colors.BOLD))
+    print(color("│            ⟡ Lil Skrrt Uninstaller                     │", Colors.MAGENTA, Colors.BOLD))
     print(color("└─────────────────────────────────────────────────────────┘", Colors.MAGENTA, Colors.BOLD))
     print()
     

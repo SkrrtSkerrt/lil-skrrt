@@ -2766,8 +2766,8 @@ def _build_compact_banner() -> str:
     dim_color = _skin.get_color("banner_dim", "#64748B") if _skin else "#64748B"
 
     if skin_name == "default":
-        line1 = "⚕ LIL SKRRT - AI Agent Framework"
-        tiny_line = "⚕ LIL SKRRT"
+        line1 = "⟡ LIL SKRRT - AI Agent Framework"
+        tiny_line = "⟡ LIL SKRRT"
     else:
         agent_name = _skin.get_branding("agent_name", "Lil Skrrt") if _skin else "Lil Skrrt"
         line1 = f"{agent_name} - AI Agent Framework"
@@ -3839,12 +3839,12 @@ class LilSkrrtCLI:
 
             yolo_active = self._is_session_yolo_active()
             if width < 52:
-                text = f"⚕ {snapshot['model_short']} · {duration_label}"
+                text = f"⟡ {snapshot['model_short']} · {duration_label}"
                 if yolo_active:
                     text += " · ⚠ YOLO"
                 return self._trim_status_bar_text(text, width)
             if width < 76:
-                parts = [f"⚕ {snapshot['model_short']}", percent_label]
+                parts = [f"⟡ {snapshot['model_short']}", percent_label]
                 compressions = snapshot.get("compressions", 0)
                 if compressions:
                     parts.append(f"🗜️ {compressions}")
@@ -3867,7 +3867,7 @@ class LilSkrrtCLI:
                 context_label = "ctx --"
 
             compressions = snapshot.get("compressions", 0)
-            parts = [f"⚕ {snapshot['model_short']}", context_label, percent_label]
+            parts = [f"⟡ {snapshot['model_short']}", context_label, percent_label]
             if compressions:
                 parts.append(f"🗜️ {compressions}")
             bg_count = snapshot.get("active_background_tasks", 0)
@@ -3884,7 +3884,7 @@ class LilSkrrtCLI:
                 parts.append("⚠ YOLO")
             return self._trim_status_bar_text(" │ ".join(parts), width)
         except Exception:
-            return f"⚕ {self.model if getattr(self, 'model', None) else 'Lil Skrrt'}"
+            return f"⟡ {self.model if getattr(self, 'model', None) else 'Lil Skrrt'}"
 
     def _get_status_bar_fragments(self):
         if not self._status_bar_visible or getattr(self, '_model_picker_state', None):
@@ -3902,7 +3902,7 @@ class LilSkrrtCLI:
 
             if width < 52:
                 frags = [
-                    ("class:status-bar", " ⚕ "),
+                    ("class:status-bar", " ⟡ "),
                     ("class:status-bar-strong", snapshot["model_short"]),
                     ("class:status-bar-dim", " · "),
                     ("class:status-bar-dim", duration_label),
@@ -3919,7 +3919,7 @@ class LilSkrrtCLI:
                     bg_count = snapshot.get("active_background_tasks", 0)
                     bg_proc_count = snapshot.get("active_background_processes", 0)
                     frags = [
-                        ("class:status-bar", " ⚕ "),
+                        ("class:status-bar", " ⟡ "),
                         ("class:status-bar-strong", snapshot["model_short"]),
                         ("class:status-bar-dim", " · "),
                         (self._status_bar_context_style(percent), percent_label),
@@ -3954,7 +3954,7 @@ class LilSkrrtCLI:
                     bg_count = snapshot.get("active_background_tasks", 0)
                     bg_proc_count = snapshot.get("active_background_processes", 0)
                     frags = [
-                        ("class:status-bar", " ⚕ "),
+                        ("class:status-bar", " ⟡ "),
                         ("class:status-bar-strong", snapshot["model_short"]),
                         ("class:status-bar-dim", " │ "),
                         ("class:status-bar-dim", context_label),
@@ -4483,10 +4483,10 @@ class LilSkrrtCLI:
             try:
                 from hermes_cli.skin_engine import get_active_skin
                 _skin = get_active_skin()
-                label = _skin.get_branding("response_label", "⚕ Lil Skrrt")
+                label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
                 _text_hex = _skin.get_color("banner_text", "#FFF8DC")
             except Exception:
-                label = "⚕ Lil Skrrt"
+                label = "⟡ Lil Skrrt"
                 _text_hex = "#FFF8DC"
             # Build a true-color ANSI escape for the response text color
             # so streamed content matches the Rich Panel appearance.
@@ -9164,11 +9164,11 @@ class LilSkrrtCLI:
                     try:
                         from hermes_cli.skin_engine import get_active_skin
                         _skin = get_active_skin()
-                        label = _skin.get_branding("response_label", "⚕ Lil Skrrt")
+                        label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
                         _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#38BDF8"))
                         _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#FFF8DC"))
                     except Exception:
-                        label = "⚕ Lil Skrrt"
+                        label = "⟡ Lil Skrrt"
                         _resp_color = "#38BDF8"
                         _resp_text = "#FFF8DC"
 
@@ -10316,7 +10316,7 @@ class LilSkrrtCLI:
             ("cancel", "Cancel", "keep the current session"),
         ]
         raw = self._prompt_text_input_modal(
-            title="⚕  Update Lil Skrrt",
+            title="⟡  Update Lil Skrrt",
             detail="This will exit the current session and run `lil-skrrt update`.",
             choices=choices,
         )
@@ -10329,7 +10329,7 @@ class LilSkrrtCLI:
             return False
 
         print()
-        print("  ⚕ Launching update...")
+        print("  ⟡ Launching update...")
         print()
 
         # Store the relaunch args so run() can exec them from the main thread
@@ -12117,7 +12117,7 @@ class LilSkrrtCLI:
                     if not _streaming_box_opened:
                         _streaming_box_opened = True
                         w = self._scrollback_box_width(getattr(self.console, "width", 80))
-                        label = " ⚕ Lil Skrrt "
+                        label = " ⟡ Lil Skrrt "
                         if self.show_timestamps:
                             label = f"{label}{datetime.now().strftime('%H:%M')} "
                         fill = w - 2 - LilSkrrtCLI._status_bar_display_width(label)
@@ -12451,11 +12451,11 @@ class LilSkrrtCLI:
                 try:
                     from hermes_cli.skin_engine import get_active_skin
                     _skin = get_active_skin()
-                    label = _skin.get_branding("response_label", "⚕ Lil Skrrt")
+                    label = _skin.get_branding("response_label", "⟡ Lil Skrrt")
                     _resp_color = _maybe_remap_for_light_mode(_skin.get_color("response_border", "#38BDF8"))
                     _resp_text = _maybe_remap_for_light_mode(_skin.get_color("banner_text", "#E2E8F0"))
                 except Exception:
-                    label = "⚕ Lil Skrrt"
+                    label = "⟡ Lil Skrrt"
                     _resp_color = _maybe_remap_for_light_mode("#38BDF8")
                     _resp_text = _maybe_remap_for_light_mode("#E2E8F0")
 
@@ -12608,9 +12608,9 @@ class LilSkrrtCLI:
         else:
             try:
                 from hermes_cli.skin_engine import get_active_goodbye
-                goodbye = get_active_goodbye("Goodbye! ⚕")
+                goodbye = get_active_goodbye("Goodbye! ⟡")
             except Exception:
-                goodbye = "Goodbye! ⚕"
+                goodbye = "Goodbye! ⟡"
             print(goodbye)
 
     def _get_tui_prompt_symbols(self) -> tuple[str, str]:
@@ -12699,7 +12699,7 @@ class LilSkrrtCLI:
         if self._command_running:
             return _state_fragment("class:prompt-working", self._command_spinner_frame())
         if self._agent_running:
-            return _state_fragment("class:prompt-working", "⚕")
+            return _state_fragment("class:prompt-working", "⟡")
         if self._voice_mode:
             return _state_fragment("class:voice-prompt", "🎤")
         return [("class:prompt", symbol)]

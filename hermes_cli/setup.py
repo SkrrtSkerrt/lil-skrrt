@@ -177,7 +177,7 @@ def is_interactive_stdin() -> bool:
 def print_noninteractive_setup_guidance(reason: str | None = None) -> None:
     """Print guidance for headless/non-interactive setup flows."""
     print()
-    print(color("⚕ Lil Skrrt Setup — Non-interactive mode", Colors.CYAN, Colors.BOLD))
+    print(color("⟡ Lil Skrrt Setup — Non-interactive mode", Colors.CYAN, Colors.BOLD))
     print()
     if reason:
         print_info(reason)
@@ -2934,7 +2934,7 @@ def _run_portal_one_shot(config: dict) -> None:
             Colors.MAGENTA,
         )
     )
-    print(color("│     ⚕ Lil Skrrt Setup — Nous Portal (one-shot)          │", Colors.MAGENTA))
+    print(color("│     ⟡ Lil Skrrt Setup — Nous Portal (one-shot)          │", Colors.MAGENTA))
     print(
         color(
             "└─────────────────────────────────────────────────────────┘",
@@ -3096,7 +3096,7 @@ def run_setup_wizard(args):
                         Colors.MAGENTA,
                     )
                 )
-                print(color(f"│     ⚕ Lil Skrrt Setup — {label:<32s} │", Colors.MAGENTA))
+                print(color(f"│     ⟡ Lil Skrrt Setup — {label:<32s} │", Colors.MAGENTA))
                 print(
                     color(
                         "└─────────────────────────────────────────────────────────┘",
@@ -3132,7 +3132,7 @@ def run_setup_wizard(args):
     )
     print(
         color(
-            "│             ⚕ Lil Skrrt Setup Wizard                   │", Colors.MAGENTA
+            "│             ⟡ Lil Skrrt Setup Wizard                   │", Colors.MAGENTA
         )
     )
     print(

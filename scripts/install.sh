@@ -166,7 +166,7 @@ print_banner() {
     echo ""
     echo -e "${MAGENTA}${BOLD}"
     echo "┌─────────────────────────────────────────────────────────┐"
-    echo "│             ⚕ Lil Skrrt Installer                    │"
+    echo "│             ⟡ Lil Skrrt Installer                    │"
     echo "├─────────────────────────────────────────────────────────┤"
     echo "│  An open source AI agent by SkrrtSkerrt.              │"
     echo "└─────────────────────────────────────────────────────────┘"
