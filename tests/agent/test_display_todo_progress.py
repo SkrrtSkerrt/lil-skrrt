@@ -7,6 +7,15 @@ todo tool call paths: read, create (merge=False), update (merge=True).
 import json
 import pytest
 from agent.display import get_cute_tool_message
+from hermes_cli.skin_engine import set_active_skin
+
+
+@pytest.fixture(autouse=True)
+def _default_skin():
+    """Keep these display tests isolated from prior skin mutations."""
+    set_active_skin("default")
+    yield
+    set_active_skin("default")
 
 
 def _todo_result(total: int, completed: int) -> str:

@@ -41,7 +41,7 @@ nous = NousProfile(
     aliases=("nous-portal", "nousresearch"),
     env_vars=("NOUS_API_KEY",),
     display_name="SkrrtSkerrt",
-    description="SkrrtSkerrt — Hermes model family",
+    description="SkrrtSkerrt — Lil Skrrt model family",
     signup_url="https://github.com/SkrrtSkerrt/hermes-agent/",
     fallback_models=(
         "hermes-3-405b",

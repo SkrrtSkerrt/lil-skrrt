@@ -1,1 +1,1 @@
-# Hermes plugins package
+# Lil Skrrt plugins package

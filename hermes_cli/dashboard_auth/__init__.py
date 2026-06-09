@@ -1,4 +1,4 @@
-"""Compatibility dashboard-auth package for the Hermes web server.
+"""Compatibility dashboard-auth package for the Lil Skrrt web server.
 
 The original project references a dedicated ``hermes_cli.dashboard_auth``
 package for the OAuth gate. Some test and runtime paths only need a small

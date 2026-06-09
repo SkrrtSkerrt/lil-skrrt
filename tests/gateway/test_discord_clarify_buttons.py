@@ -32,6 +32,12 @@ from plugins.platforms.discord.adapter import (  # noqa: E402
 )
 from gateway.config import PlatformConfig  # noqa: E402
 
+# If another gateway test imported the adapter against a different discord mock,
+# refresh the module-global binding here so these assertions see the active mock.
+_adapter_mod = sys.modules.get("plugins.platforms.discord.adapter")
+if _adapter_mod is not None and hasattr(_adapter_mod, "discord"):
+    setattr(_adapter_mod, "discord", sys.modules.get("discord", getattr(_adapter_mod, "discord")))
+
 
 # ---------------------------------------------------------------------------
 # Helpers

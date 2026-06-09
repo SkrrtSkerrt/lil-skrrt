@@ -94,7 +94,7 @@ def _get_live_tracking_cwd(task_id: str = "default") -> str | None:
         container_key = task_id
 
     with _file_ops_lock:
-        cached = _file_ops_cache.get(container_key) or _file_ops_cache.get(task_id)
+        cached = _file_ops_cache.get(task_id) or _file_ops_cache.get(container_key)
     if cached is not None:
         live_cwd = getattr(getattr(cached, "env", None), "cwd", None) or getattr(
             cached, "cwd", None
@@ -195,10 +195,10 @@ def _check_sensitive_path(filepath: str, task_id: str = "default") -> str | None
 
 def _check_cross_profile_path(filepath: str, task_id: str = "default") -> str | None:
     """Return a cross-profile warning string when ``filepath`` lands in
-    another Hermes profile's skills/plugins/cron/memories directory.
+    another Lil Skrrt profile's skills/plugins/cron/memories directory.
 
     Returns ``None`` when the write is in-scope (same profile) or outside
-    Hermes scope entirely. Soft guard — the agent can override by passing
+    Lil Skrrt scope entirely. Soft guard — the agent can override by passing
     ``cross_profile=True`` to its write tool after explicit user direction.
 
     Defense-in-depth, NOT a security boundary — the terminal tool runs
@@ -559,7 +559,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
                 ),
             })
 
-        # ── Hermes internal path guard ────────────────────────────────
+        # ── Lil Skrrt internal path guard ────────────────────────────────
         # Prevent prompt injection via catalog or hub metadata files,
         # and block credential stores under HERMES_HOME.  Pass the
         # already-resolved path so a relative-path read against
@@ -593,7 +593,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
 
         if cached_mtime is not None:
             try:
-                current_mtime = os.path.getmtime(resolved_str)
+                current_mtime = os.stat(resolved_str).st_mtime_ns
                 if current_mtime == cached_mtime:
                     # Count repeated stub returns so weak tool-followers that
                     # ignore the "refer to earlier result" hint don't burn
@@ -701,7 +701,7 @@ def read_file_tool(path: str, offset: int = 1, limit: int = 500, task_id: str = 
             # 2. Staleness: warn on write/patch if the file changed since
             #    the agent last read it (external edit, concurrent agent, etc.).
             try:
-                _mtime_now = os.path.getmtime(resolved_str)
+                _mtime_now = os.stat(resolved_str).st_mtime_ns
                 task_data["dedup"][dedup_key] = _mtime_now
                 task_data.setdefault("read_timestamps", {})[resolved_str] = _mtime_now
             except OSError:
@@ -840,7 +840,7 @@ def _update_read_timestamp(filepath: str, task_id: str) -> None:
     _invalidate_dedup_for_path(filepath, task_id)
     try:
         resolved = str(_resolve_path_for_task(filepath, task_id))
-        current_mtime = os.path.getmtime(resolved)
+        current_mtime = os.stat(resolved).st_mtime_ns
     except (OSError, ValueError):
         return
     with _read_tracker_lock:
@@ -869,7 +869,7 @@ def _check_file_staleness(filepath: str, task_id: str) -> str | None:
     if read_mtime is None:
         return None  # File was never read — nothing to compare against
     try:
-        current_mtime = os.path.getmtime(resolved)
+        current_mtime = os.stat(resolved).st_mtime_ns
     except OSError:
         return None  # Can't stat — file may have been deleted, let write handle it
     if current_mtime != read_mtime:
@@ -885,7 +885,7 @@ def write_file_tool(path: str, content: str, task_id: str = "default",
                     cross_profile: bool = False) -> str:
     """Write content to a file.
 
-    ``cross_profile`` opts out of the soft cross-Hermes-profile guard. The
+    ``cross_profile`` opts out of the soft cross-Lil Skrrt-profile guard. The
     guard fires only on writes that land in another profile's
     skills/plugins/cron/memories directory; everything else is unaffected.
     Pass ``True`` after explicit user direction — same shape as ``force``
@@ -955,7 +955,7 @@ def patch_tool(mode: str = "replace", path: str = None, old_string: str = None,
                task_id: str = "default", cross_profile: bool = False) -> str:
     """Patch a file using replace mode or V4A patch format.
 
-    ``cross_profile`` opts out of the soft cross-Hermes-profile guard for
+    ``cross_profile`` opts out of the soft cross-Lil Skrrt-profile guard for
     targets under another profile's skills/plugins/cron/memories
     directory. Same shape as ``write_file``'s flag.
     """
@@ -1209,7 +1209,7 @@ WRITE_FILE_SCHEMA = {
             "content": {"type": "string", "description": "Complete content to write to the file"},
             "cross_profile": {
                 "type": "boolean",
-                "description": "Opt out of the cross-profile soft guard. Defaults to false. Set true ONLY after explicit user direction to edit another Hermes profile's skills/plugins/cron/memories — by default these writes are blocked with a warning because they affect a different profile than the one this session is running under.",
+                "description": "Opt out of the cross-profile soft guard. Defaults to false. Set true ONLY after explicit user direction to edit another Lil Skrrt profile's skills/plugins/cron/memories — by default these writes are blocked with a warning because they affect a different profile than the one this session is running under.",
                 "default": False,
             },
         },
@@ -1260,7 +1260,7 @@ PATCH_SCHEMA = {
             },
             "cross_profile": {
                 "type": "boolean",
-                "description": "Opt out of the cross-profile soft guard. Defaults to false. Set true ONLY after explicit user direction to edit another Hermes profile's skills/plugins/cron/memories.",
+                "description": "Opt out of the cross-profile soft guard. Defaults to false. Set true ONLY after explicit user direction to edit another Lil Skrrt profile's skills/plugins/cron/memories.",
                 "default": False,
             },
         },

@@ -40,6 +40,25 @@ def _sh(container: str, cmd: str, timeout: int = 30) -> subprocess.CompletedProc
     return docker_exec_sh(container, cmd, timeout=timeout)
 
 
+def _exec_until_success(
+    container: str,
+    *args: str,
+    timeout: int = 30,
+    deadline_s: float = 60.0,
+    interval_s: float = 1.0,
+) -> subprocess.CompletedProcess[str]:
+    """Retry docker exec commands until they succeed or the deadline expires."""
+    end = time.monotonic() + deadline_s
+    last = None
+    while time.monotonic() < end:
+        last = _exec(container, *args, timeout=timeout)
+        if last.returncode == 0:
+            return last
+        time.sleep(interval_s)
+    assert last is not None
+    return last
+
+
 def _wait_for_path(
     container: str,
     path: str,
@@ -134,6 +153,17 @@ def restart_container(request, built_image: str):
         raise RuntimeError(
             f"container {name} did not finish cont-init within 30s"
         )
+    # The boot log can appear before the exec path is fully ready.
+    # Probe once more with a trivial exec so the first real docker exec
+    # in the test doesn't race the container's post-init startup.
+    exec_deadline = time.monotonic() + 15.0
+    while time.monotonic() < exec_deadline:
+        r = _docker("exec", "-u", "hermes", name, "true", timeout=5)
+        if r.returncode == 0:
+            break
+        time.sleep(0.25)
+    else:
+        raise RuntimeError(f"container {name} was not exec-ready within 15s")
     yield name
     _docker("rm", "-f", name)
     _docker("volume", "rm", "-f", volume)
@@ -145,10 +175,10 @@ def test_running_gateway_survives_container_restart(restart_container: str) -> N
     # Create the profile + start its gateway. The Phase 4 hooks
     # register the s6 service slot during create and the dispatch
     # path brings it up via s6-svc -u.
-    r = _exec(container, "hermes", "profile", "create", "coder")
+    r = _exec_until_success(container, "hermes", "profile", "create", "coder", timeout=60, deadline_s=90.0, interval_s=2.0)
     assert r.returncode == 0, f"profile create failed: {r.stderr}"
 
-    r = _exec(container, "hermes", "-p", "coder", "gateway", "start", timeout=60)
+    r = _exec_until_success(container, "hermes", "-p", "coder", "gateway", "start", timeout=60, deadline_s=90.0, interval_s=2.0)
     assert r.returncode == 0, f"gateway start failed: {r.stderr}"
 
     # Give the service time to actually come up under supervision.

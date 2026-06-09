@@ -1,6 +1,6 @@
 """CLI commands for Honcho integration management.
 
-Handles: hermes honcho setup | status | sessions | map | peer
+Handles: lil-skrrt honcho setup | status | sessions | map | peer
 """
 
 from __future__ import annotations
@@ -155,7 +155,7 @@ def cmd_disable(args) -> None:
 def cmd_sync(args) -> None:
     """Sync Honcho config to all existing profiles.
 
-    Scans all Hermes profiles and creates host blocks for any that don't
+    Scans all Lil Skrrt profiles and creates host blocks for any that don't
     have one yet. Inherits settings from the default host block.
     """
     try:
@@ -167,7 +167,7 @@ def cmd_sync(args) -> None:
 
     cfg = _read_config()
     if not cfg:
-        print("  No Honcho config found. Run 'hermes honcho setup' first.\n")
+        print("  No Honcho config found. Run 'lil-skrrt honcho setup' first.\n")
         return
 
     hosts = cfg.get("hosts", {})
@@ -175,7 +175,7 @@ def cmd_sync(args) -> None:
     has_key = bool(cfg.get("apiKey") or os.environ.get("HONCHO_API_KEY"))
 
     if not default_block and not has_key:
-        print("  Honcho not configured on default profile. Run 'hermes honcho setup' first.\n")
+        print("  Honcho not configured on default profile. Run 'lil-skrrt honcho setup' first.\n")
         return
 
     created = 0
@@ -201,7 +201,7 @@ def cmd_sync(args) -> None:
 def sync_honcho_profiles_quiet() -> int:
     """Sync Honcho host blocks for all profiles. Returns count of newly created blocks.
 
-    Called from `hermes update` -- no output, no exceptions.
+    Called from `lil-skrrt update` -- no output, no exceptions.
     """
     try:
         from hermes_cli.profiles import list_profiles
@@ -231,7 +231,7 @@ _profile_override: str | None = None
 
 
 def _host_key() -> str:
-    """Return the active Honcho host key, derived from the current Hermes profile."""
+    """Return the active Honcho host key, derived from the current Lil Skrrt profile."""
     if _profile_override:
         if _profile_override in {"default", "custom"}:
             return HOST
@@ -361,7 +361,7 @@ def cmd_setup(args) -> None:
     write_path = _local_config_path()
     read_path = _config_path()
     print("\nHoncho memory setup\n" + "─" * 40)
-    print("  Honcho gives Hermes persistent cross-session memory.")
+    print("  Honcho gives Lil Skrrt persistent cross-session memory.")
     print(f"  Config: {write_path}")
     if read_path != write_path and read_path.exists():
         print(f"  (seeding from existing config at {read_path})")
@@ -416,7 +416,7 @@ def cmd_setup(args) -> None:
 
         if not cfg.get("apiKey"):
             print("\n  No API key configured. Get yours at https://app.honcho.dev")
-            print("  Run 'hermes honcho setup' again once you have a key.\n")
+            print("  Run 'lil-skrrt honcho setup' again once you have a key.\n")
             return
 
     # --- 3. Identity ---
@@ -548,7 +548,7 @@ def cmd_setup(args) -> None:
         print("  Memory provider set to 'honcho' in config.yaml")
     except Exception as e:
         print(f"  Could not auto-enable in config.yaml: {e}")
-        print("  Run: hermes config set memory.provider honcho")
+        print("  Run: lil-skrrt config set memory.provider honcho")
 
     # --- Test connection ---
     print("  Testing connection... ", end="", flush=True)
@@ -578,15 +578,15 @@ def cmd_setup(args) -> None:
     print("    honcho_reasoning -- ask Honcho a question, synthesized answer")
     print("    honcho_conclude  -- persist a user fact to memory")
     print("\n  Other commands:")
-    print("    hermes honcho status     -- show full config")
-    print("    hermes honcho mode       -- change recall/observation mode")
-    print("    hermes honcho tokens     -- tune context and dialectic budgets")
-    print("    hermes honcho peer       -- update peer names")
-    print("    hermes honcho map <name> -- map this directory to a session name\n")
+    print("    lil-skrrt honcho status     -- show full config")
+    print("    lil-skrrt honcho mode       -- change recall/observation mode")
+    print("    lil-skrrt honcho tokens     -- tune context and dialectic budgets")
+    print("    lil-skrrt honcho peer       -- update peer names")
+    print("    lil-skrrt honcho map <name> -- map this directory to a session name\n")
 
 
 def _active_profile_name() -> str:
-    """Return the active Hermes profile name (respects --target-profile override)."""
+    """Return the active Lil Skrrt profile name (respects --target-profile override)."""
     if _profile_override:
         return _profile_override
     try:
@@ -635,7 +635,7 @@ def cmd_status(args) -> None:
     try:
         import honcho  # noqa: F401
     except ImportError:
-        print("  honcho-ai is not installed. Run: hermes honcho setup\n")
+        print("  honcho-ai is not installed. Run: lil-skrrt honcho setup\n")
         return
 
     cfg = _read_config()
@@ -645,7 +645,7 @@ def cmd_status(args) -> None:
 
     if not cfg:
         print(f"  No Honcho config found at {active_path}")
-        print("  Run 'hermes honcho setup' to configure.\n")
+        print("  Run 'lil-skrrt honcho setup' to configure.\n")
         return
 
     try:
@@ -796,7 +796,7 @@ def cmd_sessions(args) -> None:
 
     if not sessions:
         print("  No session mappings configured.\n")
-        print("  Add one with: hermes honcho map <session-name>")
+        print("  Add one with: lil-skrrt honcho map <session-name>")
         print(f"  Or edit {_config_path()} directly.\n")
         return
 
@@ -847,7 +847,7 @@ def cmd_peer(args) -> None:
     if user_name is None and ai_name is None and reasoning is None:
         # Show current values
         hosts = cfg.get("hosts", {})
-        hermes = hosts.get(_host_key(), {})
+        lil_skrrt = hosts.get(_host_key(), {})
         user = hermes.get('peerName') or cfg.get('peerName') or '(not set)'
         ai = hermes.get('aiPeer') or cfg.get('aiPeer') or _host_key()
         lvl = hermes.get("dialecticReasoningLevel") or cfg.get("dialecticReasoningLevel") or "low"
@@ -856,7 +856,7 @@ def cmd_peer(args) -> None:
         print(f"  User peer:   {user}")
         print("    Your identity in Honcho. Messages you send build this peer's card.")
         print(f"  AI peer:     {ai}")
-        print("    Hermes' identity in Honcho. Seed with 'hermes honcho identity <file>'.")
+        print("    Lil Skrrt' identity in Honcho. Seed with 'lil-skrrt honcho identity <file>'.")
         print("    Dialectic calls ask this peer questions to warm session context.")
         print()
         print(f"  Dialectic reasoning:  {lvl}  ({', '.join(REASONING_LEVELS)})")
@@ -909,7 +909,7 @@ def cmd_mode(args) -> None:
         for m, desc in MODES.items():
             marker = " <-" if m == current else ""
             print(f"  {m:<10}  {desc}{marker}")
-        print(f"\n  Set with: hermes honcho mode [hybrid|context|tools]\n")
+        print(f"\n  Set with: lil-skrrt honcho mode [hybrid|context|tools]\n")
         return
 
     if mode_arg not in MODES:
@@ -944,7 +944,7 @@ def cmd_strategy(args) -> None:
         for s, desc in STRATEGIES.items():
             marker = " <-" if s == current else ""
             print(f"  {s:<15}  {desc}{marker}")
-        print(f"\n  Set with: hermes honcho strategy [per-session|per-directory|per-repo|global]\n")
+        print(f"\n  Set with: lil-skrrt honcho strategy [per-session|per-directory|per-repo|global]\n")
         return
 
     if strat_arg not in STRATEGIES:
@@ -962,7 +962,7 @@ def cmd_tokens(args) -> None:
     """Show or set token budget settings."""
     cfg = _read_config()
     hosts = cfg.get("hosts", {})
-    hermes = hosts.get(_host_key(), {})
+    lil_skrrt = hosts.get(_host_key(), {})
 
     context = getattr(args, "context", None)
     dialectic = getattr(args, "dialectic", None)
@@ -978,11 +978,11 @@ def cmd_tokens(args) -> None:
         print("    the user and session, injected directly into the system prompt.")
         print()
         print(f"  Dialectic   {d_chars} chars, reasoning: {d_level}")
-        print("    AI-to-AI inference. Hermes asks Honcho's AI peer a question")
+        print("    AI-to-AI inference. Lil Skrrt asks Honcho's AI peer a question")
         print("    (e.g. \"what were we working on?\") and Honcho runs its own model")
         print("    to synthesize an answer. Used for first-turn session continuity.")
         print("    Level controls how much reasoning Honcho spends on the answer.")
-        print("\n  Set with: hermes honcho tokens [--context N] [--dialectic N]\n")
+        print("\n  Set with: lil-skrrt honcho tokens [--context N] [--dialectic N]\n")
         return
 
     host = _host_key()
@@ -1006,7 +1006,7 @@ def cmd_identity(args) -> None:
     """Seed AI peer identity or show both peer representations."""
     cfg = _read_config()
     if not _resolve_api_key(cfg):
-        print("  No API key configured. Run 'hermes honcho setup' first.\n")
+        print("  No API key configured. Run 'lil-skrrt honcho setup' first.\n")
         return
 
     file_path = getattr(args, "file", None)
@@ -1043,7 +1043,7 @@ def cmd_identity(args) -> None:
             print(ai_rep["card"])
         else:
             print("  No representation built yet.")
-            print("  Run 'hermes honcho identity <file>' to seed one.")
+            print("  Run 'lil-skrrt honcho identity <file>' to seed one.")
         print()
         return
 
@@ -1052,8 +1052,8 @@ def cmd_identity(args) -> None:
         print(f"  User peer: {hcfg.peer_name or 'not set'}")
         print(f"  AI peer:   {hcfg.ai_peer}")
         print()
-        print("    hermes honcho identity --show        — show both peer representations")
-        print("    hermes honcho identity <file>        — seed AI peer from SOUL.md or any .md/.txt\n")
+        print("    lil-skrrt honcho identity --show        — show both peer representations")
+        print("    lil-skrrt honcho identity <file>        — seed AI peer from SOUL.md or any .md/.txt\n")
         return
 
     from pathlib import Path
@@ -1077,7 +1077,7 @@ def cmd_identity(args) -> None:
 
 
 def cmd_migrate(args) -> None:
-    """Step-by-step migration guide: OpenClaw native memory → Hermes + Honcho."""
+    """Step-by-step migration guide: OpenClaw native memory → Lil Skrrt + Honcho."""
     from pathlib import Path
 
     # ── Detect OpenClaw native memory files ──────────────────────────────────
@@ -1105,7 +1105,7 @@ def cmd_migrate(args) -> None:
     cfg = _read_config()
     has_key = bool(_resolve_api_key(cfg))
 
-    print("\nHoncho migration: OpenClaw native memory → Hermes\n" + "─" * 50)
+    print("\nHoncho migration: OpenClaw native memory → Lil Skrrt\n" + "─" * 50)
     print()
     print("  OpenClaw's native memory stores context in local markdown files")
     print("  (USER.md, MEMORY.md, SOUL.md, ...) and injects them via QMD search.")
@@ -1122,21 +1122,21 @@ def cmd_migrate(args) -> None:
         print(f"  Honcho API key already configured: {masked}")
         print("  Skip to Step 2.")
     else:
-        print("  Honcho is a cloud memory service that gives Hermes persistent memory")
+        print("  Honcho is a cloud memory service that gives Lil Skrrt persistent memory")
         print("  across sessions. You need an API key to use it.")
         print()
         print("  1. Get your API key at https://app.honcho.dev")
-        print("  2. Run:  hermes honcho setup")
+        print("  2. Run:  lil-skrrt honcho setup")
         print("     Paste the key when prompted.")
         print()
-        answer = _prompt("  Run 'hermes honcho setup' now?", default="y")
+        answer = _prompt("  Run 'lil-skrrt honcho setup' now?", default="y")
         if answer.lower() in {"y", "yes"}:
             cmd_setup(args)
             cfg = _read_config()
             has_key = bool(cfg.get("apiKey", ""))
         else:
             print()
-            print("  Run 'hermes honcho setup' when ready, then re-run this walkthrough.")
+            print("  Run 'lil-skrrt honcho setup' when ready, then re-run this walkthrough.")
 
     # ── Step 2: Detected files ────────────────────────────────────────────────
     print()
@@ -1154,7 +1154,7 @@ def cmd_migrate(args) -> None:
     else:
         print("  No OpenClaw native memory files found in cwd or ~/.openclaw/.")
         print("  If your files are elsewhere, copy them here before continuing,")
-        print("  or seed them manually:  hermes honcho identity <path/to/file>")
+        print("  or seed them manually:  lil-skrrt honcho identity <path/to/file>")
 
     # ── Step 3: Migrate user memory ───────────────────────────────────────────
     print()
@@ -1169,11 +1169,11 @@ def cmd_migrate(args) -> None:
         print()
         print("  These are picked up automatically the first time you run 'hermes'")
         print("  with Honcho configured and no prior session history.")
-        print("  (Hermes calls migrate_memory_files() on first session init.)")
+        print("  (Lil Skrrt calls migrate_memory_files() on first session init.)")
         print()
         print("  If you want to migrate them now without starting a session:")
         for f in user_files:
-            print("    hermes honcho migrate  — this step handles it interactively")
+            print("    lil-skrrt honcho migrate  — this step handles it interactively")
         if has_key:
             answer = _prompt("  Upload user memory files to Honcho now?", default="y")
             if answer.lower() in {"y", "yes"}:
@@ -1204,7 +1204,7 @@ def cmd_migrate(args) -> None:
                 except Exception as e:
                     print(f"  Failed: {e}")
         else:
-            print("  Run 'hermes honcho setup' first, then re-run this step.")
+            print("  Run 'lil-skrrt honcho setup' first, then re-run this step.")
     else:
         print("  No user memory files detected. Nothing to migrate here.")
 
@@ -1216,7 +1216,7 @@ def cmd_migrate(args) -> None:
     print("  agent's character, capabilities, and behavioral rules. In OpenClaw")
     print("  these are injected via file search at prompt-build time.")
     print()
-    print("  In Hermes, they are seeded once into Honcho's AI peer through the")
+    print("  In Lil Skrrt, they are seeded once into Honcho's AI peer through the")
     print("  observation pipeline. Honcho builds a representation from them and")
     print("  from every subsequent assistant message (observe_me=True). Over time")
     print("  the representation reflects actual behavior, not just declaration.")
@@ -1250,12 +1250,12 @@ def cmd_migrate(args) -> None:
                 except Exception as e:
                     print(f"  Failed: {e}")
         else:
-            print("  Run 'hermes honcho setup' first, then seed manually:")
+            print("  Run 'lil-skrrt honcho setup' first, then seed manually:")
             for f in agent_files:
-                print(f"    hermes honcho identity {f}")
+                print(f"    lil-skrrt honcho identity {f}")
     else:
         print("  No agent identity files detected.")
-        print("  To seed manually:  hermes honcho identity <path/to/SOUL.md>")
+        print("  To seed manually:  lil-skrrt honcho identity <path/to/SOUL.md>")
 
     # ── Step 5: What changes ──────────────────────────────────────────────────
     print()
@@ -1263,17 +1263,17 @@ def cmd_migrate(args) -> None:
     print()
     print("  Storage")
     print("    OpenClaw: markdown files on disk, searched via QMD at prompt-build time.")
-    print("    Hermes:   cloud-backed Honcho peers. Files can stay on disk as source")
+    print("    Lil Skrrt:   cloud-backed Honcho peers. Files can stay on disk as source")
     print("              of truth; Honcho holds the live representation.")
     print()
     print("  Context injection")
     print("    OpenClaw: file excerpts injected synchronously before each LLM call.")
-    print("    Hermes:   Honcho context fetched async at turn end, injected next turn.")
+    print("    Lil Skrrt:   Honcho context fetched async at turn end, injected next turn.")
     print("              First turn has no Honcho context; subsequent turns are loaded.")
     print()
     print("  Memory growth")
     print("    OpenClaw: you edit files manually to update memory.")
-    print("    Hermes:   Honcho observes every message and updates representations")
+    print("    Lil Skrrt:   Honcho observes every message and updates representations")
     print("              automatically. Files become the seed, not the live store.")
     print()
     print("  Honcho tools (available to the agent during conversation)")
@@ -1285,23 +1285,23 @@ def cmd_migrate(args) -> None:
     print()
     print("  Session naming")
     print("    OpenClaw: no persistent session concept — files are global.")
-    print("    Hermes:   per-session by default — each run gets its own session")
-    print("              Map a custom name:  hermes honcho map <session-name>")
+    print("    Lil Skrrt:   per-session by default — each run gets its own session")
+    print("              Map a custom name:  lil-skrrt honcho map <session-name>")
 
     # ── Step 6: Next steps ────────────────────────────────────────────────────
     print()
     print("Step 6  Next steps")
     print()
     if not has_key:
-        print("  1. hermes honcho setup              — configure API key (required)")
-        print("  2. hermes honcho migrate            — re-run this walkthrough")
+        print("  1. lil-skrrt honcho setup              — configure API key (required)")
+        print("  2. lil-skrrt honcho migrate            — re-run this walkthrough")
     else:
-        print("  1. hermes honcho status             — verify Honcho connection")
-        print("  2. hermes                           — start a session")
+        print("  1. lil-skrrt honcho status             — verify Honcho connection")
+        print("  2. lil-skrrt                           — start a session")
         print("     (user memory files auto-uploaded on first turn if not done above)")
-        print("  3. hermes honcho identity --show    — verify AI peer representation")
-        print("  4. hermes honcho tokens             — tune context and dialectic budgets")
-        print("  5. hermes honcho mode               — view or change memory mode")
+        print("  3. lil-skrrt honcho identity --show    — verify AI peer representation")
+        print("  4. lil-skrrt honcho tokens             — tune context and dialectic budgets")
+        print("  5. lil-skrrt honcho mode               — view or change memory mode")
     print()
 
 
@@ -1314,7 +1314,7 @@ def honcho_command(args) -> None:
     if sub == "setup":
         # Redirect to memory setup — honcho setup goes through the unified path
         print("\n  Honcho is configured via the memory provider system.")
-        print("  Running 'hermes memory setup'...\n")
+        print("  Running 'lil-skrrt memory setup'...\n")
         from hermes_cli.memory_setup import cmd_setup_provider
         cmd_setup_provider("honcho")
         return
@@ -1352,10 +1352,10 @@ def honcho_command(args) -> None:
 
 
 def register_cli(subparser) -> None:
-    """Build the ``hermes honcho`` argparse subcommand tree.
+    """Build the ``lil-skrrt honcho`` argparse subcommand tree.
 
     Called by the plugin CLI registration system during argparse setup.
-    The *subparser* is the parser for ``hermes honcho``.
+    The *subparser* is the parser for ``lil-skrrt honcho``.
     """
 
     subparser.add_argument(
@@ -1366,7 +1366,7 @@ def register_cli(subparser) -> None:
 
     subs.add_parser(
         "setup",
-        help="Initial Honcho setup (redirects to hermes memory setup)",
+        help="Initial Honcho setup (redirects to lil-skrrt memory setup)",
     )
 
     status_parser = subs.add_parser(
@@ -1442,7 +1442,7 @@ def register_cli(subparser) -> None:
 
     subs.add_parser(
         "migrate",
-        help="Step-by-step migration guide from openclaw-honcho to Hermes Honcho",
+        help="Step-by-step migration guide from openclaw-honcho to Lil Skrrt Honcho",
     )
     subs.add_parser("enable", help="Enable Honcho for the active profile")
     subs.add_parser("disable", help="Disable Honcho for the active profile")

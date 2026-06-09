@@ -75,8 +75,14 @@ def _ensure_discord_mock():
 
     # Whether we just installed the mock OR the mock was already installed
     # by another test's _ensure_discord_mock, force the AllowedMentions
-    # stand-in onto it — _build_allowed_mentions() reads this attribute.
+    # stand-in onto both the live sys.modules entry and any already-imported
+    # adapter module reference. The adapter module can be imported before this
+    # helper runs in a later test file, in which case its module-global
+    # ``discord`` binding still points at the earlier stub object.
     sys.modules["discord"].AllowedMentions = _FakeAllowedMentions
+    adapter_mod = sys.modules.get("plugins.platforms.discord.adapter")
+    if adapter_mod is not None and hasattr(adapter_mod, "discord"):
+        adapter_mod.discord.AllowedMentions = _FakeAllowedMentions
 
 
 _ensure_discord_mock()

@@ -1,5 +1,5 @@
 """
-Hermes CLI - Unified command-line interface for Hermes Agent.
+Lil Skrrt CLI - Unified command-line interface for Lil Skrrt Agent.
 
 Provides subcommands for:
 - hermes chat          - Interactive chat (same as ./hermes)

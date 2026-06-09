@@ -4,7 +4,7 @@ This wrapper lets users launch the agent with:
 - ``a lil skrrt``
 - ``lil-skrrt``
 
-Both commands hand off to the real Hermes CLI after stripping the launcher
+Both commands hand off to the real Lil Skrrt CLI after stripping the launcher
 phrase from argv.
 """
 

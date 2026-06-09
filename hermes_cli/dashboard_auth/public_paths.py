@@ -1,4 +1,4 @@
-"""Public API paths for the Hermes dashboard auth gate.
+"""Public API paths for the Lil Skrrt dashboard auth gate.
 
 These endpoints are intentionally read-only and safe to expose without the
 session token so the dashboard can probe liveness and render basic catalog

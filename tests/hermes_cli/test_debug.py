@@ -1,4 +1,4 @@
-"""Tests for ``hermes debug`` CLI command and debug utilities."""
+"""Tests for ``lil-skrrt debug`` CLI command and debug utilities."""
 
 import os
 import sys
@@ -824,7 +824,7 @@ class TestRunDebug:
         run_debug(args)
 
         out = capsys.readouterr().out
-        assert "hermes debug" in out
+        assert "lil-skrrt debug" in out
         assert "share" in out
         assert "delete" in out
 
@@ -904,7 +904,7 @@ class TestScheduleAutoDelete:
 
     The new implementation is stateless: it records pending deletions to
     ``~/.hermes/pastes/pending.json`` and lets ``_sweep_expired_pastes``
-    handle the DELETE requests synchronously on the next ``hermes debug``
+    handle the DELETE requests synchronously on the next ``lil-skrrt debug``
     invocation.
     """
 
@@ -1162,7 +1162,7 @@ class TestRunDebugSweepsOnInvocation:
 
         # Default subcommand still printed help
         out = capsys.readouterr().out
-        assert "Usage: hermes debug" in out
+        assert "Usage: lil-skrrt debug" in out
 
 
 class TestRunDebugDelete:

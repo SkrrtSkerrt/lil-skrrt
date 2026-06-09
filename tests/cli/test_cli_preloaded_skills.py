@@ -77,7 +77,7 @@ def test_main_applies_preloaded_skills_to_system_prompt(monkeypatch):
         created["cli"] = _DummyCLI(**kwargs)
         return created["cli"]
 
-    monkeypatch.setattr(cli_mod, "HermesCLI", fake_cli)
+    monkeypatch.setattr(cli_mod, "LilSkrrtCLI", fake_cli)
     monkeypatch.setattr(
         cli_mod,
         "build_preloaded_skills_prompt",

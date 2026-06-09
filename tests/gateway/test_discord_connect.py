@@ -31,6 +31,9 @@ def _ensure_discord_mock():
     """
     if "discord" in sys.modules and hasattr(sys.modules["discord"], "__file__"):
         sys.modules["discord"].AllowedMentions = _FakeAllowedMentions
+        adapter_mod = sys.modules.get("plugins.platforms.discord.adapter")
+        if adapter_mod is not None and hasattr(adapter_mod, "discord"):
+            adapter_mod.discord.AllowedMentions = _FakeAllowedMentions
         return
 
     if sys.modules.get("discord") is None:

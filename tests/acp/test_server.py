@@ -152,11 +152,11 @@ class TestInitialize:
             {
                 "args": ["--setup"],
                 "description": (
-                    "Open Hermes' interactive model/provider setup in a terminal. "
-                    "Use this when Hermes has not been configured on this machine yet."
+                    "Open Lil Skrrt's interactive model/provider setup in a terminal. "
+                    "Use this when Lil Skrrt has not been configured on this machine yet."
                 ),
                 "id": TERMINAL_SETUP_AUTH_METHOD_ID,
-                "name": "Configure Hermes provider",
+                "name": "Configure Lil Skrrt provider",
                 "type": "terminal",
             }
         ]

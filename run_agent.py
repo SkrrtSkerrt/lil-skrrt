@@ -233,7 +233,7 @@ def _routermint_headers() -> dict:
     from hermes_cli import __version__ as _HERMES_VERSION
 
     return {
-        "User-Agent": f"HermesAgent/{_HERMES_VERSION}",
+        "User-Agent": f"Lil SkrrtAgent/{_HERMES_VERSION}",
     }
 
 
@@ -566,7 +566,7 @@ class AIAgent:
 
     def _ensure_lmstudio_runtime_loaded(self, config_context_length: Optional[int] = None) -> None:
         """
-        Preload the LM Studio model with at least Hermes' minimum context.
+        Preload the LM Studio model with at least Lil Skrrt' minimum context.
         """
         if (self.provider or "").strip().lower() != "lmstudio":
             return
