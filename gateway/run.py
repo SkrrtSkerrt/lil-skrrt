@@ -10162,8 +10162,8 @@ class GatewayRunner:
 
         raw_args = event.get_command_args().strip()
 
-        # Parse --provider and --global flags
-        model_input, explicit_provider, persist_global = parse_model_flags(raw_args)
+        # Parse --provider, --global, and --refresh flags
+        model_input, explicit_provider, persist_global, _force_refresh = parse_model_flags(raw_args)
 
         # Read current model/provider from config
         current_model = ""

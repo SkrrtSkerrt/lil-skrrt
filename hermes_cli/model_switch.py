@@ -294,31 +294,38 @@ class CustomAutoResult:
 # Flag parsing
 # ---------------------------------------------------------------------------
 
-def parse_model_flags(raw_args: str) -> tuple[str, str, bool]:
-    """Parse --provider and --global flags from /model command args.
+def parse_model_flags(raw_args: str) -> tuple[str, str, bool, bool]:
+    """Parse /model command flags.
 
-    Returns (model_input, explicit_provider, is_global).
+    Returns (model_input, explicit_provider, is_global, force_refresh).
 
     Examples::
 
-        "sonnet"                         -> ("sonnet", "", False)
-        "sonnet --global"                -> ("sonnet", "", True)
-        "sonnet --provider anthropic"    -> ("sonnet", "anthropic", False)
-        "--provider my-ollama"           -> ("", "my-ollama", False)
-        "sonnet --provider anthropic --global" -> ("sonnet", "anthropic", True)
+        "sonnet"                              -> ("sonnet", "", False, False)
+        "sonnet --global"                     -> ("sonnet", "", True, False)
+        "sonnet --provider anthropic"         -> ("sonnet", "anthropic", False, False)
+        "--provider my-ollama"                -> ("", "my-ollama", False, False)
+        "sonnet --provider anthropic --global"-> ("sonnet", "anthropic", True, False)
+        "--refresh"                           -> ("", "", False, True)
+        "sonnet --refresh"                    -> ("sonnet", "", False, True)
     """
     is_global = False
+    force_refresh = False
     explicit_provider = ""
 
     # Normalize Unicode dashes (Telegram/iOS auto-converts -- to em/en dash)
     # A single Unicode dash before a flag keyword becomes "--"
     import re as _re
-    raw_args = _re.sub(r'[\u2012\u2013\u2014\u2015](provider|global)', r'--\1', raw_args)
+    raw_args = _re.sub(r'[\u2012\u2013\u2014\u2015](provider|global|refresh)', r'--\1', raw_args)
 
-    # Extract --global
-    if "--global" in raw_args:
-        is_global = True
-        raw_args = raw_args.replace("--global", "").strip()
+    # Extract flags that do not take values first.
+    for flag in ("--global", "--refresh"):
+        if flag in raw_args:
+            if flag == "--global":
+                is_global = True
+            else:
+                force_refresh = True
+            raw_args = raw_args.replace(flag, "").strip()
 
     # Extract --provider <name>
     parts = raw_args.split()
@@ -333,7 +340,7 @@ def parse_model_flags(raw_args: str) -> tuple[str, str, bool]:
             i += 1
 
     model_input = " ".join(filtered).strip()
-    return (model_input, explicit_provider, is_global)
+    return (model_input, explicit_provider, is_global, force_refresh)
 
 
 # ---------------------------------------------------------------------------
