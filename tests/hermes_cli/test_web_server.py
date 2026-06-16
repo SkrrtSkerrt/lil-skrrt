@@ -2763,6 +2763,11 @@ class TestPtyWebSocket:
         monkeypatch.setattr(ws, "_DASHBOARD_EMBEDDED_CHAT_ENABLED", True)
         self.token = ws._SESSION_TOKEN
         self.client = TestClient(ws.app)
+        ws._event_channels.clear()
+        try:
+            yield
+        finally:
+            ws._event_channels.clear()
 
     def _url(self, token: str | None = None, **params: str) -> str:
         tok = token if token is not None else self.token
@@ -3014,17 +3019,18 @@ class TestPtyWebSocket:
                     "subscriber did not register on channel within 5s"
                 )
 
+            import queue, threading
+
+            recv_q: queue.Queue = queue.Queue()
+
             with self.client.websocket_connect(pub_path) as pub:
                 pub.send_text('{"type":"tool.start","payload":{"tool_id":"t1"}}')
-                # Yield control so the server-side broadcast handler can
-                # process the frame.  TestClient runs the ASGI app in a
-                # background thread; a small sleep gives that thread time
-                # to call _broadcast_event before we start blocking on
-                # receive_text().  Without this, under heavy CI load the
-                # receive can race the broadcast and hang until
-                # pytest-timeout kills us.
-                import queue, threading
-                recv_q: queue.Queue = queue.Queue()
+                # Give TestClient's background ASGI thread a tiny slice of time
+                # to process the publish and fan out the frame before we start
+                # blocking on the subscriber receive side. Without this yield,
+                # CI can occasionally race the broadcast and leave the test
+                # waiting on an empty queue even though the publish path ran.
+                time.sleep(0.05)
 
                 def _recv():
                     try:
@@ -3034,16 +3040,17 @@ class TestPtyWebSocket:
 
                 t = threading.Thread(target=_recv, daemon=True)
                 t.start()
-                try:
-                    received = recv_q.get(timeout=10.0)
-                except queue.Empty:
-                    raise AssertionError(
-                        "broadcast not received within 10s — server likely "
-                        "dropped the frame silently (see _broadcast_event "
-                        "except Exception: pass)"
-                    )
-                if isinstance(received, Exception):
-                    raise received
+
+            try:
+                received = recv_q.get(timeout=10.0)
+            except queue.Empty:
+                raise AssertionError(
+                    "broadcast not received within 10s — server likely "
+                    "dropped the frame silently (see _broadcast_event "
+                    "except Exception: pass)"
+                )
+            if isinstance(received, Exception):
+                raise received
 
         assert "tool.start" in received
         assert '"tool_id":"t1"' in received
