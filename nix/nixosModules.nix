@@ -317,7 +317,7 @@
         '';
         example = literalExpression ''
           {
-            "SOUL.md" = "You are a helpful AI assistant.";
+            "SOUL.md" = "You are a cold, sharp tactical assistant.";
             "USER.md" = ./documents/USER.md;
           }
         '';

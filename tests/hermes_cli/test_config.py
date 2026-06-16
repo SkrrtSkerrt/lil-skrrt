@@ -22,6 +22,7 @@ from hermes_cli.config import (
     sanitize_env_file,
     _sanitize_env_lines,
 )
+from hermes_cli.default_soul import DEFAULT_SOUL_MD
 
 
 @pytest.fixture(autouse=True)
@@ -68,7 +69,7 @@ class TestEnsureHermesHome:
             ensure_hermes_home()
             soul_path = tmp_path / "SOUL.md"
             assert soul_path.exists()
-            assert soul_path.read_text(encoding="utf-8").strip() != ""
+            assert soul_path.read_text(encoding="utf-8") == DEFAULT_SOUL_MD
 
     def test_does_not_overwrite_existing_soul_md(self, tmp_path):
         with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):

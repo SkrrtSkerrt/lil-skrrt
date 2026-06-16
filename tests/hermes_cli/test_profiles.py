@@ -14,6 +14,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
+from hermes_cli.default_soul import DEFAULT_SOUL_MD
 from hermes_cli.profiles import (
     normalize_profile_name,
     validate_profile_name,
@@ -307,7 +308,7 @@ class TestCreateProfile:
         assert not (profile_dir / "config.yaml").exists()
         assert not (profile_dir / ".env").exists()
         # SOUL.md is always seeded with the default even when clone source lacks it
-        assert (profile_dir / "SOUL.md").exists()
+        assert (profile_dir / "SOUL.md").read_text(encoding="utf-8") == DEFAULT_SOUL_MD
 
 
 # ===================================================================
