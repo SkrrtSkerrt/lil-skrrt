@@ -7,6 +7,8 @@ import sys
 
 import pytest
 
+from hermes_cli.default_soul import DEFAULT_SOUL_MD
+
 from agent.prompt_builder import (
     _scan_context_content,
     _truncate_content,
@@ -491,15 +493,14 @@ class TestBuildNousSubscriptionPrompt:
 
 
 class TestBuildContextFilesPrompt:
-    def test_empty_dir_loads_seeded_global_soul(self, tmp_path):
-        from unittest.mock import patch
-
+    def test_empty_dir_loads_seeded_global_soul(self, tmp_path, monkeypatch):
         fake_home = tmp_path / "fake_home"
         fake_home.mkdir()
-        with patch("pathlib.Path.home", return_value=fake_home):
-            result = build_context_files_prompt(cwd=str(tmp_path))
+        monkeypatch.setenv("HERMES_HOME", str(fake_home))
+
+        result = build_context_files_prompt(cwd=str(tmp_path))
         assert "Project Context" in result
-        assert "Lil Skrrt Agent" in result
+        assert DEFAULT_SOUL_MD.splitlines()[0] in result
 
     def test_loads_agents_md(self, tmp_path):
         (tmp_path / "AGENTS.md").write_text("Use Ruff for linting.")
