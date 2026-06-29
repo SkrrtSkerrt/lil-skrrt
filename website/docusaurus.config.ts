@@ -7,7 +7,7 @@ const config: Config = {
   tagline: 'The self-improving AI agent',
   favicon: 'img/favicon.ico',
 
-  url: 'https://lil-skrrt.github.com/SkrrtSkerrt/lil-skrrt',
+  url: 'https://skrrtskerrt.com',
   baseUrl: '/docs/',
 
   organizationName: 'SkrrtSkerrt',
@@ -118,7 +118,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://lil-skrrt.github.com/SkrrtSkerrt/lil-skrrt',
+          to: '/',
           label: 'Home',
           position: 'right',
         },
