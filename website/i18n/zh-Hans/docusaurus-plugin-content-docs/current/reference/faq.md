@@ -446,7 +446,7 @@ lsof -i :8080
 lil-skrrt config show
 ```
 
-#### WSL：网关持续断开连接或 `lil-skrrt gateway start` 失败
+#### WSL：网关持续断开连接或 `lil-skrrt gateway start` 失败 {#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails}
 
 **原因：** WSL 的 systemd 支持不稳定。许多 WSL2 安装未启用 systemd，即使启用，服务也可能在 WSL 重启或 Windows 空闲关机后无法存活。
 

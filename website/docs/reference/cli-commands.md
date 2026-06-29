@@ -1099,7 +1099,7 @@ Subcommands:
 | `stats` | Show session-store statistics. |
 | `rename <session-id> <title>` | Set or change a session title. |
 
-## `lil-skrrt insights`
+## `lil-skrrt insights` {#hermes-insights}
 
 ```bash
 lil-skrrt insights [--days N] [--source platform]

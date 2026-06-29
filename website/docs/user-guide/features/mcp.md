@@ -626,7 +626,7 @@ mcp_servers:
       enabled: false
 ```
 
-## Running Lil Skrrt as an MCP server
+## Running Lil Skrrt as an MCP server {#running-hermes-as-an-mcp-server}
 
 In addition to connecting **to** MCP servers, Lil Skrrt can also **be** an MCP server. This lets other MCP-capable agents (Claude Code, Cursor, Codex, or any MCP client) use Lil Skrrt's messaging capabilities — list conversations, read message history, and send messages across all your connected platforms.
 

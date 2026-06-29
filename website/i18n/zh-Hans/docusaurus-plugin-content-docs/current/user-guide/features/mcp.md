@@ -484,7 +484,7 @@ mcp_servers:
       enabled: false
 ```
 
-## 将 Lil Skrrt 作为 MCP 服务器运行
+## 运行 Lil Skrrt 作为 MCP 服务器 {#running-hermes-as-an-mcp-server}
 
 除了连接**到** MCP 服务器，Lil Skrrt 也可以**作为** MCP 服务器运行。这让其他支持 MCP 的 agent（Claude Code、Cursor、Codex 或任何 MCP 客户端）能够使用 Lil Skrrt 的消息能力——列出会话、读取消息历史，以及跨所有已连接平台发送消息。
 

@@ -446,7 +446,7 @@ lsof -i :8080
 lil-skrrt config show
 ```
 
-#### WSL: Gateway keeps disconnecting or `lil-skrrt gateway start` fails
+#### WSL: Gateway keeps disconnecting or `lil-skrrt gateway start` fails {#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails}
 
 **Cause:** WSL's systemd support is unreliable. Many WSL2 installations don't have systemd enabled, and even when enabled, services may not survive WSL restarts or Windows idle shutdowns.
 

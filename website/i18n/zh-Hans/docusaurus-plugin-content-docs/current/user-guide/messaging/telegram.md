@@ -335,7 +335,7 @@ brew install ffmpeg
 
 在 `config.yaml` 的 `tts.provider` 键下配置 TTS 提供商。
 
-## 通过本地 Bot API 服务器处理大文件（>20MB）
+## 通过本地 Bot API 服务器处理大文件（>20MB） {#large-files-20mb--via-local-bot-api-server}
 
 Telegram 的**公共** Bot API 将 `getFile` 下载限制为 **20 MB**，因此任何超过该大小的语音备忘录、音频文件、视频或文档都会被 Lil Skrrt 静默拒绝并回复"文件过大"。官方解决方案是运行本地 [telegram-bot-api](https://github.com/tdlib/telegram-bot-api) 守护进程——与 Telegram 使用的相同服务器软件，但运行在你的网络上。本地服务器将文件上限提升至 **2 GB**，Lil Skrrt 在检测到自定义 `base_url` 配置时会自动解除自身内部限制。
 

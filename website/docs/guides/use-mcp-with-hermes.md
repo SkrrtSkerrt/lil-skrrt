@@ -109,7 +109,7 @@ mcp_servers:
 
 This is usually the best default for sensitive systems.
 
-## WSL2: bridge Lil Skrrt in WSL to Windows Chrome
+## WSL2: bridge Lil Skrrt in WSL to Windows Chrome {#wsl2-bridge-hermes-in-wsl-to-windows-chrome}
 
 This is the practical setup when:
 

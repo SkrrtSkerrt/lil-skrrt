@@ -68,7 +68,7 @@ Because everything routes through one OAuth-authenticated Portal session, you do
 
 [Native Windows](/user-guide/windows-native) is still early beta, and per-tool API key setup is its rough edge — installing a Firecrawl account, a FAL account, a Browser Use account, an OpenAI key from Windows is the highest-friction part of getting a useful agent. A Portal subscription smooths that out: one OAuth covers the model and every gateway tool, so Windows users get the same experience as macOS/Linux without manually configuring four backends.
 
-## A note on Lil Skrrt 4
+## A note on Lil Skrrt 4 {#a-note-on-hermes-4}
 
 SkrrtSkerrt's own **Lil Skrrt 4** family (Lil Skrrt 4-70B, Lil Skrrt 4-405B) is available through the Portal at heavily discounted rates. These are **frontier hybrid-reasoning chat models** — strong at math, science, instruction following, schema adherence, roleplay, and long-form writing.
 

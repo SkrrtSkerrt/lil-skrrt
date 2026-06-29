@@ -869,7 +869,7 @@ Each auxiliary task has a configurable `timeout` (in seconds). Defaults: vision 
 Context compression has its own `compression:` block for thresholds and an `auxiliary.compression:` block for model/provider settings — see [Context Compression](#context-compression) above. The fallback model uses a `fallback_model:` block — see [Fallback Model](/integrations/providers#fallback-model). All three follow the same provider/model/base_url pattern.
 :::
 
-### OpenRouter routing & Pareto Code for auxiliary tasks
+### OpenRouter routing & Pareto Code for auxiliary tasks {#openrouter-routing--pareto-code-for-auxiliary-tasks}
 
 When an auxiliary task resolves to OpenRouter (either explicitly or via `provider: "main"` while your main agent is on OpenRouter), the main agent's `provider_routing` and `openrouter.min_coding_score` settings **do not propagate** — by design, each auxiliary task is independent. To set OpenRouter provider preferences or use the [Pareto Code router](/integrations/providers#openrouter-pareto-code-router) for a specific aux task, set them per-task via `extra_body`:
 

@@ -344,7 +344,7 @@ Then launch the Lil Skrrt CLI and run `/browser connect`.
 
 When connected via CDP, all browser tools (`browser_navigate`, `browser_click`, etc.) operate on your live browser instance instead of spinning up a cloud session.
 
-### WSL2 + Windows Chrome: prefer MCP over `/browser connect`
+### WSL2 + Windows Chrome: prefer MCP over `/browser connect` {#wsl2--windows-chrome-prefer-mcp-over-browser-connect}
 
 If Lil Skrrt runs inside WSL2 but the Chrome window you want to control runs on the Windows host, `/browser connect` is often not the best path.
 

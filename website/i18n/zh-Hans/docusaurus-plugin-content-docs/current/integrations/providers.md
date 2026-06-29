@@ -1453,7 +1453,7 @@ openrouter:
 - 参见 OpenRouter 的 [Pareto Router 文档](https://openrouter.ai/docs/guides/routing/routers/pareto-router) 了解完整路由器行为。
 - 要将 Pareto Code 路由器用于特定**辅助任务**（压缩、视觉等）而非主智能体，在该任务下设置 `extra_body.plugins`——参见[辅助模型 → OpenRouter 路由与辅助任务的 Pareto Code](/user-guide/configuration#openrouter-routing--pareto-code-for-auxiliary-tasks)。
 
-## 故障转移提供商
+## 故障转移提供商 {#fallback-model}
 
 配置一个备用提供商链，当主模型失败时（速率限制、服务器错误、认证失败）Lil Skrrt 按顺序尝试。规范格式是顶级 `fallback_providers:` 列表：
 

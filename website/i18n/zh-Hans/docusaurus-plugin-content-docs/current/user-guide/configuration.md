@@ -858,7 +858,7 @@ auxiliary:
 上下文压缩有自己的 `compression:` 块用于阈值，以及 `auxiliary.compression:` 块用于模型/provider 设置 —— 参阅上方的[上下文压缩](#context-compression)。回退模型使用 `fallback_model:` 块 —— 参阅[回退模型](/integrations/providers#fallback-model)。三者都遵循相同的 provider/model/base_url 模式。
 :::
 
-### OpenRouter 路由和辅助任务的 Pareto Code
+### OpenRouter 路由和辅助任务的 Pareto Code {#openrouter-routing--pareto-code-for-auxiliary-tasks}
 
 当辅助任务解析到 OpenRouter（显式或通过 `provider: "main"` 而您的主 agent 在 OpenRouter 上）时，主 agent 的 `provider_routing` 和 `openrouter.min_coding_score` 设置**不会传播** —— 按设计，每个辅助任务是独立的。要为特定辅助任务设置 OpenRouter provider 偏好或使用 [Pareto Code 路由器](/integrations/providers#openrouter-pareto-code-router)，请通过 `extra_body` 按任务设置：
 

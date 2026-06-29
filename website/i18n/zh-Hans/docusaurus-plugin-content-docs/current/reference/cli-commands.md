@@ -1075,7 +1075,7 @@ lil-skrrt sessions <subcommand>
 | `stats` | 显示会话存储统计信息。 |
 | `rename <session-id> <title>` | 设置或更改会话标题。 |
 
-## `lil-skrrt insights`
+## `lil-skrrt insights` {#hermes-insights}
 
 ```bash
 lil-skrrt insights [--days N] [--source platform]

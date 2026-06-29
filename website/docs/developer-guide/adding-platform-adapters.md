@@ -325,7 +325,7 @@ Why this hook is necessary: built-in platforms (Telegram, Discord, Slack, etc.) 
 
 The function receives the same `pconfig` and `chat_id` that the live adapter would, plus optional `thread_id`, `media_files`, and `force_document` keyword arguments. Returning `{"success": True, "message_id": ...}` is treated as a successful delivery; returning `{"error": "..."}` surfaces the message in cron's `delivery_errors`. Exceptions raised inside the function are caught by the dispatcher and reported as `Plugin standalone send failed: <reason>`. Reference implementations live in `plugins/platforms/{irc,teams,google_chat}/adapter.py`.
 
-## Surfacing Env Vars in `lil-skrrt config`
+## Surfacing Env Vars in `lil-skrrt config` {#surfacing-env-vars-in-hermes-config}
 
 `hermes_cli/config.py` scans `plugins/platforms/*/plugin.yaml` at import time and auto-populates `OPTIONAL_ENV_VARS` from `requires_env` and (optional) `optional_env` blocks. Use the rich-dict form to contribute proper descriptions, prompts, password flags, and URLs — the CLI setup UI picks them up for free.
 
@@ -458,7 +458,7 @@ See `plugins/platforms/irc/` in the repo for a complete working example — a fu
 
 ---
 
-## Step-by-Step Checklist (Built-in Path)
+## Step-by-Step Checklist (Built-in Path) {#step-by-step-checklist}
 
 :::note
 This checklist is for adding a platform directly to the Lil Skrrt core codebase — typically done by core contributors for officially supported platforms. Community/third-party platforms should use the [Plugin Path](#plugin-path-recommended) above.

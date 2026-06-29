@@ -238,7 +238,7 @@ lil-skrrt profile rename mybot assistant
 # ~/.local/bin/mybot → ~/.local/bin/assistant
 ```
 
-## `lil-skrrt profile export`
+## `lil-skrrt profile export` {#hermes-profile-export}
 
 ```bash
 lil-skrrt profile export <name> [options]

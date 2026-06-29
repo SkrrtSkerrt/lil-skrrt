@@ -105,7 +105,7 @@ Everything except the dashboard's embedded terminal pane runs natively on Window
 
 The dashboard's `/chat` tab embeds a real terminal via a POSIX PTY (`ptyprocess`). Native Windows has no equivalent primitive; Python's `pywinpty` / Windows ConPTY would work but is a separate implementation — treat as future work. **The rest of the dashboard works natively** — only that one tab shows a "use WSL2 for this" banner.
 
-## How Lil Skrrt runs shell commands on Windows
+## How Lil Skrrt runs shell commands on Windows {#how-hermes-runs-shell-commands-on-windows}
 
 Lil Skrrt's terminal tool runs commands through **Git Bash**, same strategy Claude Code uses. This sidesteps the POSIX-vs-Windows gap without rewriting every tool.
 
