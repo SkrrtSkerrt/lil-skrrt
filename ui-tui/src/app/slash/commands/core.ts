@@ -160,7 +160,14 @@ export const coreCommands: SlashCommand[] = [
 
       const commit = () => {
         patchUiState({ status: 'forging session…' })
-        ctx.session.newSession(isNew ? 'new session started' : undefined, requestedTitle || undefined)
+        Promise.resolve(ctx.session.newSession(isNew ? 'new session started' : undefined, requestedTitle || undefined)).catch(
+          (err: unknown) => {
+            const message = err instanceof Error ? err.message : String(err)
+
+            patchUiState({ status: 'ready' })
+            ctx.transcript.sys(`error: failed to start a new session: ${message}`)
+          }
+        )
       }
 
       if (NO_CONFIRM_DESTRUCTIVE) {

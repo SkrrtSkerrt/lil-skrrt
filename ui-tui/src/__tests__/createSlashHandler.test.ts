@@ -234,6 +234,19 @@ describe('createSlashHandler', () => {
     expect(ctx.gateway.rpc).not.toHaveBeenCalled()
   })
 
+  it('reports /clear session startup failures instead of leaking a rejected promise', async () => {
+    const ctx = buildCtx({
+      session: { newSession: vi.fn(() => Promise.reject(new Error('gateway closed'))) }
+    })
+
+    createSlashHandler(ctx)('/clear')
+    getOverlayState().confirm?.onConfirm()
+
+    await vi.waitFor(() => {
+      expect(ctx.transcript.sys).toHaveBeenCalledWith('error: failed to start a new session: gateway closed')
+    })
+  })
+
   it('keeps visible scrollback when branching a TUI session', async () => {
     patchUiState({ sid: 'sid-parent' })
     const rpc = vi.fn(() => Promise.resolve({ session_id: 'sid-branch', title: 'branch title' }))

@@ -286,8 +286,8 @@ export interface SlashHandlerContext {
     die: () => void
     dieWithCode: (code: number) => void
     guardBusySessionSwitch: (what?: string) => boolean
-    newLiveSession: (msg?: string, title?: string) => void
-    newSession: (msg?: string, title?: string) => void
+    newLiveSession: (msg?: string, title?: string) => MaybePromise<unknown>
+    newSession: (msg?: string, title?: string) => MaybePromise<unknown>
     resetVisibleHistory: (info?: null | SessionInfo) => void
     resumeById: (id: string) => void
     setSessionStartedAt: StateSetter<number>
