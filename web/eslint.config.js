@@ -19,5 +19,16 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // React Hooks 7 enables React Compiler diagnostics by default. The
+      // existing dashboard uses effect-driven fetch/load patterns throughout;
+      // keep lint focused on actionable hook dependency/syntax issues until
+      // those patterns are intentionally refactored.
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/static-components': 'off',
+      // Route/context modules intentionally export helpers next to components.
+      'react-refresh/only-export-components': 'warn',
+    },
   },
 ])
