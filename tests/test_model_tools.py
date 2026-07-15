@@ -40,6 +40,43 @@ class TestHandleFunctionCall:
         assert len(parsed["error"]) > 0
         assert "error" in parsed["error"].lower() or "failed" in parsed["error"].lower()
 
+    def test_enabled_tools_blocks_unlisted_tool_before_dispatch(self, monkeypatch):
+        def fake_dispatch(*args, **kwargs):
+            raise AssertionError("dispatch should not run for disabled tools")
+
+        monkeypatch.setattr("model_tools.registry.dispatch", fake_dispatch)
+
+        result = json.loads(
+            handle_function_call(
+                "terminal",
+                {"command": "printf bypass"},
+                enabled_tools=["read_file", "search_files"],
+            )
+        )
+
+        assert result == {"error": "Tool not enabled for this session: terminal"}
+
+    def test_enabled_tools_allows_listed_tool_and_passes_registry_allowlist(self, monkeypatch):
+        calls = []
+
+        def fake_dispatch(name, args, **kwargs):
+            calls.append((name, args, kwargs))
+            return json.dumps({"ok": True})
+
+        monkeypatch.setattr("model_tools.registry.dispatch", fake_dispatch)
+
+        result = json.loads(
+            handle_function_call(
+                "read_file",
+                {"path": "test.txt"},
+                enabled_tools=["read_file", "search_files"],
+            )
+        )
+
+        assert result == {"ok": True}
+        assert calls[0][0] == "read_file"
+        assert calls[0][2]["allowed_tools"] == ["read_file", "search_files"]
+
     def test_tool_hooks_receive_session_and_tool_call_ids(self):
         with (
             patch("model_tools.registry.dispatch", return_value='{"ok":true}'),

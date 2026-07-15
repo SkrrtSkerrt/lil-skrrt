@@ -394,6 +394,10 @@ class ToolRegistry:
         * All exceptions are caught and returned as ``{"error": "..."}``
           for consistent error format.
         """
+        allowed_tools = kwargs.pop("allowed_tools", None)
+        if allowed_tools is not None and name not in allowed_tools:
+            return json.dumps({"error": f"Tool not enabled for this session: {name}"})
+
         entry = self.get_entry(name)
         if not entry:
             return json.dumps({"error": f"Unknown tool: {name}"})

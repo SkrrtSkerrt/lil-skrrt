@@ -22,6 +22,7 @@ Usage::
 import json
 import os
 import re
+import shlex
 import shutil
 import stat
 import subprocess
@@ -33,6 +34,7 @@ from typing import List, Optional
 from agent.skill_utils import is_excluded_skill_path
 
 _PROFILE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
+_ALIAS_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 
 # Directories bootstrapped inside every new profile
 _PROFILE_DIRS = [
@@ -299,6 +301,7 @@ def validate_profile_name(name: str) -> None:
 def get_profile_dir(name: str) -> Path:
     """Resolve a profile name to its HERMES_HOME directory."""
     canon = normalize_profile_name(name)
+    validate_profile_name(canon)
     if canon == "default":
         return _get_default_hermes_home()
     return _get_profiles_root() / canon
@@ -306,7 +309,11 @@ def get_profile_dir(name: str) -> Path:
 
 def profile_exists(name: str) -> bool:
     """Check whether a profile directory exists."""
-    canon = normalize_profile_name(name)
+    try:
+        canon = normalize_profile_name(name)
+        validate_profile_name(canon)
+    except ValueError:
+        return False
     if canon == "default":
         return True
     return get_profile_dir(canon).is_dir()
@@ -316,16 +323,30 @@ def profile_exists(name: str) -> bool:
 # Alias / wrapper script management
 # ---------------------------------------------------------------------------
 
+def validate_alias_name(name: str) -> str:
+    """Return a canonical alias name or raise if it is unsafe as an executable."""
+    canon = normalize_profile_name(name)
+    if not _ALIAS_ID_RE.match(canon):
+        raise ValueError(
+            f"Invalid alias name {name!r}. Must match "
+            f"[a-z0-9][a-z0-9_-]{{0,63}}"
+        )
+    if canon in _RESERVED_NAMES:
+        raise ValueError(f"Alias name {canon!r} is reserved")
+    if canon in _HERMES_SUBCOMMANDS:
+        raise ValueError(f"Alias name {canon!r} conflicts with a hermes subcommand")
+    return canon
+
+
 def check_alias_collision(name: str) -> Optional[str]:
     """Return a human-readable collision message, or None if the name is safe.
 
     Checks: reserved names, hermes subcommands, existing binaries in PATH.
     """
-    canon = normalize_profile_name(name)
-    if canon in _RESERVED_NAMES:
-        return f"'{canon}' is a reserved name"
-    if canon in _HERMES_SUBCOMMANDS:
-        return f"'{canon}' conflicts with a hermes subcommand"
+    try:
+        canon = validate_alias_name(name)
+    except ValueError as e:
+        return str(e)
 
     # Check existing commands in PATH
     wrapper_dir = _get_wrapper_dir()
@@ -356,12 +377,14 @@ def _is_wrapper_dir_in_path() -> bool:
     return wrapper_dir in os.environ.get("PATH", "").split(os.pathsep)
 
 
-def create_wrapper_script(name: str) -> Optional[Path]:
+def create_wrapper_script(name: str, profile_name: Optional[str] = None) -> Optional[Path]:
     """Create a shell wrapper script at ~/.local/bin/<name>.
 
     Returns the path to the created wrapper, or None if creation failed.
     """
-    canon = normalize_profile_name(name)
+    canon = validate_alias_name(name)
+    profile_canon = normalize_profile_name(profile_name or name)
+    validate_profile_name(profile_canon)
     wrapper_dir = _get_wrapper_dir()
     try:
         wrapper_dir.mkdir(parents=True, exist_ok=True)
@@ -370,8 +393,9 @@ def create_wrapper_script(name: str) -> Optional[Path]:
         return None
 
     wrapper_path = wrapper_dir / canon
+    quoted_profile = shlex.quote(profile_canon)
     try:
-        wrapper_path.write_text(f'#!/bin/sh\nexec hermes -p {canon} "$@"\n')
+        wrapper_path.write_text(f'#!/bin/sh\nexec hermes -p {quoted_profile} "$@"\n')
         wrapper_path.chmod(wrapper_path.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
         return wrapper_path
     except OSError as e:
@@ -381,7 +405,11 @@ def create_wrapper_script(name: str) -> Optional[Path]:
 
 def remove_wrapper_script(name: str) -> bool:
     """Remove the wrapper script for a profile. Returns True if removed."""
-    wrapper_path = _get_wrapper_dir() / normalize_profile_name(name)
+    try:
+        canon = validate_alias_name(name)
+    except ValueError:
+        return False
+    wrapper_path = _get_wrapper_dir() / canon
     if wrapper_path.exists():
         try:
             # Verify it's our wrapper before removing

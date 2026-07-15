@@ -18,7 +18,10 @@ from hermes_cli.default_soul import DEFAULT_SOUL_MD
 from hermes_cli.profiles import (
     normalize_profile_name,
     validate_profile_name,
+    validate_alias_name,
     get_profile_dir,
+    profile_exists,
+    create_wrapper_script,
     create_profile,
     delete_profile,
     list_profiles,
@@ -92,7 +95,7 @@ class TestValidateProfileName:
         with pytest.raises(ValueError):
             validate_profile_name("Jules")
 
-    @pytest.mark.parametrize("name", ["UPPER", "has space", ".hidden", "-leading"])
+    @pytest.mark.parametrize("name", ["UPPER", "has space", ".hidden", "-leading", "/tmp", "../x", "../../x", "foo/bar"])
     def test_invalid_names_rejected(self, name):
         with pytest.raises(ValueError):
             validate_profile_name(name)
@@ -144,6 +147,15 @@ class TestGetProfileDir:
     def test_named_profile_matching_is_case_insensitive(self, profile_env):
         tmp_path = profile_env
         assert get_profile_dir("Coder") == tmp_path / ".hermes" / "profiles" / "coder"
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "../../x", "foo/bar"])
+    def test_unsafe_profile_names_do_not_escape_profiles_root(self, profile_env, name):
+        with pytest.raises(ValueError):
+            get_profile_dir(name)
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "../../x", "foo/bar"])
+    def test_profile_exists_returns_false_for_unsafe_names(self, profile_env, name):
+        assert profile_exists(name) is False
 
 
 # ===================================================================
@@ -573,6 +585,19 @@ class TestResolveProfileEnv:
             resolve_profile_env("INVALID!")
 
 
+class TestAliasValidation:
+    """Tests for alias executable-name validation."""
+
+    @pytest.mark.parametrize("name", ["mybot", "work-bot", "a1", "my_agent"])
+    def test_valid_alias_names_accepted(self, name):
+        assert validate_alias_name(name) == name
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "../../x", "foo/bar", "has space", ".hidden"])
+    def test_unsafe_alias_names_rejected(self, name):
+        with pytest.raises(ValueError):
+            validate_alias_name(name)
+
+
 # ===================================================================
 # TestAliasCollision
 # ===================================================================
@@ -601,6 +626,32 @@ class TestAliasCollision:
         result = check_alias_collision("default")
         assert result is not None
         assert "reserved" in result.lower()
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "foo/bar"])
+    def test_unsafe_alias_name_returns_message(self, profile_env, name):
+        result = check_alias_collision(name)
+        assert result is not None
+        assert "invalid alias" in result.lower()
+
+
+class TestWrapperScript:
+    """Tests for create_wrapper_script()."""
+
+    def test_creates_wrapper_with_quoted_profile_name(self, profile_env):
+        wrapper = create_wrapper_script("custom", profile_name="Coder")
+        assert wrapper is not None
+        assert wrapper == profile_env / ".local" / "bin" / "custom"
+        assert wrapper.read_text() == '#!/bin/sh\nexec hermes -p coder "$@"\n'
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "foo/bar"])
+    def test_rejects_unsafe_alias_path(self, profile_env, name):
+        with pytest.raises(ValueError):
+            create_wrapper_script(name, profile_name="coder")
+
+    @pytest.mark.parametrize("name", ["/tmp", "../x", "foo/bar"])
+    def test_rejects_unsafe_profile_arg(self, profile_env, name):
+        with pytest.raises(ValueError):
+            create_wrapper_script("custom", profile_name=name)
 
 
 # ===================================================================

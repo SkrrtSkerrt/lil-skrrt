@@ -771,6 +771,12 @@ def handle_function_call(
         if function_name in _AGENT_LOOP_TOOLS:
             return json.dumps({"error": f"{function_name} must be handled by the agent loop"})
 
+        if enabled_tools is not None and function_name not in enabled_tools:
+            return json.dumps(
+                {"error": f"Tool not enabled for this session: {function_name}"},
+                ensure_ascii=False,
+            )
+
         # Check plugin hooks for a block directive (unless caller already
         # checked — e.g. run_agent._invoke_tool passes skip=True to
         # avoid double-firing the hook).
@@ -837,12 +843,14 @@ def handle_function_call(
                 function_name, function_args,
                 task_id=task_id,
                 enabled_tools=sandbox_enabled,
+                allowed_tools=enabled_tools,
             )
         else:
             result = registry.dispatch(
                 function_name, function_args,
                 task_id=task_id,
                 user_task=user_task,
+                allowed_tools=enabled_tools,
             )
         duration_ms = int((time.monotonic() - _dispatch_start) * 1000)
 
