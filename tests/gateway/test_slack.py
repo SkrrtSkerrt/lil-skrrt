@@ -79,7 +79,9 @@ def adapter():
     a = SlackAdapter(config)
     # Mock the Slack app client
     a._app = MagicMock()
-    a._app.client = AsyncMock()
+    a._app.client = MagicMock()
+    a._app.client.users_info = AsyncMock(return_value={"user": {"name": "test-user"}})
+    a._app.client.conversations_replies = AsyncMock(return_value={"messages": []})
     a._bot_user_id = "U_BOT"
     a._running = True
     # Capture events instead of processing them
@@ -1999,7 +2001,9 @@ class TestThreadReplyHandling:
         config = PlatformConfig(enabled=True, token="***")
         a = SlackAdapter(config)
         a._app = MagicMock()
-        a._app.client = AsyncMock()
+        a._app.client = MagicMock()
+        a._app.client.users_info = AsyncMock(return_value={"user": {"name": "test-user"}})
+        a._app.client.conversations_replies = AsyncMock(return_value={"messages": []})
         a._bot_user_id = "U_BOT"
         a._team_bot_user_ids = {"T_TEAM": "U_BOT"}
         a._running = True
@@ -2139,7 +2143,9 @@ class TestAssistantThreadLifecycle:
         config = PlatformConfig(enabled=True, token="***")
         a = SlackAdapter(config)
         a._app = MagicMock()
-        a._app.client = AsyncMock()
+        a._app.client = MagicMock()
+        a._app.client.users_info = AsyncMock(return_value={"user": {"name": "test-user"}})
+        a._app.client.conversations_replies = AsyncMock(return_value={"messages": []})
         a._bot_user_id = "U_BOT"
         a._team_bot_user_ids = {"T_TEAM": "U_BOT"}
         a._running = True

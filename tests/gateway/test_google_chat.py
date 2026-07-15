@@ -528,7 +528,7 @@ class TestOnPubsubMessage:
             "message_name": "spaces/RELAY/messages/M.M",
         }
         msg = _make_pubsub_message(envelope)
-        with patch.object(adapter, "_submit_on_loop") as submit:
+        with patch.object(adapter, "_submit_on_loop", side_effect=lambda coro: coro.close()) as submit:
             adapter._on_pubsub_message(msg)
             submit.assert_called_once()
         msg.ack.assert_called_once()
@@ -546,7 +546,7 @@ class TestOnPubsubMessage:
     def test_text_message_submits_to_loop(self, adapter):
         env = _make_chat_envelope(text="hola")
         msg = _make_pubsub_message(env)
-        with patch.object(adapter, "_submit_on_loop") as submit:
+        with patch.object(adapter, "_submit_on_loop", side_effect=lambda coro: coro.close()) as submit:
             adapter._on_pubsub_message(msg)
             submit.assert_called_once()
         msg.ack.assert_called_once()
@@ -554,9 +554,16 @@ class TestOnPubsubMessage:
     def test_callback_exception_does_not_escape(self, adapter):
         env = _make_chat_envelope(text="hola")
         msg = _make_pubsub_message(env)
-        with patch.object(
-            adapter, "_submit_on_loop", side_effect=RuntimeError("boom")
-        ):
+        class DummyCoro:
+            def close(self):
+                pass
+
+        def raise_after_closing(coro):
+            coro.close()
+            raise RuntimeError("boom")
+
+        with patch.object(adapter, "_dispatch_message", new=MagicMock(return_value=DummyCoro())), \
+             patch.object(adapter, "_submit_on_loop", side_effect=raise_after_closing):
             # Must not re-raise (would trigger Pub/Sub infinite redelivery).
             adapter._on_pubsub_message(msg)
         msg.ack.assert_called_once()

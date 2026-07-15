@@ -74,7 +74,7 @@ class SmsAdapter(BasePlatformAdapter):
         self._webhook_host: str = os.getenv("SMS_WEBHOOK_HOST", DEFAULT_WEBHOOK_HOST)
         self._webhook_url: str = os.getenv("SMS_WEBHOOK_URL", "").strip()
         self._runner = None
-        self._http_session: Optional["aiohttp.ClientSession"] = None
+        self._http_session: Optional[Any] = None
 
     def _basic_auth_header(self) -> str:
         """Build HTTP Basic auth header value for Twilio."""
@@ -120,7 +120,7 @@ class SmsAdapter(BasePlatformAdapter):
 
         app = web.Application()
         app.router.add_post("/webhooks/twilio", self._handle_webhook)
-        app.router.add_get("/health", lambda _: web.Response(text="ok"))
+        app.router.add_get("/health", self._handle_health)
 
         self._runner = web.AppRunner(app)
         await self._runner.setup()
@@ -286,10 +286,15 @@ class SmsAdapter(BasePlatformAdapter):
         return None
 
     # ------------------------------------------------------------------
-    # Twilio webhook handler
+    # HTTP handlers
     # ------------------------------------------------------------------
 
-    async def _handle_webhook(self, request) -> "aiohttp.web.Response":
+    async def _handle_health(self, request) -> Any:
+        from aiohttp import web
+
+        return web.Response(text="ok")
+
+    async def _handle_webhook(self, request) -> Any:
         from aiohttp import web
 
         try:

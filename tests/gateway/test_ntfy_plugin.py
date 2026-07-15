@@ -43,6 +43,19 @@ def _run(coro):
     return asyncio.get_event_loop().run_until_complete(coro)
 
 
+async def _drain_adapter_tasks(adapter):
+    """Wait for background dispatch tasks spawned by handle_message()."""
+    tasks = list(getattr(adapter, "_background_tasks", ()))
+    if tasks:
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+
+def _run_message(adapter, event):
+    """Dispatch an ntfy event and drain spawned background tasks."""
+    _run(adapter._on_message(event))
+    _run(_drain_adapter_tasks(adapter))
+
+
 # ---------------------------------------------------------------------------
 # 1. Platform enum (plugin-discovered, not bundled)
 # ---------------------------------------------------------------------------
@@ -514,7 +527,7 @@ class TestOnMessage:
             "message": "Hello from ntfy",
             "time": 1700000000,
         }
-        _run(adapter._on_message(event))
+        _run_message(adapter, event)
         assert len(calls) == 1
         assert calls[0].text == "Hello from ntfy"
 
@@ -526,9 +539,9 @@ class TestOnMessage:
             calls.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "x", "event": "message", "topic": "t", "message": "", "time": None
-        }))
+        })
         assert calls == []
 
     def test_duplicate_message_skipped(self):
@@ -540,8 +553,8 @@ class TestOnMessage:
 
         adapter.set_message_handler(handler)
         event = {"id": "dup-1", "event": "message", "topic": "hermes-in", "message": "hi", "time": None}
-        _run(adapter._on_message(event))
-        _run(adapter._on_message(event))
+        _run_message(adapter, event)
+        _run_message(adapter, event)
         assert len(calls) == 1
 
     def test_timestamp_parsed_from_event(self):
@@ -553,13 +566,13 @@ class TestOnMessage:
             captured.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "ts-1",
             "event": "message",
             "topic": "hermes-in",
             "message": "ping",
             "time": 1700000000,
-        }))
+        })
         ts = captured[0].timestamp
         assert ts.tzinfo == timezone.utc
 
@@ -571,13 +584,13 @@ class TestOnMessage:
             captured.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "ntfy-id-42",
             "event": "message",
             "topic": "hermes-in",
             "message": "test",
             "time": None,
-        }))
+        })
         assert captured[0].message_id == "ntfy-id-42"
 
     def test_title_not_used_as_user_id(self):
@@ -589,14 +602,14 @@ class TestOnMessage:
             captured.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "u-1",
             "event": "message",
             "topic": "hermes-in",
             "message": "hello",
             "title": "Alice",
             "time": None,
-        }))
+        })
         assert captured[0].source.user_id == "hermes-in"
         assert captured[0].source.user_name == "hermes-in"
 
@@ -609,14 +622,14 @@ class TestOnMessage:
             captured.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "u-2",
             "event": "message",
             "topic": "hermes-in",
             "message": "sensitive command",
             "title": "admin",
             "time": None,
-        }))
+        })
         assert captured[0].source.user_id == "hermes-in"
         assert captured[0].source.user_id != "admin"
 
@@ -628,13 +641,13 @@ class TestOnMessage:
             captured.append(event)
 
         adapter.set_message_handler(handler)
-        _run(adapter._on_message({
+        _run_message(adapter, {
             "id": "s-1",
             "event": "message",
             "topic": "hermes-in",
             "message": "hello",
             "time": None,
-        }))
+        })
         assert captured[0].source.chat_id == "hermes-in"
 
 

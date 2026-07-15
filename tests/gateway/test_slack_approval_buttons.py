@@ -53,7 +53,10 @@ def _make_adapter():
     adapter = SlackAdapter(config)
     adapter._app = MagicMock()
     adapter._bot_user_id = "U_BOT"
-    adapter._team_clients = {"T1": AsyncMock()}
+    team_client = MagicMock()
+    team_client.users_info = AsyncMock(return_value={"user": {"name": "test-user"}})
+    team_client.conversations_replies = AsyncMock(return_value={"messages": []})
+    adapter._team_clients = {"T1": team_client}
     adapter._team_bot_user_ids = {"T1": "U_BOT"}
     adapter._channel_team = {"C1": "T1"}
     return adapter
@@ -410,7 +413,9 @@ class TestSlackThreadContext:
         filter out a legitimate message in the current workspace."""
         adapter = _make_adapter()
         # Add a second workspace with a different bot user id
-        adapter._team_clients["T2"] = AsyncMock()
+        team2_client = MagicMock()
+        team2_client.users_info = AsyncMock(return_value={"user": {"name": "test-user"}})
+        adapter._team_clients["T2"] = team2_client
         adapter._team_bot_user_ids = {"T1": "U_BOT_T1", "T2": "U_BOT_T2"}
         adapter._bot_user_id = "U_BOT_T1"
         adapter._channel_team["C2"] = "T2"

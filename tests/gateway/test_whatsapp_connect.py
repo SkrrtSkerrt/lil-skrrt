@@ -82,11 +82,19 @@ def _mock_aiohttp(status=200, json_data=None, json_side_effect=None):
     return MagicMock(return_value=_AsyncCM(mock_session))
 
 
+def _closing_create_task(coro):
+    """Test stub for create_task() that closes ignored coroutine inputs."""
+    close = getattr(coro, "close", None)
+    if callable(close):
+        close()
+    return MagicMock()
+
+
 def _connect_patches(mock_proc, mock_fh, mock_client_cls=None):
     """Return a dict of common patches needed to reach the health-check loop."""
     patches = {
         "gateway.platforms.whatsapp.check_whatsapp_requirements": True,
-        "gateway.platforms.whatsapp.asyncio.create_task": MagicMock(),
+        "gateway.platforms.whatsapp.asyncio.create_task": MagicMock(side_effect=_closing_create_task),
     }
     base = [
         patch("gateway.platforms.whatsapp.check_whatsapp_requirements", return_value=True),
@@ -96,7 +104,7 @@ def _connect_patches(mock_proc, mock_fh, mock_client_cls=None):
         patch("subprocess.Popen", return_value=mock_proc),
         patch("builtins.open", return_value=mock_fh),
         patch("gateway.platforms.whatsapp.asyncio.sleep", new_callable=AsyncMock),
-        patch("gateway.platforms.whatsapp.asyncio.create_task"),
+        patch("gateway.platforms.whatsapp.asyncio.create_task", side_effect=_closing_create_task),
     ]
     if mock_client_cls is not None:
         base.append(patch("aiohttp.ClientSession", mock_client_cls))
@@ -544,7 +552,8 @@ class TestHttpSessionLifecycle:
     async def test_session_closed_on_disconnect(self):
         """disconnect() should close self._http_session."""
         adapter = _make_adapter()
-        mock_session = AsyncMock()
+        mock_session = MagicMock()
+        mock_session.close = AsyncMock()
         mock_session.closed = False
         adapter._http_session = mock_session
         adapter._poll_task = None

@@ -826,6 +826,7 @@ class QQAdapter(BasePlatformAdapter):
             loop = asyncio.get_running_loop()
             return loop.create_task(coro)
         except RuntimeError:
+            coro.close()
             return None
 
     def _dispatch_payload(self, payload: Dict[str, Any]) -> None:
