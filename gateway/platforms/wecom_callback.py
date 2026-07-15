@@ -57,10 +57,23 @@ DEFAULT_PORT = 8645
 DEFAULT_PATH = "/wecom/callback"
 ACCESS_TOKEN_TTL_SECONDS = 7200
 MESSAGE_DEDUP_TTL_SECONDS = 300
+WECOM_CALLBACK_INSTALL_HINT = "pip install 'hermes-agent[wecom]'"
+
+
+def missing_wecom_callback_requirements() -> List[str]:
+    """Return missing runtime dependencies for the callback adapter."""
+    missing: List[str] = []
+    if not AIOHTTP_AVAILABLE:
+        missing.append("aiohttp")
+    if not HTTPX_AVAILABLE:
+        missing.append("httpx")
+    if not DEFUSEDXML_AVAILABLE:
+        missing.append("defusedxml")
+    return missing
 
 
 def check_wecom_callback_requirements() -> bool:
-    return AIOHTTP_AVAILABLE and HTTPX_AVAILABLE and DEFUSEDXML_AVAILABLE
+    return not missing_wecom_callback_requirements()
 
 
 class WecomCallbackAdapter(BasePlatformAdapter):
@@ -113,10 +126,18 @@ class WecomCallbackAdapter(BasePlatformAdapter):
 
     async def connect(self) -> bool:
         if not self._apps:
-            logger.warning("[WecomCallback] No callback apps configured")
+            message = "WeCom Callback startup failed: no callback apps configured"
+            self._set_fatal_error("wecom_callback_missing_apps", message, retryable=True)
+            logger.warning("[WecomCallback] %s", message)
             return False
-        if not check_wecom_callback_requirements():
-            logger.warning("[WecomCallback] aiohttp/httpx not installed")
+        missing = missing_wecom_callback_requirements()
+        if missing:
+            message = (
+                "WeCom Callback startup failed: missing Python dependencies: "
+                f"{', '.join(missing)}. Install with: {WECOM_CALLBACK_INSTALL_HINT}"
+            )
+            self._set_fatal_error("wecom_callback_missing_dependency", message, retryable=True)
+            logger.warning("[WecomCallback] %s", message)
             return False
 
         # Quick port-in-use check.

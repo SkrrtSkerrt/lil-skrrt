@@ -24,7 +24,11 @@ Lil Skrrt supports two WeCom integration modes:
 ## Prerequisites
 
 - A WeCom enterprise account with admin access
-- `aiohttp` and `httpx` Python packages (included in the default install)
+- Python callback dependencies installed:
+  ```bash
+  pip install 'hermes-agent[wecom]'
+  ```
+  This installs `aiohttp` for the callback HTTP server and `defusedxml` for safe encrypted XML parsing. `httpx` ships with the core install.
 - A publicly reachable server for the callback URL (or a tunnel like ngrok)
 
 ## Setup

@@ -28,6 +28,59 @@ def _config(apps=None):
     )
 
 
+class TestWecomCallbackRequirements:
+    def test_missing_requirements_names_each_missing_dependency(self, monkeypatch):
+        import gateway.platforms.wecom_callback as wecom_callback
+
+        monkeypatch.setattr(wecom_callback, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(wecom_callback, "HTTPX_AVAILABLE", True)
+        monkeypatch.setattr(wecom_callback, "DEFUSEDXML_AVAILABLE", False)
+
+        assert wecom_callback.missing_wecom_callback_requirements() == ["aiohttp", "defusedxml"]
+        assert wecom_callback.check_wecom_callback_requirements() is False
+
+    def test_requirements_pass_when_all_runtime_deps_available(self, monkeypatch):
+        import gateway.platforms.wecom_callback as wecom_callback
+
+        monkeypatch.setattr(wecom_callback, "AIOHTTP_AVAILABLE", True)
+        monkeypatch.setattr(wecom_callback, "HTTPX_AVAILABLE", True)
+        monkeypatch.setattr(wecom_callback, "DEFUSEDXML_AVAILABLE", True)
+
+        assert wecom_callback.missing_wecom_callback_requirements() == []
+        assert wecom_callback.check_wecom_callback_requirements() is True
+
+
+class TestWecomCallbackConnectValidation:
+    @pytest.mark.asyncio
+    async def test_connect_records_missing_apps_as_fatal(self):
+        adapter = WecomCallbackAdapter(PlatformConfig(enabled=True, extra={"apps": []}))
+
+        success = await adapter.connect()
+
+        assert success is False
+        assert adapter.has_fatal_error is True
+        assert adapter.fatal_error_code == "wecom_callback_missing_apps"
+        assert "no callback apps configured" in (adapter.fatal_error_message or "")
+
+    @pytest.mark.asyncio
+    async def test_connect_records_missing_dependencies_as_fatal(self, monkeypatch):
+        import gateway.platforms.wecom_callback as wecom_callback
+
+        monkeypatch.setattr(wecom_callback, "AIOHTTP_AVAILABLE", True)
+        monkeypatch.setattr(wecom_callback, "HTTPX_AVAILABLE", True)
+        monkeypatch.setattr(wecom_callback, "DEFUSEDXML_AVAILABLE", False)
+
+        adapter = WecomCallbackAdapter(_config())
+
+        success = await adapter.connect()
+
+        assert success is False
+        assert adapter.has_fatal_error is True
+        assert adapter.fatal_error_code == "wecom_callback_missing_dependency"
+        assert "defusedxml" in (adapter.fatal_error_message or "")
+        assert "hermes-agent[wecom]" in (adapter.fatal_error_message or "")
+
+
 class TestWecomCrypto:
     def test_roundtrip_encrypt_decrypt(self):
         app = _app()
