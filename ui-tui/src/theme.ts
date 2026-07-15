@@ -85,6 +85,9 @@ const ANSI_LIGHT_MIN_SATURATION = 0.22
 const ANSI_MUTED_BUCKET = 245
 
 const ANSI_NORMALIZED_FOREGROUNDS: readonly (keyof ThemeColors)[] = [
+  'primary',
+  'accent',
+  'border',
   'text',
   'label',
   'ok',
@@ -553,7 +556,7 @@ export function fromSkin(
       warn: c('ui_warn') ?? d.color.warn,
 
       prompt: c('prompt') ?? c('banner_text') ?? d.color.prompt,
-      sessionLabel: c('session_label') ?? muted,
+      sessionLabel: c('session_label') ?? (hasSkinColors ? muted : d.color.sessionLabel),
       sessionBorder: c('session_border') ?? muted,
 
       statusBg: d.color.statusBg,
