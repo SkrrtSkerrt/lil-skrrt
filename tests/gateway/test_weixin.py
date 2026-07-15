@@ -27,6 +27,36 @@ def _make_adapter() -> WeixinAdapter:
     )
 
 
+class TestWeixinRequirements:
+    def test_missing_requirements_names_packages(self, monkeypatch):
+        monkeypatch.setattr(weixin, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(weixin, "CRYPTO_AVAILABLE", False)
+        assert weixin.missing_weixin_requirements() == ["aiohttp", "cryptography"]
+
+    def test_check_requirements_uses_lazy_deps_when_missing(self, monkeypatch):
+        calls = []
+        monkeypatch.setattr(weixin, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(weixin, "CRYPTO_AVAILABLE", False)
+        monkeypatch.setattr(weixin, "_ensure_weixin_feature", lambda: calls.append(("platform.weixin", False)))
+
+        assert weixin.check_weixin_requirements() is True
+        assert calls == [("platform.weixin", False)]
+        assert weixin.AIOHTTP_AVAILABLE is True
+        assert weixin.CRYPTO_AVAILABLE is True
+
+    @pytest.mark.asyncio
+    async def test_connect_records_fatal_missing_dependency(self, monkeypatch):
+        monkeypatch.setattr(weixin, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(weixin, "CRYPTO_AVAILABLE", True)
+        monkeypatch.setattr(weixin, "_ensure_weixin_feature", Mock(side_effect=RuntimeError("disabled")))
+        adapter = _make_adapter()
+
+        assert await adapter.connect() is False
+        assert adapter.fatal_error_code == "weixin_missing_dependency"
+        assert adapter.fatal_error_message is not None
+        assert "hermes-agent[weixin]" in adapter.fatal_error_message
+
+
 class TestWeixinFormatting:
     def test_format_message_preserves_markdown(self):
         adapter = _make_adapter()

@@ -47,15 +47,16 @@ Install the required Python packages:
 pip install "hermes-agent[dingtalk]"
 ```
 
-Or individually:
+Or individually with the exact packages Lil Skrrt pins:
 
 ```bash
-pip install dingtalk-stream httpx alibabacloud-dingtalk
+pip install dingtalk-stream alibabacloud-dingtalk qrcode
 ```
 
 - `dingtalk-stream` — DingTalk's official SDK for Stream Mode (WebSocket-based real-time messaging)
-- `httpx` — async HTTP client used for sending replies via session webhooks
+- `httpx` — async HTTP client used for sending replies via session webhooks; included in the core Lil Skrrt install
 - `alibabacloud-dingtalk` — DingTalk OpenAPI SDK for AI Cards, emoji reactions, and media downloads
+- `qrcode` — terminal QR display for setup/onboarding
 
 ## Step 1: Create a DingTalk App
 

@@ -1744,6 +1744,9 @@ pty = [
     { name = "ptyprocess", marker = "sys_platform != 'win32'" },
     { name = "pywinpty", marker = "sys_platform == 'win32'" },
 ]
+qqbot = [
+    { name = "aiohttp" },
+]
 slack = [
     { name = "aiohttp" },
     { name = "slack-bolt" },
@@ -1789,7 +1792,12 @@ web = [
     { name = "uvicorn", extra = ["standard"] },
 ]
 wecom = [
+    { name = "aiohttp" },
     { name = "defusedxml" },
+]
+weixin = [
+    { name = "aiohttp" },
+    { name = "cryptography" },
 ]
 youtube = [
     { name = "youtube-transcript-api" },
@@ -1800,8 +1808,11 @@ requires-dist = [
     { name = "agent-client-protocol", marker = "extra == 'acp'", specifier = "==0.9.0" },
     { name = "aiohttp", marker = "extra == 'homeassistant'", specifier = "==3.14.1" },
     { name = "aiohttp", marker = "extra == 'messaging'", specifier = "==3.14.1" },
+    { name = "aiohttp", marker = "extra == 'qqbot'", specifier = "==3.14.1" },
     { name = "aiohttp", marker = "extra == 'slack'", specifier = "==3.14.1" },
     { name = "aiohttp", marker = "extra == 'sms'", specifier = "==3.14.1" },
+    { name = "aiohttp", marker = "extra == 'wecom'", specifier = "==3.14.1" },
+    { name = "aiohttp", marker = "extra == 'weixin'", specifier = "==3.14.1" },
     { name = "aiohttp-socks", marker = "extra == 'matrix'", specifier = "==0.11.0" },
     { name = "aiosqlite", marker = "extra == 'matrix'", specifier = "==0.22.1" },
     { name = "alibabacloud-dingtalk", marker = "extra == 'dingtalk'", specifier = "==2.2.42" },
@@ -1811,6 +1822,7 @@ requires-dist = [
     { name = "boto3", marker = "extra == 'bedrock'", specifier = "==1.42.89" },
     { name = "brotlicffi", marker = "extra == 'messaging'", specifier = "==1.2.0.1" },
     { name = "croniter", specifier = "==6.0.0" },
+    { name = "cryptography", marker = "extra == 'weixin'", specifier = "==46.0.7" },
     { name = "daytona", marker = "extra == 'daytona'", specifier = "==0.155.0" },
     { name = "debugpy", marker = "extra == 'dev'", specifier = "==1.8.20" },
     { name = "defusedxml", marker = "extra == 'wecom'", specifier = "==0.7.1" },
@@ -1897,7 +1909,7 @@ requires-dist = [
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'web'", specifier = "==0.41.0" },
     { name = "youtube-transcript-api", marker = "extra == 'youtube'", specifier = "==1.2.4" },
 ]
-provides-extras = ["anthropic", "exa", "firecrawl", "parallel-web", "fal", "edge-tts", "modal", "daytona", "hindsight", "dev", "messaging", "cron", "slack", "matrix", "wecom", "cli", "tts-premium", "voice", "pty", "honcho", "mcp", "homeassistant", "sms", "computer-use", "acp", "bedrock", "azure-identity", "termux", "termux-all", "dingtalk", "feishu", "google", "youtube", "web", "all"]
+provides-extras = ["anthropic", "exa", "firecrawl", "parallel-web", "fal", "edge-tts", "modal", "daytona", "hindsight", "dev", "messaging", "cron", "slack", "matrix", "wecom", "weixin", "qqbot", "cli", "tts-premium", "voice", "pty", "honcho", "mcp", "homeassistant", "sms", "computer-use", "acp", "bedrock", "azure-identity", "termux", "termux-all", "dingtalk", "feishu", "google", "youtube", "web", "all"]
 
 [[package]]
 name = "hf-xet"

@@ -91,9 +91,10 @@ matrix = ["mautrix[encryption]==0.21.0", "Markdown==3.10.2", "aiosqlite==0.22.1"
 # WeCom callback-mode adapter — parses untrusted XML POST bodies from
 # WeCom-controlled callback endpoints, so we use defusedxml (drop-in
 # replacement for stdlib xml.etree.ElementTree) to block billion-laughs
-# and XXE. aiohttp/httpx are already in [messaging]; defusedxml lands
-# here to keep the dependency local to wecom_callback's threat model.
-wecom = ["defusedxml==0.7.1"]
+# and XXE. aiohttp is the callback HTTP server; httpx is a core dep.
+wecom = ["aiohttp==3.14.1", "defusedxml==0.7.1"]
+weixin = ["aiohttp==3.14.1", "cryptography==46.0.7"]
+qqbot = ["aiohttp==3.14.1"]
 cli = ["simple-term-menu==1.6.6"]
 tts-premium = ["elevenlabs==1.59.0"]
 voice = [

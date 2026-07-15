@@ -137,9 +137,47 @@ from gateway.platforms.qqbot.keyboards import (
 )
 
 
+QQBOT_INSTALL_HINT = "pip install 'hermes-agent[qqbot]'"
+
+
+def missing_qq_requirements() -> List[str]:
+    """Return missing QQ Bot runtime dependency names."""
+    missing: List[str] = []
+    if not AIOHTTP_AVAILABLE:
+        missing.append("aiohttp")
+    if not HTTPX_AVAILABLE:
+        missing.append("httpx")
+    return missing
+
+
+def _ensure_qqbot_feature() -> None:
+    import tools.lazy_deps as _lazy_deps
+    _lazy_deps.ensure("platform.qqbot", prompt=False)
+
+
 def check_qq_requirements() -> bool:
-    """Check if QQ runtime dependencies are available."""
-    return AIOHTTP_AVAILABLE and HTTPX_AVAILABLE
+    """Check if QQ runtime dependencies are available.
+
+    Lazy-installs QQ Bot runtime deps via ``tools.lazy_deps.ensure("platform.qqbot")``
+    on first call if missing. httpx is a core dependency; aiohttp is optional.
+    """
+    global AIOHTTP_AVAILABLE, HTTPX_AVAILABLE, aiohttp, httpx
+    if not missing_qq_requirements():
+        return True
+    try:
+        _ensure_qqbot_feature()
+    except Exception:
+        return False
+    try:
+        import aiohttp as _aiohttp
+        import httpx as _httpx
+    except ImportError:
+        return False
+    aiohttp = _aiohttp
+    httpx = _httpx
+    AIOHTTP_AVAILABLE = True
+    HTTPX_AVAILABLE = True
+    return True
 
 
 def _coerce_list(value: Any) -> List[str]:
@@ -276,15 +314,11 @@ class QQAdapter(BasePlatformAdapter):
 
     async def connect(self) -> bool:
         """Authenticate, obtain gateway URL, and open the WebSocket."""
-        if not AIOHTTP_AVAILABLE:
-            message = "QQ startup failed: aiohttp not installed"
+        if not check_qq_requirements():
+            missing = ", ".join(missing_qq_requirements()) or "aiohttp/httpx"
+            message = f"QQ startup failed: missing runtime dependencies: {missing}. Run: {QQBOT_INSTALL_HINT}"
             self._set_fatal_error("qq_missing_dependency", message, retryable=True)
-            logger.warning("[%s] %s. Run: pip install aiohttp", self._log_tag, message)
-            return False
-        if not HTTPX_AVAILABLE:
-            message = "QQ startup failed: httpx not installed"
-            self._set_fatal_error("qq_missing_dependency", message, retryable=True)
-            logger.warning("[%s] %s. Run: pip install httpx", self._log_tag, message)
+            logger.warning("[%s] %s", self._log_tag, message)
             return False
         if not self._app_id or not self._client_secret:
             message = "QQ startup failed: QQ_APP_ID and QQ_CLIENT_SECRET are required"

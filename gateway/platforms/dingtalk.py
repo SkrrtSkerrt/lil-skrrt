@@ -102,6 +102,7 @@ MAX_MESSAGE_LENGTH = 20000
 RECONNECT_BACKOFF = [2, 5, 10, 30, 60]
 _SESSION_WEBHOOKS_MAX = 500
 _DINGTALK_WEBHOOK_RE = re.compile(r'^https://(?:api|oapi)\.dingtalk\.com/')
+DINGTALK_INSTALL_HINT = "pip install 'hermes-agent[dingtalk]'"
 
 # DingTalk message type → runtime content type
 DINGTALK_TYPE_MAPPING = {
@@ -141,6 +142,16 @@ def check_dingtalk_requirements() -> bool:
     if not os.getenv("DINGTALK_CLIENT_ID") or not os.getenv("DINGTALK_CLIENT_SECRET"):
         return False
     return True
+
+
+def missing_dingtalk_requirements() -> List[str]:
+    """Return missing DingTalk runtime dependency names."""
+    missing: List[str] = []
+    if not DINGTALK_STREAM_AVAILABLE:
+        missing.append("dingtalk-stream")
+    if not HTTPX_AVAILABLE:
+        missing.append("httpx")
+    return missing
 
 
 class DingTalkAdapter(BasePlatformAdapter):
@@ -234,21 +245,16 @@ class DingTalkAdapter(BasePlatformAdapter):
 
     async def connect(self) -> bool:
         """Connect to DingTalk via Stream Mode."""
-        if not DINGTALK_STREAM_AVAILABLE:
-            logger.warning(
-                "[%s] dingtalk-stream not installed. Run: pip install 'dingtalk-stream>=0.20'",
-                self.name,
-            )
-            return False
-        if not HTTPX_AVAILABLE:
-            logger.warning(
-                "[%s] httpx not installed. Run: pip install httpx", self.name
-            )
+        if missing_dingtalk_requirements():
+            missing = ", ".join(missing_dingtalk_requirements())
+            message = f"DingTalk startup failed: missing runtime dependencies: {missing}. Run: {DINGTALK_INSTALL_HINT}"
+            self._set_fatal_error("dingtalk_missing_dependency", message, retryable=False)
+            logger.warning("[%s] %s", self.name, message)
             return False
         if not self._client_id or not self._client_secret:
-            logger.warning(
-                "[%s] DINGTALK_CLIENT_ID and DINGTALK_CLIENT_SECRET required", self.name
-            )
+            message = "DingTalk startup failed: DINGTALK_CLIENT_ID and DINGTALK_CLIENT_SECRET required"
+            self._set_fatal_error("dingtalk_missing_credentials", message, retryable=False)
+            logger.warning("[%s] %s", self.name, message)
             return False
 
         try:

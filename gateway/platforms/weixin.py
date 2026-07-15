@@ -153,9 +153,55 @@ _FENCE_RE = re.compile(r"^```([^\n`]*)\s*$")
 _MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
+WEIXIN_INSTALL_HINT = "pip install 'hermes-agent[weixin]'"
+
+
+def missing_weixin_requirements() -> List[str]:
+    """Return missing Weixin runtime dependency names."""
+    missing: List[str] = []
+    if not AIOHTTP_AVAILABLE:
+        missing.append("aiohttp")
+    if not CRYPTO_AVAILABLE:
+        missing.append("cryptography")
+    return missing
+
+
+def _ensure_weixin_feature() -> None:
+    import tools.lazy_deps as _lazy_deps
+    _lazy_deps.ensure("platform.weixin", prompt=False)
+
+
 def check_weixin_requirements() -> bool:
-    """Return True when runtime dependencies for Weixin are available."""
-    return AIOHTTP_AVAILABLE and CRYPTO_AVAILABLE
+    """Return True when runtime dependencies for Weixin are available.
+
+    Lazy-installs Weixin runtime deps via ``tools.lazy_deps.ensure("platform.weixin")``
+    on first call if missing, then rebinds module-level imports.
+    """
+    global AIOHTTP_AVAILABLE, CRYPTO_AVAILABLE, aiohttp, default_backend, Cipher, algorithms, modes
+    if not missing_weixin_requirements():
+        return True
+    try:
+        _ensure_weixin_feature()
+    except Exception:
+        return False
+    try:
+        import aiohttp as _aiohttp
+        from cryptography.hazmat.backends import default_backend as _default_backend
+        from cryptography.hazmat.primitives.ciphers import (
+            Cipher as _Cipher,
+            algorithms as _algorithms,
+            modes as _modes,
+        )
+    except ImportError:
+        return False
+    aiohttp = _aiohttp
+    default_backend = _default_backend
+    Cipher = _Cipher
+    algorithms = _algorithms
+    modes = _modes
+    AIOHTTP_AVAILABLE = True
+    CRYPTO_AVAILABLE = True
+    return True
 
 
 def _safe_id(value: Optional[str], keep: int = 8) -> str:
@@ -1244,7 +1290,8 @@ class WeixinAdapter(BasePlatformAdapter):
 
     async def connect(self) -> bool:
         if not check_weixin_requirements():
-            message = "Weixin startup failed: aiohttp and cryptography are required"
+            missing = ", ".join(missing_weixin_requirements()) or "aiohttp/cryptography"
+            message = f"Weixin startup failed: missing runtime dependencies: {missing}. Run: {WEIXIN_INSTALL_HINT}"
             self._set_fatal_error("weixin_missing_dependency", message, retryable=False)
             logger.warning("[%s] %s", self.name, message)
             return False

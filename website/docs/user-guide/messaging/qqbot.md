@@ -18,9 +18,9 @@ The QQ Bot adapter uses the [Official QQ Bot API](https://bot.q.qq.com/wiki/deve
    - Enable the required intents: C2C messages, Group @-messages, Guild messages
    - Configure your bot in sandbox mode for testing, or publish for production
 
-2. **Dependencies** — The adapter requires `aiohttp` and `httpx`:
+2. **Dependencies** — The adapter requires `aiohttp`; `httpx` ships with the core Lil Skrrt install:
    ```bash
-   pip install aiohttp httpx
+   pip install 'hermes-agent[qqbot]'
    ```
 
 ## Configuration
@@ -118,6 +118,9 @@ This usually means:
 
 ### Connection errors
 
-- Ensure `aiohttp` and `httpx` are installed: `pip install aiohttp httpx`
+- Install missing optional dependency if startup reports one:
+  ```bash
+  pip install 'hermes-agent[qqbot]'
+  ```
 - Check network connectivity to `api.sgroup.qq.com` and the WebSocket gateway
 - Review gateway logs for detailed error messages and reconnect behavior

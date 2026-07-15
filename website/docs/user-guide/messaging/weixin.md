@@ -26,15 +26,15 @@ In practice, most deployments only get DMs to the iLink bot working reliably. If
 ## Prerequisites
 
 - A personal WeChat account
-- Python packages: `aiohttp` and `cryptography`
+- Python packages: `aiohttp` and `cryptography` from the `weixin` extra
 - Terminal QR rendering is included when Lil Skrrt is installed with the `messaging` extra
 
 Install the required dependencies:
 
 ```bash
-pip install aiohttp cryptography
+pip install 'hermes-agent[weixin]'
 # Optional: for terminal QR code display
-pip install hermes-agent[messaging]
+pip install 'hermes-agent[messaging]'
 ```
 
 ## Setup

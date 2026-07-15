@@ -120,6 +120,45 @@ class TestDingTalkRequirements:
         from gateway.platforms.dingtalk import check_dingtalk_requirements
         assert check_dingtalk_requirements() is True
 
+    def test_missing_requirements_names_packages(self, monkeypatch):
+        from gateway.platforms import dingtalk as dt
+        monkeypatch.setattr(dt, "DINGTALK_STREAM_AVAILABLE", False)
+        monkeypatch.setattr(dt, "HTTPX_AVAILABLE", False)
+        assert dt.missing_dingtalk_requirements() == ["dingtalk-stream", "httpx"]
+
+    @pytest.mark.asyncio
+    async def test_connect_records_fatal_missing_dependency(self, monkeypatch):
+        from gateway.platforms import dingtalk as dt
+        from gateway.platforms.dingtalk import DingTalkAdapter
+
+        monkeypatch.setattr(dt, "DINGTALK_STREAM_AVAILABLE", False)
+        monkeypatch.setattr(dt, "HTTPX_AVAILABLE", True)
+        adapter = DingTalkAdapter(
+            PlatformConfig(
+                enabled=True,
+                extra={"client_id": "cfg-id", "client_secret": "cfg-secret"},
+            )
+        )
+
+        assert await adapter.connect() is False
+        assert adapter.fatal_error_code == "dingtalk_missing_dependency"
+        assert adapter.fatal_error_message is not None
+        assert "hermes-agent[dingtalk]" in adapter.fatal_error_message
+
+    @pytest.mark.asyncio
+    async def test_connect_records_fatal_missing_credentials(self, monkeypatch):
+        from gateway.platforms import dingtalk as dt
+        from gateway.platforms.dingtalk import DingTalkAdapter
+
+        monkeypatch.setattr(dt, "DINGTALK_STREAM_AVAILABLE", True)
+        monkeypatch.setattr(dt, "HTTPX_AVAILABLE", True)
+        monkeypatch.delenv("DINGTALK_CLIENT_ID", raising=False)
+        monkeypatch.delenv("DINGTALK_CLIENT_SECRET", raising=False)
+        adapter = DingTalkAdapter(PlatformConfig(enabled=True))
+
+        assert await adapter.connect() is False
+        assert adapter.fatal_error_code == "dingtalk_missing_credentials"
+
 
 # ---------------------------------------------------------------------------
 # Adapter construction

@@ -31,6 +31,41 @@ class TestQQRequirements:
         result = check_qq_requirements()
         assert isinstance(result, bool)
 
+    def test_missing_requirements_names_packages(self, monkeypatch):
+        from gateway.platforms.qqbot import adapter as qq
+
+        monkeypatch.setattr(qq, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(qq, "HTTPX_AVAILABLE", False)
+        assert qq.missing_qq_requirements() == ["aiohttp", "httpx"]
+
+    def test_check_requirements_uses_lazy_deps_when_missing(self, monkeypatch):
+        from gateway.platforms.qqbot import adapter as qq
+
+        calls = []
+        monkeypatch.setattr(qq, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(qq, "HTTPX_AVAILABLE", True)
+        monkeypatch.setattr(qq, "_ensure_qqbot_feature", lambda: calls.append(("platform.qqbot", False)))
+
+        assert qq.check_qq_requirements() is True
+        assert calls == [("platform.qqbot", False)]
+        assert qq.AIOHTTP_AVAILABLE is True
+        assert qq.HTTPX_AVAILABLE is True
+
+    @pytest.mark.asyncio
+    async def test_connect_records_fatal_missing_dependency(self, monkeypatch):
+        from gateway.platforms.qqbot import adapter as qq
+        from gateway.platforms.qqbot import QQAdapter
+
+        monkeypatch.setattr(qq, "AIOHTTP_AVAILABLE", False)
+        monkeypatch.setattr(qq, "HTTPX_AVAILABLE", True)
+        monkeypatch.setattr(qq, "_ensure_qqbot_feature", mock.Mock(side_effect=RuntimeError("disabled")))
+        adapter = QQAdapter(_make_config(app_id="a", client_secret="b"))
+
+        assert await adapter.connect() is False
+        assert adapter.fatal_error_code == "qq_missing_dependency"
+        assert adapter.fatal_error_message is not None
+        assert "hermes-agent[qqbot]" in adapter.fatal_error_message
+
 
 # ---------------------------------------------------------------------------
 # QQAdapter.__init__
