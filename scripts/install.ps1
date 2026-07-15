@@ -1413,7 +1413,7 @@ function Set-PathVariable {
 function Copy-ConfigTemplates {
     Write-Info "Setting up configuration files..."
     
-    # Create ~/.hermes directory structure
+    # Create HERMES_HOME directory structure
     New-Item -ItemType Directory -Force -Path "$HermesHome\cron" | Out-Null
     New-Item -ItemType Directory -Force -Path "$HermesHome\sessions" | Out-Null
     New-Item -ItemType Directory -Force -Path "$HermesHome\logs" | Out-Null
@@ -1431,13 +1431,13 @@ function Copy-ConfigTemplates {
         $examplePath = "$InstallDir\.env.example"
         if (Test-Path $examplePath) {
             Copy-Item $examplePath $envPath
-            Write-Success "Created ~/.hermes/.env from template"
+            Write-Success "Created $HermesHome\.env from template"
         } else {
             New-Item -ItemType File -Force -Path $envPath | Out-Null
-            Write-Success "Created ~/.hermes/.env"
+            Write-Success "Created $HermesHome\.env"
         }
     } else {
-        Write-Info "~/.hermes/.env already exists, keeping it"
+        Write-Info "$HermesHome\.env already exists, keeping it"
     }
     
     # Create config.yaml
@@ -1446,10 +1446,10 @@ function Copy-ConfigTemplates {
         $examplePath = "$InstallDir\cli-config.yaml.example"
         if (Test-Path $examplePath) {
             Copy-Item $examplePath $configPath
-            Write-Success "Created ~/.hermes/config.yaml from template"
+            Write-Success "Created $HermesHome\config.yaml from template"
         }
     } else {
-        Write-Info "~/.hermes/config.yaml already exists, keeping it"
+        Write-Info "$HermesHome\config.yaml already exists, keeping it"
     }
     
     # Create SOUL.md if it doesn't exist (global persona file).
@@ -1499,25 +1499,25 @@ You are a cold, sharp tactical assistant.
 "@
         $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
         [System.IO.File]::WriteAllText($soulPath, $soulContent, $utf8NoBom)
-        Write-Success "Created ~/.hermes/SOUL.md (edit to customize personality)"
+        Write-Success "Created $HermesHome\SOUL.md (edit to customize personality)"
     }
     
-    Write-Success "Configuration directory ready: ~/.hermes/"
+    Write-Success "Configuration directory ready: $HermesHome\"
     
-    # Seed bundled skills into ~/.hermes/skills/ (manifest-based, one-time per skill)
-    Write-Info "Syncing bundled skills to ~/.hermes/skills/ ..."
+    # Seed bundled skills into HERMES_HOME\skills\ (manifest-based, one-time per skill)
+    Write-Info "Syncing bundled skills to $HermesHome\skills\ ..."
     $pythonExe = "$InstallDir\venv\Scripts\python.exe"
     if (Test-Path $pythonExe) {
         try {
             & $pythonExe "$InstallDir\tools\skills_sync.py" 2>$null
-            Write-Success "Skills synced to ~/.hermes/skills/"
+            Write-Success "Skills synced to $HermesHome\skills\"
         } catch {
             # Fallback: simple directory copy
             $bundledSkills = "$InstallDir\skills"
             $userSkills = "$HermesHome\skills"
             if ((Test-Path $bundledSkills) -and -not (Get-ChildItem $userSkills -Exclude '.bundled_manifest' -ErrorAction SilentlyContinue)) {
                 Copy-Item -Path "$bundledSkills\*" -Destination $userSkills -Recurse -Force -ErrorAction SilentlyContinue
-                Write-Success "Skills copied to ~/.hermes/skills/"
+                Write-Success "Skills copied to $HermesHome\skills\"
             }
         }
     }
@@ -1543,7 +1543,7 @@ function Install-NodeDeps {
     $npmCmd = Get-Command npm -ErrorAction SilentlyContinue
     if (-not $npmCmd) {
         Write-Warn "npm not found on PATH -- skipping Node.js dependencies."
-        Write-Info "Open a new PowerShell window and re-run 'hermes setup tools' later."
+        Write-Info "Open a new PowerShell window and re-run 'lil-skrrt setup tools' later."
         return
     }
     $npmExe = $npmCmd.Source
@@ -1742,7 +1742,7 @@ function Install-NodeDeps {
 
 function Install-PlatformSdks {
     # Ensure messaging-platform SDKs matching tokens the user added to
-    # ~/.hermes/.env are importable.  Two problems this solves:
+    # HERMES_HOME\.env are importable.  Two problems this solves:
     #
     # 1. The tiered `uv pip install` cascade above can fall through to a
     #    lower tier when the first fails (common when RL git deps choke),
@@ -1859,7 +1859,7 @@ function Invoke-SetupWizard {
         # The setup wizard prompts for API keys, model choice, persona, etc.
         # Non-interactive callers (GUI installer) own that UX themselves; let
         # them drive it after install.ps1 returns.
-        Write-Info "Skipping setup wizard (non-interactive). Configure via the GUI or 'hermes setup'."
+        Write-Info "Skipping setup wizard (non-interactive). Configure via the GUI or 'lil-skrrt setup'."
         return
     }
 
@@ -1869,7 +1869,7 @@ function Invoke-SetupWizard {
 
     Push-Location $InstallDir
 
-    # Run hermes setup using the venv Python directly (no activation needed)
+    # Run lil-skrrt setup using the venv Python directly (no activation needed)
     if (-not $NoVenv) {
         & ".\venv\Scripts\python.exe" -m hermes_cli.main setup
     } else {
@@ -1932,7 +1932,7 @@ function Start-GatewayIfConfigured {
     # services on the build agent, etc.).  Treat it like the user declined.
     if ($NonInteractive) {
         Write-Info "Skipping gateway autostart prompt (non-interactive)."
-        Write-Info "Start the gateway later with: hermes gateway"
+        Write-Info "Start the gateway later with: lil-skrrt gateway"
         return
     }
 
@@ -1950,10 +1950,10 @@ function Start-GatewayIfConfigured {
             Write-Info "Logs: $logFile"
             Write-Info "To stop: close the gateway process from Task Manager"
         } catch {
-            Write-Warn "Failed to start gateway. Run manually: hermes gateway"
+            Write-Warn "Failed to start gateway. Run manually: lil-skrrt gateway"
         }
     } else {
-        Write-Info "Skipped. Start the gateway later with: hermes gateway"
+        Write-Info "Skipped. Start the gateway later with: lil-skrrt gateway"
     }
 }
 
@@ -1981,17 +1981,17 @@ function Write-Completion {
     Write-Host ""
     Write-Host "* Commands:" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "   hermes              " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt           " -NoNewline -ForegroundColor Green
     Write-Host "Start chatting"
-    Write-Host "   hermes setup        " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt setup     " -NoNewline -ForegroundColor Green
     Write-Host "Configure API keys & settings"
-    Write-Host "   hermes config       " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt config    " -NoNewline -ForegroundColor Green
     Write-Host "View/edit configuration"
-    Write-Host "   hermes config edit  " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt config edit" -NoNewline -ForegroundColor Green
     Write-Host "Open config in editor"
-    Write-Host "   hermes gateway      " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt gateway   " -NoNewline -ForegroundColor Green
     Write-Host "Start messaging gateway (Telegram, Discord, etc.)"
-    Write-Host "   hermes update       " -NoNewline -ForegroundColor Green
+    Write-Host "   lil-skrrt update    " -NoNewline -ForegroundColor Green
     Write-Host "Update to latest version"
     Write-Host ""
     

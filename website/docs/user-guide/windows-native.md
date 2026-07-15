@@ -16,7 +16,7 @@ Lil Skrrt runs natively on Windows 10 and Windows 11 — no WSL, no Cygwin, no D
 If you just want to install, the one-liner on the [landing page](/) or [Installation page](../getting-started/installation#windows-native-powershell--early-beta) is all you need. Come back here when something surprises you.
 
 :::tip Want WSL instead?
-If you prefer a real POSIX environment (for the dashboard's embedded terminal, `fork` semantics, Linux-style file watchers, etc.), see the **[Windows (WSL2) Guide](./windows-wsl-quickstart.md)**. Both coexist cleanly: native data lives under `%LOCALAPPDATA%\lil-skrrt`, WSL data lives under `~/.hermes`.
+If you prefer a real POSIX environment (for the dashboard's embedded terminal, `fork` semantics, Linux-style file watchers, etc.), see the **[Windows (WSL2) Guide](./windows-wsl-quickstart.md)**. Both coexist cleanly: native data lives under `%LOCALAPPDATA%\hermes`, WSL data lives under `~/.hermes`.
 :::
 
 ## Quick install
@@ -27,7 +27,7 @@ Open **PowerShell** (or Windows Terminal) and run:
 iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.ps1)
 ```
 
-No admin rights required. The installer goes to `%LOCALAPPDATA%\lil-skrrt\` and adds `lil-skrrt` to your **User PATH** — open a new terminal after it finishes.
+No admin rights required. The installer goes to `%LOCALAPPDATA%\hermes\` and adds `lil-skrrt` to your **User PATH** — open a new terminal after it finishes.
 
 **Installer options** (requires the scriptblock form to pass parameters):
 
@@ -42,14 +42,14 @@ No admin rights required. The installer goes to `%LOCALAPPDATA%\lil-skrrt\` and 
 | `-Tag` | unset | Pin install to a specific git tag (e.g. `v0.14.0`) |
 | `-NoVenv` | off | Skip venv creation (advanced — you manage Python yourself) |
 | `-SkipSetup` | off | Skip the post-install `lil-skrrt setup` wizard |
-| `-LilSkrrtHome` | `%LOCALAPPDATA%\lil-skrrt` | Override data directory |
-| `-InstallDir` | `%LOCALAPPDATA%\lil-skrrt\hermes-agent` | Override code location |
+| `-HermesHome` | `%LOCALAPPDATA%\hermes` | Override data directory |
+| `-InstallDir` | `%LOCALAPPDATA%\hermes\hermes-agent` | Override code location |
 
 The installer auto-retries flaky git fetches and strips BOM from any downloaded `install.ps1` payload, so a UTF-8 BOM picked up during HTTP transit no longer breaks the `[scriptblock]::Create((irm ...))` form.
 
 ### Desktop installer (alternative)
 
-A thin GUI installer is also available — useful if you'd rather double-click an `.exe` than open PowerShell. Download Lil Skrrt Desktop, run the installer, and on first launch the GUI calls `install.ps1` under the hood to provision Python (via `uv`), Node, PortableGit, and the rest of the dependency bootstrap described below. After the first run, the desktop app and the PowerShell-installed `lil-skrrt` CLI share the same `%LOCALAPPDATA%\lil-skrrt\hermes-agent` install and `%USERPROFILE%\.hermes` data directory — switch between the GUI and the CLI freely.
+A thin GUI installer is also available — useful if you'd rather double-click an `.exe` than open PowerShell. Download Lil Skrrt Desktop, run the installer, and on first launch the GUI calls `install.ps1` under the hood to provision Python (via `uv`), Node, PortableGit, and the rest of the dependency bootstrap described below. After the first run, the desktop app and the PowerShell-installed `lil-skrrt` CLI share the same `%LOCALAPPDATA%\hermes\hermes-agent` install and `%LOCALAPPDATA%\hermes` data directory — switch between the GUI and the CLI freely.
 
 Use the desktop installer when you want a familiar Windows install experience or you're handing Lil Skrrt to a non-developer; use the PowerShell one-liner when you're already in a terminal.
 
@@ -73,13 +73,13 @@ Top-to-bottom, in order:
 
 1. **Bootstraps `uv`** — Astral's fast Python manager. Installed to `%USERPROFILE%\.local\bin`.
 2. **Installs Python 3.11** via `uv`. No existing Python needed.
-3. **Installs Node.js 22** (winget if available, else a portable Node tarball unpacked under `%LOCALAPPDATA%\lil-skrrt\node`). Used for the browser tool and the WhatsApp bridge.
-4. **Installs portable Git** — if `git` is already on PATH the installer uses it; otherwise it downloads a trimmed, self-contained **PortableGit** (~45 MB, from the official `git-for-windows` release) to `%LOCALAPPDATA%\lil-skrrt\git`. No admin, no Windows installer registry, no interference with anything else on the box.
-5. **Clones the repo** to `%LOCALAPPDATA%\lil-skrrt\hermes-agent` and creates a virtualenv inside it.
+3. **Installs Node.js 22** (winget if available, else a portable Node tarball unpacked under `%LOCALAPPDATA%\hermes\node`). Used for the browser tool and the WhatsApp bridge.
+4. **Installs portable Git** — if `git` is already on PATH the installer uses it; otherwise it downloads a trimmed, self-contained **PortableGit** (~45 MB, from the official `git-for-windows` release) to `%LOCALAPPDATA%\hermes\git`. No admin, no Windows installer registry, no interference with anything else on the box.
+5. **Clones the repo** to `%LOCALAPPDATA%\hermes\hermes-agent` and creates a virtualenv inside it.
 6. **Tiered `uv pip install`** — tries `.[all]` first, falls back to progressively smaller sets (`[messaging,dashboard,ext]` → `[messaging]` → `.`) if a `git+https` dep flakes on rate-limited GitHub. Prevents "single flake drops you to a bare install" failure mode.
 7. **Auto-installs messaging SDKs** keyed off `.env` — if `TELEGRAM_BOT_TOKEN` / `DISCORD_BOT_TOKEN` / `SLACK_BOT_TOKEN` / `SLACK_APP_TOKEN` / `WHATSAPP_ENABLED` are present, runs `python -m ensurepip --upgrade` and targeted `pip install` calls so each platform's SDK is actually importable.
 8. **Sets `HERMES_GIT_BASH_PATH`** to the resolved `bash.exe` so Lil Skrrt finds it deterministically in fresh shells.
-9. **Adds `%LOCALAPPDATA%\lil-skrrt\bin` to User PATH** — exposes the `lil-skrrt` command after you open a new terminal.
+9. **Adds `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` to User PATH** — exposes the `lil-skrrt` command after you open a new terminal.
 10. **Runs `lil-skrrt setup`** — the normal first-run wizard (model, provider, toolsets). Skip with `-SkipSetup`.
 
 :::tip Skip provider hunting on Windows
@@ -112,8 +112,8 @@ Lil Skrrt's terminal tool runs commands through **Git Bash**, same strategy Clau
 Resolution order for `bash.exe`:
 
 1. `HERMES_GIT_BASH_PATH` environment variable if set.
-2. `%LOCALAPPDATA%\lil-skrrt\git\usr\bin\bash.exe` (installer-managed PortableGit).
-3. `%LOCALAPPDATA%\lil-skrrt\git\bin\bash.exe` (older Git-for-Windows layout).
+2. `%LOCALAPPDATA%\hermes\git\bin\bash.exe` (installer-managed PortableGit).
+3. `%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe` (MinGit / alternate Git-for-Windows layout).
 4. System Git-for-Windows install (`%ProgramFiles%\Git\bin\bash.exe`, etc.).
 5. MSYS2, Cygwin, or any `bash.exe` on PATH as a last resort.
 
@@ -206,13 +206,12 @@ Services require admin rights to install and tie the gateway's lifecycle to mach
 
 | Path | Contents |
 |---|---|
-| `%LOCALAPPDATA%\lil-skrrt\hermes-agent\` | Git checkout + venv. Safe to `Remove-Item -Recurse` and reinstall. |
-| `%LOCALAPPDATA%\lil-skrrt\git\` | PortableGit (only if the installer provisioned it). |
-| `%LOCALAPPDATA%\lil-skrrt\node\` | Portable Node.js (only if the installer provisioned it). |
-| `%LOCALAPPDATA%\lil-skrrt\bin\` | `lil-skrrt.cmd` shim, added to User PATH. |
-| `%USERPROFILE%\.hermes\` | Your config, auth, skills, sessions, logs. **Survives reinstalls.** |
+| `%LOCALAPPDATA%\hermes\hermes-agent\` | Git checkout + venv. Safe to `Remove-Item -Recurse` and reinstall. |
+| `%LOCALAPPDATA%\hermes\git\` | PortableGit (only if the installer provisioned it). |
+| `%LOCALAPPDATA%\hermes\node\` | Portable Node.js (only if the installer provisioned it). |
+| `%LOCALAPPDATA%\hermes\config.yaml`, `.env`, `skills\`, `sessions\`, `logs\` | Your config, auth, skills, sessions, logs. **Survives keep-data reinstalls.** |
 
-The split is deliberate: `%LOCALAPPDATA%\lil-skrrt` is disposable infrastructure (you can blow it away and the one-liner restores it). `%USERPROFILE%\.hermes` is your data — config, memory, skills, session history — and is identical in shape to a Linux install. Mirror it between machines and your Lil Skrrt moves with you.
+The split inside `%LOCALAPPDATA%\hermes` is deliberate: `hermes-agent\`, `git\`, and `node\` are disposable infrastructure. Config, memory, skills, and session history live in the same `HERMES_HOME` root and survive `lil-skrrt uninstall` when you choose **Keep data**.
 
 **Override `HERMES_HOME`:** set the environment variable to point at a different data dir. Works the same as on Linux.
 
@@ -228,19 +227,19 @@ The browser tool uses `agent-browser` (a Node helper) to drive Chromium. On Wind
 
 ### PATH after install
 
-The installer adds `%LOCALAPPDATA%\lil-skrrt\bin` to your **User PATH** via `[Environment]::SetEnvironmentVariable`. Existing terminals don't pick this up — open a new PowerShell window (or Windows Terminal tab) after installation. Close-and-reopen, don't `$env:PATH += …` by hand unless you know what you're doing.
+The installer adds `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` to your **User PATH** via `[Environment]::SetEnvironmentVariable`. Existing terminals don't pick this up — open a new PowerShell window (or Windows Terminal tab) after installation. Close-and-reopen, don't `$env:PATH += …` by hand unless you know what you're doing.
 
 Verify:
 
 ```powershell
-Get-Command lil-skrrt     # should print C:\Users\<you>\AppData\Local\lil-skrrt\bin\lil-skrrt.cmd
+Get-Command lil-skrrt     # should print C:\Users\<you>\AppData\Local\hermes\hermes-agent\venv\Scripts\lil-skrrt.exe
 Get-Command hermes        # compatibility alias; should point at the same install
 lil-skrrt --version
 ```
 
 ### Environment variables
 
-Lil Skrrt honors both `$env:X` (process-scope) and User environment variables (permanent, set in System Properties → Environment Variables). Setting API keys in `%USERPROFILE%\.hermes\.env` is the normal path — same as Linux:
+Lil Skrrt honors both `$env:X` (process-scope) and User environment variables (permanent, set in System Properties → Environment Variables). Setting API keys in `%LOCALAPPDATA%\hermes\.env` is the normal native Windows path:
 
 ```
 OPENROUTER_API_KEY=sk-or-...
@@ -267,13 +266,12 @@ From PowerShell:
 lil-skrrt uninstall
 ```
 
-That's the clean path — removes the schtasks entry, Startup folder shortcut, `lil-skrrt.cmd` shim, deletes `%LOCALAPPDATA%\lil-skrrt\hermes-agent\`, and trims the User PATH. It leaves `%USERPROFILE%\.hermes\` alone (your config, auth, skills, sessions, logs) in case you're reinstalling.
+That's the clean path — removes the schtasks entry, Startup folder shortcut, deletes `%LOCALAPPDATA%\hermes\hermes-agent\`, removes installer-owned PortableGit / Node artifacts, and trims the User PATH. Choose **Keep data** to leave `%LOCALAPPDATA%\hermes\` config, auth, skills, sessions, and logs in place for reinstalling.
 
 To nuke everything:
 
 ```powershell
 lil-skrrt uninstall
-Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
 Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 ```
 
@@ -292,7 +290,7 @@ Consequence: any codepath that said "check if this PID is alive" via `os.kill(pi
 ## Common pitfalls
 
 **`lil-skrrt: command not found` right after install.**
-Open a new PowerShell window. The installer added `%LOCALAPPDATA%\lil-skrrt\bin` to User PATH, but existing shells need to be restarted to pick it up. In the meantime you can run `& "$env:LOCALAPPDATA\lil-skrrt\bin\lil-skrrt.cmd"`.
+Open a new PowerShell window. The installer added `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` to User PATH, but existing shells need to be restarted to pick it up. In the meantime you can run `& "$env:LOCALAPPDATA\hermes\hermes-agent\venv\Scripts\lil-skrrt.exe"`.
 
 **`WinError 193: %1 is not a valid Win32 application` when running a tool.**
 You hit a shebang-script invocation that bypassed the `.cmd` shim. Lil Skrrt resolves commands through `shutil.which(cmd, path=local_bin)` so PATHEXT picks up `.CMD` — if you're invoking the tool via a hardcoded path instead, switch to the `.cmd` variant (e.g., `npx.cmd`, not `npx`).
@@ -310,7 +308,7 @@ You set it in the current process only; close and reopen the shell, or set it at
 Chromium is auto-installed on first run. If the install failed (rate-limited GitHub, Playwright CDN hiccup), run `lil-skrrt doctor` — it will surface the missing Chromium and print the exact `npx playwright install chromium` command to fix it.
 
 **`agent-browser` fails with a weird Node version error.**
-The installer provisions Node 22 at `%LOCALAPPDATA%\lil-skrrt\node` but your PATH may have an older system Node 18 first. Either move Lil Skrrt's node dir earlier on PATH, or delete the system install if you don't use Node elsewhere.
+The installer provisions Node 22 at `%LOCALAPPDATA%\hermes\node` but your PATH may have an older system Node 18 first. Either move Lil Skrrt's node dir earlier on PATH, or delete the system install if you don't use Node elsewhere.
 
 **Chinese / Japanese / Arabic characters show as `?` in the CLI.**
 The UTF-8 stdio shim didn't activate. Check that `HERMES_DISABLE_WINDOWS_UTF8` is NOT set (`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`). If it's empty and you still see `?`, the console host (very old `cmd.exe`) may not support UTF-8 at all — switch to Windows Terminal.

@@ -23,14 +23,14 @@ Use this guide when you want a clean Windows install that starts from scratch an
    ```
 3. Remove the disposable install directory if you want a full reset:
    ```powershell
+   Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes" -ErrorAction SilentlyContinue
+   ```
+4. If you are cleaning up an older pre-`%LOCALAPPDATA%\hermes` install, remove the legacy directory too:
+   ```powershell
    Remove-Item -Recurse -Force "$env:LOCALAPPDATA\lil-skrrt" -ErrorAction SilentlyContinue
    ```
-4. If you want a truly clean user state as well, back up anything you care about and then remove the data directory:
-   ```powershell
-   Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes" -ErrorAction SilentlyContinue
-   ```
 
-That removes local binaries, portable Git, Node, venv state, and cached installer artifacts. Only do step 4 if you really want to erase config, sessions, memories, and skills.
+That removes local binaries, portable Git, Node, venv state, cached installer artifacts, config, sessions, memories, and skills. Back up `%LOCALAPPDATA%\hermes` first if you want to keep user state.
 
 ## Install the latest code from GitHub
 
@@ -65,9 +65,9 @@ On a clean machine, the Windows installer should:
 - install Python 3.11 into a user-scoped venv
 - install Node.js 22 when needed
 - install `ripgrep` and `ffmpeg`
-- clone Lil Skrrt into `%LOCALAPPDATA%\lil-skrrt\hermes-agent`
+- clone Lil Skrrt into `%LOCALAPPDATA%\hermes\hermes-agent`
 - set `HERMES_HOME` and `HERMES_GIT_BASH_PATH`
-- write the launcher shim into `%LOCALAPPDATA%\lil-skrrt\bin`
+- add `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` to User PATH
 - run the first-time setup wizard unless you pass `-SkipSetup`
 
 ## Verify the install
@@ -86,8 +86,8 @@ If those three commands work, the install landed correctly.
 
 If you ran into a bad state, the cleanest recovery is:
 
-1. Remove `%LOCALAPPDATA%\lil-skrrt`
-2. Remove `%USERPROFILE%\.hermes` only if you want to wipe all data
+1. Remove `%LOCALAPPDATA%\hermes`
+2. Remove `%LOCALAPPDATA%\lil-skrrt` only if you are cleaning up an older legacy install
 3. Re-run the installer from `main`
 4. Re-open the shell before testing again
 
