@@ -93,7 +93,7 @@ matrix = ["mautrix[encryption]==0.21.0", "Markdown==3.10.2", "aiosqlite==0.22.1"
 # replacement for stdlib xml.etree.ElementTree) to block billion-laughs
 # and XXE. aiohttp is the callback HTTP server; httpx is a core dep.
 wecom = ["aiohttp==3.14.1", "defusedxml==0.7.1"]
-weixin = ["aiohttp==3.14.1", "cryptography==46.0.7"]
+weixin = ["aiohttp==3.14.1", "cryptography==48.0.1"]
 qqbot = ["aiohttp==3.14.1"]
 cli = ["simple-term-menu==1.6.6"]
 tts-premium = ["elevenlabs==1.59.0"]
