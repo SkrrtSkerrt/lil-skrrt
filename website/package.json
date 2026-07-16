@@ -7,7 +7,7 @@
     "prestart": "node scripts/prebuild.mjs",
     "start": "docusaurus start",
     "prebuild": "node scripts/prebuild.mjs",
-    "build": "docusaurus build",
+    "build": "node -r ./scripts/js-yaml-compat.cjs ./node_modules/@docusaurus/core/bin/docusaurus.mjs build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
