@@ -30,6 +30,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.run_tests_parallel import _count_tests
+
 
 # Both tests share the same handoff file: the leaker writes here, the
 # verifier reads here. We park it in $TMPDIR with a unique-per-run name
@@ -40,6 +42,28 @@ _HANDOFF_DIR.mkdir(exist_ok=True)
 
 def _handoff_path_for(nonce: str) -> Path:
     return _HANDOFF_DIR / f"grandchild-{nonce}.json"
+
+
+def test_count_tests_parses_quiet_collection_summary(tmp_path: Path) -> None:
+    """Passthrough ``-q`` makes pytest emit ``file.py: N`` instead of node IDs."""
+    repo_root = tmp_path
+    test_file = repo_root / "test_quiet_collect.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """
+            def test_one():
+                assert True
+
+            def test_two():
+                assert True
+            """
+        ).strip()
+        + "\n"
+    )
+
+    counts = _count_tests([test_file], repo_root, ["-q"])
+
+    assert counts == {test_file: 2}
 
 
 def _pid_alive(pid: int) -> bool:

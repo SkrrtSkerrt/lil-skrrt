@@ -131,12 +131,30 @@ def _count_tests(
 
     counts: dict[Path, int] = {}
     for line in result.stdout.splitlines():
-        # Lines look like: tests/acp/test_auth.py::TestClass::test_name
-        if "::" not in line:
+        line = line.strip()
+        if not line:
             continue
-        file_part = line.split("::", 1)[0]
-        key = repo_root / file_part
-        counts[key] = counts.get(key, 0) + 1
+        # Default ``pytest --co -q`` output lists one collected node id per line:
+        # ``tests/acp/test_auth.py::TestClass::test_name``.
+        if "::" in line:
+            file_part = line.split("::", 1)[0]
+            key = repo_root / file_part
+            counts[key] = counts.get(key, 0) + 1
+            continue
+        # If the caller also passes ``-q`` through to pytest, pytest becomes
+        # quieter and emits one aggregate line per file instead:
+        # ``tests/acp/test_auth.py: 12``.  Parse that form too so progress
+        # does not collapse to ``0 tests`` for normal invocations like
+        # ``scripts/run_tests_parallel.py -- -x --tb=short -q``.
+        if ":" in line:
+            file_part, count_part = line.rsplit(":", 1)
+            try:
+                count = int(count_part.strip())
+            except ValueError:
+                continue
+            if count > 0:
+                key = repo_root / file_part.strip()
+                counts[key] = counts.get(key, 0) + count
 
     return counts
 
