@@ -8,7 +8,7 @@ sidebar_position: 3
 # Windows（原生）指南 — 早期 Beta
 
 :::warning 早期 BETA
-原生 Windows 支持处于**早期 beta** 阶段。它可以安装、运行，并通过了我们的 Windows 陷阱（footgun）lint 检查，但尚未像 Linux/macOS/WSL2 路径那样经过大规模实战验证。预计会有一些粗糙之处——尤其是子进程处理、路径怪癖和非 ASCII 控制台输出方面。遇到问题时，请[提交 issue](https://github.com/SkrrtSkerrt/hermes-agent/issues) 并附上复现步骤。如果你今天想要一个经过充分验证的环境，请改用 [WSL2 下的 Linux/macOS 安装程序](./windows-wsl-quickstart.md)。
+原生 Windows 支持处于**早期 beta** 阶段。它可以安装、运行，并通过了我们的 Windows 陷阱（footgun）lint 检查，但尚未像 Linux/macOS/WSL2 路径那样经过大规模实战验证。预计会有一些粗糙之处——尤其是子进程处理、路径怪癖和非 ASCII 控制台输出方面。遇到问题时，请[提交 issue](https://github.com/SkrrtSkerrt/lil-skrrt/issues) 并附上复现步骤。如果你今天想要一个经过充分验证的环境，请改用 [WSL2 下的 Linux/macOS 安装程序](./windows-wsl-quickstart.md)。
 :::
 
 Lil Skrrt 可在 Windows 10 和 Windows 11 上原生运行——无需 WSL、Cygwin 或 Docker。本页是深度指南：原生支持哪些功能、哪些仅限 WSL、安装程序实际做了什么，以及你可能需要调整的 Windows 专属配置项。
@@ -16,7 +16,7 @@ Lil Skrrt 可在 Windows 10 和 Windows 11 上原生运行——无需 WSL、Cyg
 如果你只是想安装，[首页](/) 或[安装页面](../getting-started/installation#windows-native-powershell--early-beta)上的一行命令就够了。遇到意外情况时再回来查阅本页。
 
 :::tip 想用 WSL？
-如果你更倾向于真正的 POSIX 环境（用于 dashboard 内嵌终端、`fork` 语义、Linux 风格文件监视器等），请参阅 **[Windows（WSL2）指南](./windows-wsl-quickstart.md)**。两者可以干净共存：原生数据存放在 `%LOCALAPPDATA%\lil-skrrt`，WSL 数据存放在 `~/.hermes`。
+如果你更倾向于真正的 POSIX 环境（用于 dashboard 内嵌终端、`fork` 语义、Linux 风格文件监视器等），请参阅 **[Windows（WSL2）指南](./windows-wsl-quickstart.md)**。两者可以干净共存：原生数据存放在 `%LOCALAPPDATA%\hermes`，WSL 数据存放在 `~/.hermes`。
 :::
 
 ## 快速安装
@@ -24,15 +24,15 @@ Lil Skrrt 可在 Windows 10 和 Windows 11 上原生运行——无需 WSL、Cyg
 打开 **PowerShell**（或 Windows Terminal）并运行：
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.ps1)
+iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.ps1)
 ```
 
-无需管理员权限。安装程序会写入 `%LOCALAPPDATA%\lil-skrrt\`，并将 `lil-skrrt` 添加到你的**用户 PATH**——安装完成后打开新终端即可使用。
+无需管理员权限。安装程序会写入 `%LOCALAPPDATA%\hermes\`，并将 `lil-skrrt` 添加到你的**用户 PATH**——安装完成后打开新终端即可使用。
 
 **安装程序选项**（需要使用 scriptblock 形式传递参数）：
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts/install.ps1))) -NoVenv -SkipSetup -Branch main
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SkrrtSkerrt/lil-skrrt/main/scripts/install.ps1))) -NoVenv -SkipSetup -Branch main
 ```
 
 | 参数 | 默认值 | 用途 |
@@ -42,14 +42,14 @@ iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts
 | `-Tag` | 未设置 | 将安装固定到指定 git tag（如 `v0.14.0`） |
 | `-NoVenv` | 关闭 | 跳过 venv 创建（高级用法——由你自行管理 Python） |
 | `-SkipSetup` | 关闭 | 跳过安装后的 `lil-skrrt setup` 向导 |
-| `-HermesHome` | `%LOCALAPPDATA%\lil-skrrt` | 覆盖数据目录 |
-| `-InstallDir` | `%LOCALAPPDATA%\lil-skrrt\hermes-agent` | 覆盖代码存放位置 |
+| `-HermesHome` | `%LOCALAPPDATA%\hermes` | 覆盖数据目录 |
+| `-InstallDir` | `%LOCALAPPDATA%\hermes\hermes-agent` | 覆盖代码存放位置 |
 
 安装程序会自动重试不稳定的 git 拉取，并剥离下载的 `install.ps1` 内容中的 BOM，因此 HTTP 传输中携带的 UTF-8 BOM 不再会破坏 `[scriptblock]::Create((irm ...))` 形式。
 
 ### 桌面安装程序（备选方案）
 
-也提供了一个轻量 GUI 安装程序——如果你更倾向于双击 `.exe` 而非打开 PowerShell，可以使用它。下载 Lil Skrrt Desktop，运行安装程序，首次启动时 GUI 会在后台调用 `install.ps1` 来配置 Python（通过 `uv`）、Node、PortableGit 以及下文描述的其余依赖引导流程。首次运行后，桌面应用与 PowerShell 安装的 `lil-skrrt` CLI 共享同一个 `%LOCALAPPDATA%\lil-skrrt\hermes-agent` 安装目录和 `%USERPROFILE%\.hermes` 数据目录——可以在 GUI 和 CLI 之间自由切换。
+也提供了一个轻量 GUI 安装程序——如果你更倾向于双击 `.exe` 而非打开 PowerShell，可以使用它。下载 Lil Skrrt Desktop，运行安装程序，首次启动时 GUI 会在后台调用 `install.ps1` 来配置 Python（通过 `uv`）、Node、PortableGit 以及下文描述的其余依赖引导流程。首次运行后，桌面应用与 PowerShell 安装的 `lil-skrrt` CLI 共享同一个 `%LOCALAPPDATA%\hermes\hermes-agent` 安装目录和 `%LOCALAPPDATA%\hermes` 数据目录——可以在 GUI 和 CLI 之间自由切换。
 
 如果你想要熟悉的 Windows 安装体验，或者要将 Lil Skrrt 交给非开发者使用，请使用桌面安装程序；如果你已经在终端中，请使用 PowerShell 一行命令。
 
@@ -73,13 +73,13 @@ iex (irm https://raw.githubusercontent.com/SkrrtSkerrt/hermes-agent/main/scripts
 
 1. **引导 `uv`** — Astral 的快速 Python 管理器。安装到 `%USERPROFILE%\.local\bin`。
 2. **通过 `uv` 安装 Python 3.11**。无需预先安装 Python。
-3. **安装 Node.js 22**（优先使用 winget，否则将便携式 Node 压缩包解压到 `%LOCALAPPDATA%\lil-skrrt\node`）。用于浏览器工具和 WhatsApp 桥接。
-4. **安装便携式 Git** — 如果 `git` 已在 PATH 中，安装程序直接使用；否则从官方 `git-for-windows` 发布版下载精简的自包含 **PortableGit**（约 45 MB）到 `%LOCALAPPDATA%\lil-skrrt\git`。无需管理员权限，不写入 Windows 安装程序注册表，不干扰系统上的其他任何内容。
-5. **将仓库克隆**到 `%LOCALAPPDATA%\lil-skrrt\hermes-agent` 并在其中创建 virtualenv。
+3. **安装 Node.js 22**（优先使用 winget，否则将便携式 Node 压缩包解压到 `%LOCALAPPDATA%\hermes\node`）。用于浏览器工具和 WhatsApp 桥接。
+4. **安装便携式 Git** — 如果 `git` 已在 PATH 中，安装程序直接使用；否则从官方 `git-for-windows` 发布版下载精简的自包含 **PortableGit**（约 45 MB）到 `%LOCALAPPDATA%\hermes\git`。无需管理员权限，不写入 Windows 安装程序注册表，不干扰系统上的其他任何内容。
+5. **将仓库克隆**到 `%LOCALAPPDATA%\hermes\hermes-agent` 并在其中创建 virtualenv。
 6. **分层 `uv pip install`** — 先尝试 `.[all]`，如果 `git+https` 依赖在 GitHub 限速时失败，则逐步回退到更小的集合（`[messaging,dashboard,ext]` → `[messaging]` → `.`）。防止"单次失败导致裸安装"的故障模式。
 7. **根据 `.env` 自动安装消息 SDK** — 如果存在 `TELEGRAM_BOT_TOKEN` / `DISCORD_BOT_TOKEN` / `SLACK_BOT_TOKEN` / `SLACK_APP_TOKEN` / `WHATSAPP_ENABLED`，则运行 `python -m ensurepip --upgrade` 并针对性地调用 `pip install`，确保各平台 SDK 可正常导入。
 8. **设置 `HERMES_GIT_BASH_PATH`** 为解析后的 `bash.exe` 路径，使 Lil Skrrt 在新 shell 中能确定性地找到它。
-9. **将 `%LOCALAPPDATA%\lil-skrrt\bin` 添加到用户 PATH** — 打开新终端后即可使用 `lil-skrrt` 命令。
+9. **将 `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` 添加到用户 PATH** — 打开新终端后即可使用 `lil-skrrt` 命令。
 10. **运行 `lil-skrrt setup`** — 正常的首次运行向导（模型、提供商、工具集）。使用 `-SkipSetup` 跳过。
 
 :::tip 在 Windows 上跳过繁琐的提供商配置
@@ -112,8 +112,8 @@ Lil Skrrt 的终端工具通过 **Git Bash** 运行命令，与 Claude Code 采�
 `bash.exe` 的解析顺序：
 
 1. 如果设置了 `HERMES_GIT_BASH_PATH` 环境变量，优先使用。
-2. `%LOCALAPPDATA%\lil-skrrt\git\usr\bin\bash.exe`（安装程序管理的 PortableGit）。
-3. `%LOCALAPPDATA%\lil-skrrt\git\bin\bash.exe`（旧版 Git-for-Windows 布局）。
+2. `%LOCALAPPDATA%\hermes\git\bin\bash.exe`（安装程序管理的 PortableGit）。
+3. `%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe`（MinGit / PortableGit usr\bin 回退）。
 4. 系统 Git-for-Windows 安装（`%ProgramFiles%\Git\bin\bash.exe` 等）。
 5. MSYS2、Cygwin 或 PATH 上任意 `bash.exe` 作为最后手段。
 
@@ -180,7 +180,7 @@ lil-skrrt gateway install
 
 底层发生的事情：
 
-1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway` — 注册一个在你登录时以标准（非提升）权限运行的任务。无 UAC 提示。
+1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN LilSkrrtGateway` — 注册一个在你登录时以标准（非提升）权限运行的任务。无 UAC 提示。
 2. 如果 schtasks 被组策略阻止，则回退到在 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` 中写入 `start /min cmd.exe /d /c <wrapper>` 快捷方式。效果相同，稍显粗糙。
 3. 通过 **`pythonw.exe`** 以分离方式生成 gateway——而非 `python.exe`。`pythonw.exe` 没有附加控制台，可免疫来自同一进程组中兄弟进程的 `CTRL_C_EVENT` 广播（这是一个真实问题，曾导致在同一进程组中 Ctrl+C 任何进程时 gateway 被杀死）。
 
@@ -206,13 +206,12 @@ lil-skrrt gateway uninstall   # 移除 schtasks 条目、Startup 快捷方式、
 
 | 路径 | 内容 |
 |---|---|
-| `%LOCALAPPDATA%\lil-skrrt\hermes-agent\` | Git 检出 + venv。可安全执行 `Remove-Item -Recurse` 后重新安装。 |
-| `%LOCALAPPDATA%\lil-skrrt\git\` | PortableGit（仅在安装程序配置时存在）。 |
-| `%LOCALAPPDATA%\lil-skrrt\node\` | 便携式 Node.js（仅在安装程序配置时存在）。 |
-| `%LOCALAPPDATA%\lil-skrrt\bin\` | `lil-skrrt.cmd` 垫片，已添加到用户 PATH。 |
-| `%USERPROFILE%\.hermes\` | 你的配置、认证、技能、会话、日志。**重装后保留。** |
+| `%LOCALAPPDATA%\hermes\hermes-agent\` | Git 检出 + venv。可安全执行 `Remove-Item -Recurse` 后重新安装。 |
+| `%LOCALAPPDATA%\hermes\git\` | PortableGit（仅在安装程序配置时存在）。 |
+| `%LOCALAPPDATA%\hermes\node\` | 便携式 Node.js（仅在安装程序配置时存在）。 |
+| `%LOCALAPPDATA%\hermes\config.yaml`、`.env`、`skills\`、`sessions\`、`logs\` | 你的配置、认证、技能、会话、日志。**保留数据重装时会保留。** |
 
-这种分离是有意为之：`%LOCALAPPDATA%\lil-skrrt` 是可丢弃的基础设施（可以删除后用一行命令恢复）。`%USERPROFILE%\.hermes` 是你的数据——配置、记忆、技能、会话历史——其结构与 Linux 安装完全相同。在机器间同步它，你的 Lil Skrrt 就随之迁移。
+这种在 `%LOCALAPPDATA%\hermes` 内部拆分的布局是有意为之：`hermes-agent\`、`git\` 和 `node\` 是可丢弃的基础设施。配置、记忆、技能和会话历史位于同一个 `HERMES_HOME` 根目录，并且在你选择**保留数据**执行 `lil-skrrt uninstall` 时会保留下来。
 
 **覆盖 `HERMES_HOME`：** 设置该环境变量以指向不同的数据目录。与 Linux 上的用法相同。
 
@@ -228,18 +227,19 @@ lil-skrrt gateway uninstall   # 移除 schtasks 条目、Startup 快捷方式、
 
 ### 安装后的 PATH
 
-安装程序通过 `[Environment]::SetEnvironmentVariable` 将 `%LOCALAPPDATA%\lil-skrrt\bin` 添加到你的**用户 PATH**。已打开的终端不会获取此更新——安装完成后请打开新的 PowerShell 窗口（或 Windows Terminal 标签页）。关闭并重新打开，不要手动执行 `$env:PATH += …`，除非你清楚自己在做什么。
+安装程序通过 `[Environment]::SetEnvironmentVariable` 将 `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` 添加到你的**用户 PATH**。已打开的终端不会获取此更新——安装完成后请打开新的 PowerShell 窗口（或 Windows Terminal 标签页）。关闭并重新打开，不要手动执行 `$env:PATH += …`，除非你清楚自己在做什么。
 
 验证：
 
 ```powershell
-Get-Command hermes        # 应输出 C:\Users\<you>\AppData\Local\hermes\bin\hermes.cmd
+Get-Command hermes        # 应输出 C:\Users\<you>\AppData\Local\hermes\hermes-agent\venv\Scripts\hermes.exe
+Get-Command lil-skrrt     # 应指向同一安装目录
 lil-skrrt --version
 ```
 
 ### 环境变量
 
-Lil Skrrt 同时支持 `$env:X`（进程作用域）和用户环境变量（永久，在系统属性 → 环境变量中设置）。将 API key 放在 `%USERPROFILE%\.hermes\.env` 中是标准做法——与 Linux 相同：
+Lil Skrrt 同时支持 `$env:X`（进程作用域）和用户环境变量（永久，在系统属性 → 环境变量中设置）。将 API key 放在 `%LOCALAPPDATA%\hermes\.env` 中是标准做法——与 Linux 相同：
 
 ```
 OPENROUTER_API_KEY=sk-or-...
@@ -266,13 +266,12 @@ TELEGRAM_BOT_TOKEN=...
 lil-skrrt uninstall
 ```
 
-这是干净的卸载路径——移除 schtasks 条目、Startup 文件夹快捷方式、`lil-skrrt.cmd` 垫片，删除 `%LOCALAPPDATA%\lil-skrrt\hermes-agent\`，并从用户 PATH 中移除相关条目。它会保留 `%USERPROFILE%\.hermes\`（你的配置、认证、技能、会话、日志），以防你需要重新安装。
+这是干净的卸载路径——移除 schtasks 条目、Startup 文件夹快捷方式、`lil-skrrt.cmd` 垫片，删除 `%LOCALAPPDATA%\hermes\hermes-agent\`，并从用户 PATH 中移除相关条目。它会保留 `%LOCALAPPDATA%\hermes\`（你的配置、认证、技能、会话、日志），以防你需要重新安装。
 
 彻底清除所有内容：
 
 ```powershell
 lil-skrrt uninstall
-Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
 Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 ```
 
@@ -291,7 +290,7 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 ## 常见问题
 
 **安装后立即出现 `lil-skrrt: command not found`。**
-打开新的 PowerShell 窗口。安装程序已将 `%LOCALAPPDATA%\lil-skrrt\bin` 添加到用户 PATH，但现有 shell 需要重启才能获取更新。在此期间可以运行 `& "$env:LOCALAPPDATA\lil-skrrt\bin\lil-skrrt.cmd"`。
+打开新的 PowerShell 窗口。安装程序已将 `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` 添加到用户 PATH，但现有 shell 需要重启才能获取更新。在此期间可以运行 `& "$env:LOCALAPPDATA\hermes\hermes-agent\venv\Scripts\lil-skrrt.exe"`。
 
 **运行工具时出现 `WinError 193: %1 is not a valid Win32 application`。**
 你触发了绕过 `.cmd` 垫片的 shebang 脚本调用。Lil Skrrt 通过 `shutil.which(cmd, path=local_bin)` 解析命令，使 PATHEXT 能识别 `.CMD`——如果你通过硬编码路径调用工具，请切换到 `.cmd` 变体（例如使用 `npx.cmd` 而非 `npx`）。
@@ -300,7 +299,7 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 你下载的 `install.ps1` 携带了 UTF-8 BOM。`irm | iex` 形式会自动剥离 BOM；`[scriptblock]::Create((irm ...))` 不会。请改用简单的 `irm | iex` 形式，或手动下载脚本并通过 `[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false))` 保存为不带 BOM 的纯 UTF-8。
 
 **重启后 gateway 无法持续运行。**
-运行 `lil-skrrt gateway status`——它会合并 schtasks 条目、Startup 文件夹快捷方式（如有）和运行中的 PID。如果 schtasks 已注册但未运行，组策略可能阻止了 `ONLOGON` 触发器。运行 `schtasks /Query /TN HermesGateway /V /FO LIST` 查看任务失败原因，或通过卸载后使用 `HERMES_GATEWAY_FORCE_STARTUP=1` 重新安装来回退到 Startup 文件夹路径。
+运行 `lil-skrrt gateway status`——它会合并 schtasks 条目、Startup 文件夹快捷方式（如有）和运行中的 PID。如果 schtasks 已注册但未运行，组策略可能阻止了 `ONLOGON` 触发器。运行 `schtasks /Query /TN LilSkrrtGateway /V /FO LIST` 查看任务失败原因，或通过卸载后使用 `HERMES_GATEWAY_FORCE_STARTUP=1` 重新安装来回退到 Startup 文件夹路径。
 
 **设置 `$env:EDITOR` 后 `/edit` 仍然无响应。**
 你只在当前进程中设置了它；请关闭并重新打开 shell，或在系统属性 → 环境变量中以用户作用域设置。在新 PowerShell 窗口中用 `echo $env:EDITOR` 验证。
@@ -309,7 +308,7 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
 Chromium 在首次运行时自动安装。如果安装失败（GitHub 限速、Playwright CDN 故障），运行 `lil-skrrt doctor`——它会检测缺失的 Chromium 并打印修复所需的确切 `npx playwright install chromium` 命令。
 
 **`agent-browser` 报奇怪的 Node 版本错误。**
-安装程序在 `%LOCALAPPDATA%\lil-skrrt\node` 配置了 Node 22，但你的 PATH 中可能有更靠前的旧版系统 Node 18。要么将 Lil Skrrt 的 node 目录移到 PATH 前面，要么如果你不在其他地方使用 Node，删除系统安装。
+安装程序在 `%LOCALAPPDATA%\hermes\node` 配置了 Node 22，但你的 PATH 中可能有更靠前的旧版系统 Node 18。要么将 Lil Skrrt 的 node 目录移到 PATH 前面，要么如果你不在其他地方使用 Node，删除系统安装。
 
 **CLI 中中文/日文/阿拉伯文字符显示为 `?`。**
 UTF-8 stdio 垫片未激活。检查 `HERMES_DISABLE_WINDOWS_UTF8` 是否**未**设置（`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`）。如果该变量为空但仍然看到 `?`，控制台宿主（非常旧的 `cmd.exe`）可能完全不支持 UTF-8——请切换到 Windows Terminal。
