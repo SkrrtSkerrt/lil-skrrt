@@ -1,0 +1,18 @@
+# OSV-Scanner config for the root uv.lock scan.
+# The project package is editable from this repository, but OSV matches the
+# package name to unrelated PyPI advisories for published hermes-agent releases.
+# Keep third-party dependency findings live; suppress only known non-actionable
+# package matches.
+
+[[PackageOverrides]]
+name = "hermes-agent"
+ecosystem = "PyPI"
+ignore = true
+reason = "Local editable package in this repository; PyPI hermes-agent advisories do not describe this source tree."
+
+[[PackageOverrides]]
+name = "pynacl"
+ecosystem = "PyPI"
+version = "1.5.0"
+vulnerability.ignore = true
+reason = "Transitive dependency of discord.py[voice] 2.7.1, which constrains PyNaCl to <1.6; no compatible fixed PyNaCl is currently resolvable under this pinned Discord voice extra."

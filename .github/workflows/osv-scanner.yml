@@ -33,6 +33,7 @@ on:
       - 'website/package-lock.json'
       - 'scripts/whatsapp-bridge/package.json'
       - 'scripts/whatsapp-bridge/package-lock.json'
+      - 'osv-scanner.toml'
       - '.github/workflows/osv-scanner.yml'
   push:
     branches: [main]
@@ -51,6 +52,7 @@ on:
       - 'website/package-lock.json'
       - 'scripts/whatsapp-bridge/package.json'
       - 'scripts/whatsapp-bridge/package-lock.json'
+      - 'osv-scanner.toml'
       - '.github/workflows/osv-scanner.yml'
   schedule:
     # Weekly scan against main — catches CVEs published after merge for
