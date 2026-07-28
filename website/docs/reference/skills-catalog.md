@@ -182,10 +182,12 @@ If a skill is missing from this list but present in the repo, the catalog is reg
 
 | Skill | Description | Path |
 |-------|-------------|------|
+| [`caveman`](/user-guide/skills/bundled/software-development/software-development-caveman) | Ultra-compressed communication mode. | `software-development/caveman` |
 | [`debugging-hermes-tui-commands`](/user-guide/skills/bundled/software-development/software-development-debugging-hermes-tui-commands) | Debug Lil Skrrt TUI slash commands: Python, gateway, Ink UI. | `software-development/debugging-hermes-tui-commands` |
 | [`hermes-agent-skill-authoring`](/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring) | Author in-repo SKILL.md: frontmatter, validator, structure. | `software-development/hermes-agent-skill-authoring` |
 | [`node-inspect-debugger`](/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger) | Debug Node.js via --inspect + Chrome DevTools Protocol CLI. | `software-development/node-inspect-debugger` |
 | [`plan`](/user-guide/skills/bundled/software-development/software-development-plan) | Plan mode: write markdown plan to .hermes/plans/, no exec. | `software-development/plan` |
+| [`ponytail`](/user-guide/skills/bundled/software-development/software-development-ponytail) | Forces the laziest solution that actually works, simplest, shortest, most minimal. | `software-development/ponytail` |
 | [`python-debugpy`](/user-guide/skills/bundled/software-development/software-development-python-debugpy) | Debug Python: pdb REPL + debugpy remote (DAP). | `software-development/python-debugpy` |
 | [`requesting-code-review`](/user-guide/skills/bundled/software-development/software-development-requesting-code-review) | Pre-commit review: security scan, quality gates, auto-fix. | `software-development/requesting-code-review` |
 | [`spike`](/user-guide/skills/bundled/software-development/software-development-spike) | Throwaway experiments to validate an idea before build. | `software-development/spike` |
