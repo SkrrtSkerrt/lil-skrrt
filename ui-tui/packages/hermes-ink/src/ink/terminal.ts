@@ -172,6 +172,16 @@ export function needsAltScreenResizeScrollbackClear(env: NodeJS.ProcessEnv = pro
   return (env.TERM_PROGRAM ?? '').trim() === 'Apple_Terminal'
 }
 
+/** True if the terminal should skip the kitty keyboard protocol push.
+ *
+ * Ghostty's kitty disambiguate mode strips Alt from Backspace when the kitty
+ * keyboard protocol is pushed, so the TUI must fall back to modifyOtherKeys
+ * only there.
+ */
+export function skipKittyKeyboardProtocol(): boolean {
+  return env.terminal === 'ghostty'
+}
+
 // Terminals known to correctly implement the Kitty keyboard protocol
 // (CSI >1u) and/or xterm modifyOtherKeys (CSI >4;2m) for ctrl+shift+<letter>
 // disambiguation. We previously enabled unconditionally (#23350), assuming
