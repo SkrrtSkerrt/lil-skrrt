@@ -7403,27 +7403,10 @@ class LilSkrrtCLI:
         choices visible and lets the normal Enter key binding submit the typed
         or highlighted choice.
 
-        **Platform note (Windows dead-lock — issue #30768):**
-        The queue-based modal relies on prompt_toolkit key bindings receiving
-        keyboard events and calling ``_submit_slash_confirm_response``.  On
-        Windows (PowerShell / Windows Terminal) the prompt_toolkit input
-        channel can become unresponsive when the modal is entered from the
-        ``process_loop`` daemon thread, causing a dead-lock: the user sees the
-        confirmation panel but keystrokes never reach the key bindings and the
-        ``response_queue.get()`` blocks until the 120-second timeout expires.
-
-        To avoid this, we fall back to ``_prompt_text_input`` (a simple
-        ``input()``-based prompt) when any of these conditions hold:
-
-        * ``sys.platform == "win32"`` — native Windows console (ConPTY /
-          win32_input) does not support the modal reliably.
-        * ``self._app`` is not set — unit tests / non-interactive contexts.
-
-        On non-Windows platforms the modal itself is still safe from the
-        ``process_loop`` daemon thread as long as the main-thread event loop
-        owns the prompt_toolkit buffer mutations.  When we are off the main
-        thread, schedule the modal snapshot / restore work on ``self._app.loop``
-        via ``call_soon_threadsafe`` and keep the queue-based response path.
+        Windows still falls back to a simple stdin prompt because the modal can
+        deadlock there.  On non-Windows platforms the modal is driven via the
+        app loop even when the caller is the ``process_loop`` daemon thread,
+        which avoids the raw-input EOF crash on ``/clear``.
         """
         import threading
         import time as _time
@@ -7449,8 +7432,7 @@ class LilSkrrtCLI:
         except Exception:
             app_loop = None
 
-        in_main_thread = threading.current_thread() is threading.main_thread()
-        if not in_main_thread:
+        if app_loop is None:
             return self._prompt_text_input("Choice [1/2/3]: ")
 
         response_queue = queue.Queue()
@@ -7474,9 +7456,6 @@ class LilSkrrtCLI:
             self._invalidate()
 
         def _run_on_app_loop(fn) -> bool:
-            if in_main_thread or app_loop is None:
-                fn()
-                return True
             ready = threading.Event()
 
             def _wrapped() -> None:

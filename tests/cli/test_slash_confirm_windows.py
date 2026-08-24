@@ -29,6 +29,7 @@ def _make_cli():
 
     obj = object.__new__(cli_mod.HermesCLI)
     obj._app = MagicMock()
+    obj._app.loop.call_soon_threadsafe.side_effect = lambda cb: cb()
     obj._status_bar_visible = True
     obj._last_invalidate = 0.0
     obj._modal_input_snapshot = None
@@ -66,15 +67,15 @@ class TestModalWindowsFallback:
         mock_stdin.assert_called_once_with("Choice [1/2/3]: ")
         assert result == "1"
 
-    def test_non_main_thread_falls_back_to_stdin(self):
-        """Off the main thread, _prompt_text_input_modal should use stdin fallback."""
+    def test_non_main_thread_uses_modal_on_non_windows(self):
+        """Off the main thread, non-Windows should still use the modal path."""
         cli = _make_cli()
         result_holder = {}
 
         def run_on_daemon():
-            # Patch platform to "linux" so the Windows check doesn't short-circuit.
+            # Patch platform to "linux" so the Windows fallback doesn't short-circuit.
             with patch.object(sys, "platform", "linux"), \
-                 patch.object(cli, "_prompt_text_input", return_value="2") as mock_stdin:
+                 patch.object(cli, "_prompt_text_input") as mock_stdin:
                 result_holder["result"] = cli._prompt_text_input_modal(
                     title="⚠️  /reset",
                     detail="This starts a fresh session.",
@@ -82,12 +83,22 @@ class TestModalWindowsFallback:
                 )
                 result_holder["stdin_called"] = mock_stdin.called
 
+        def _submit_after_delay():
+            time.sleep(0.2)
+            state = cli._slash_confirm_state
+            if state and "response_queue" in state:
+                state["response_queue"].put("once")
+
+        submitter = threading.Thread(target=_submit_after_delay, daemon=True)
+        submitter.start()
+
         t = threading.Thread(target=run_on_daemon, daemon=True)
         t.start()
         t.join(timeout=2.0)
+        submitter.join(timeout=2.0)
         assert not t.is_alive(), "daemon thread hung — modal deadlocked"
-        assert result_holder["stdin_called"] is True
-        assert result_holder["result"] == "2"
+        assert result_holder["stdin_called"] is False
+        assert result_holder["result"] == "once"
 
     def test_main_thread_non_windows_uses_modal(self):
         """On macOS/Linux main thread, the queue-based modal is still used."""
@@ -182,16 +193,23 @@ class TestModalWindowsFallback:
 
         assert cli._slash_confirm_state is None
 
-    def test_non_main_thread_fallback_does_not_set_modal_state(self):
-        """Verify daemon-thread fallback doesn't leave modal state set."""
+    def test_non_main_thread_modal_state_is_cleared(self):
+        """Verify daemon-thread modal setup is torn down after completion."""
         cli = _make_cli()
         errors = []
+        result_holder = {}
+
+        def submit_after_delay():
+            time.sleep(0.2)
+            state = cli._slash_confirm_state
+            if state and "response_queue" in state:
+                state["response_queue"].put("once")
 
         def run_on_daemon():
             try:
                 with patch.object(sys, "platform", "linux"), \
                      patch.object(cli, "_prompt_text_input", return_value="1"):
-                    cli._prompt_text_input_modal(
+                    result_holder["value"] = cli._prompt_text_input_modal(
                         title="⚠️  /new",
                         detail="This starts a fresh session.",
                         choices=_SAMPLE_CHOICES,
@@ -201,10 +219,14 @@ class TestModalWindowsFallback:
             except Exception as exc:
                 errors.append(str(exc))
 
+        submitter = threading.Thread(target=submit_after_delay, daemon=True)
+        submitter.start()
         t = threading.Thread(target=run_on_daemon, daemon=True)
         t.start()
         t.join(timeout=2.0)
+        submitter.join(timeout=2.0)
         assert not errors, f"unexpected errors: {errors}"
+        assert result_holder["value"] == "once"
         assert cli._slash_confirm_state is None
 
 
